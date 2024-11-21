@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,9 +10,10 @@ import static java.util.stream.Collectors.toCollection;
 public class SiteInfoDisplayPanel {
     // Determines whether the frame is from intro or edit section
     boolean isIntro;
+    Controller controller;
 
     // Site info
-    UUID iD;
+    UUID siteId;
     String title;
     String description;
     ImageIcon icon;
@@ -46,9 +46,9 @@ public class SiteInfoDisplayPanel {
     JPanel resolvedPanel = new JPanel(new BorderLayout());
     JLabel resolvedTicketsHeader = new JLabel("Resolved Tickets", JLabel.CENTER);
 
-    public SiteInfoDisplayPanel(UUID id, ImageIcon icon, String title, String description, String address, String city, String state, String zip, String phoneNumber, String emailAddress, boolean isIntro) {
+    public SiteInfoDisplayPanel(UUID siteId, ImageIcon icon, String title, String description, String address, String city, String state, String zip, String phoneNumber, String emailAddress, boolean isIntro, Controller controller) {
 
-        this.iD = id;
+        this.siteId = siteId;
         this.icon = icon;
         this.title = title;
         this.description = description;
@@ -59,6 +59,7 @@ public class SiteInfoDisplayPanel {
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
         this.isIntro = isIntro;
+        this.controller = controller;
 
 
         scrollPanel.setLayout(new BoxLayout(scrollPanel, BoxLayout.Y_AXIS));
@@ -78,7 +79,7 @@ public class SiteInfoDisplayPanel {
         resolvedTicketsHeader.setFont(new Font("Arial", Font.ITALIC, 20));
         resolvedPanel.add(resolvedTicketsHeader);
 
-        SiteInfoHeaderPanel siteInfoHeader = new SiteInfoHeaderPanel(iD, icon, address, city, state, zip, phoneNumber, emailAddress);
+        SiteInfoHeaderPanel siteInfoHeader = new SiteInfoHeaderPanel(siteId, icon, address, city, state, zip, phoneNumber, emailAddress);
         scrollPanel.add(siteInfoHeader.mainPanel());
 
     }
@@ -90,8 +91,6 @@ public class SiteInfoDisplayPanel {
 
     // Process tickets in stream and generate list of resolved and unresolved tickets
     public void addTicketsToScrollPane(){
-        // Formatting constant
-        counter = 0;
 
         if (ticketPanels.isEmpty()){
             scrollPanel.add(new JLabel("No tickets found"));

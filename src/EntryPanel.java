@@ -96,4 +96,4 @@ public class EntryPanel implements Comparable<EntryPanel> {
     }
 }
 
-}
+

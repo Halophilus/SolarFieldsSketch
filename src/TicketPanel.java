@@ -83,13 +83,14 @@ public class TicketPanel implements Comparable<TicketPanel> {
         panel.add(dateLabel, BorderLayout.EAST);
 
         // Action that opens up a new ticket window when clicked on
+        // TODO: assign a controller action to this mouseCLicked event
         idPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                c
+                System.out.println("Mouse clicked on TicketPanel " + ticketId);
             }
-        })
+        });
 
 
 

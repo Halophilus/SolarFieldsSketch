@@ -62,11 +62,8 @@ public class Main {
         List<UUID> siteIds = ticketingSystem.sites.stream().map(site -> site.id).toList();
         System.out.println("SiteIDs: " + siteIds);
         ControllerImpl c = new ControllerImpl(ticketingSystem);
-        c.addSitesToSiteSelectionFrame(Set.copyOf(siteIds));
 
-        c.siteSelectionFrame.setVisible(true);
 
-        c.generateSiteInfoAndDisplay(siteIds.get(0));
-        c.displayEntryDisplayFrameIntro();
+        c.displaySiteInfoFrameIntro(siteIds.getFirst());
         }
     }

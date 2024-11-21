@@ -34,43 +34,39 @@ public class ControllerImpl implements Controller {
     }
 
     // SiteInfoFrameMethods
-    public void generateSiteInfoAndDisplay(UUID siteId){
-        makeSiteInfoFrameFromID(siteId);
-        siteInfoFrame.addTicketsToScrollPane();
-        siteInfoFrame.setVisible(true);
+    public void displaySiteInfoFrameIntro(UUID siteId){
+        SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelFromID(siteId, true);
+        assert innerDisplayPanel != null;
+        addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, true);
+        innerDisplayPanel.addTicketsToScrollPane();
+        SiteInfoFrameIntro newFrame = assembleSiteInfoFrameIntro(innerDisplayPanel);
+        newFrame.setVisible(true);
     }
 
-    private void makeSiteInfoFrameFromID(UUID id){
-        Site newSite = ticketingSystem.getSite(id);
-        siteInfoFrame = new SiteInfoFrame(newSite.id,
-                                        newSite.imageIcon,
-                                        newSite.title,
-                                        newSite.description,
-                                        newSite.address,
-                                        newSite.city,
-                                        newSite.state,
-                                        newSite.zip,
-                                        newSite.phoneNumber,
-                                        newSite.emailAddress,
-                                        true);
-
-        parseTicketsFromListOfTicketIds(Set.copyOf(newSite.ticketIds()));
+    public SiteInfoFrameIntro assembleSiteInfoFrameIntro(SiteInfoDisplayPanel siteInfoDisplayPanel){
+        return new SiteInfoFrameIntro(siteInfoDisplayPanel, this);
     }
 
-    private void parseTicketsFromListOfTicketIds(Set<UUID> tickets){
-        for (UUID id : tickets){
-            //System.out.println("Parsing ticket " + id);
-            addTicketToSiteInfoFrameFromID(id);
+    public void addTicketPanelsToSiteInfoDisplayPanel(SiteInfoDisplayPanel siteInfoDisplayPanel, boolean isIntro){
+        List<UUID> listOfTickets = fetchSite(siteInfoDisplayPanel.siteId).ticketIds();
+
+        if(!listOfTickets.isEmpty()){
+            for (UUID ticketId : listOfTickets){
+                TicketPanel newTicketPanel = makeTicketPanelFromId(ticketId, isIntro);
+                siteInfoDisplayPanel.addTicketPanel(newTicketPanel);
+            }
         }
-
     }
 
-    private void addTicketToSiteInfoFrameFromID(SiteInfoFrame UUID ticketId, boolean isIntro) {
-
-        siteInfoFrame.addTicketPanel(newTicket.id, mostRecentDate, ticketEntryIds.size(), newTicket.resolved);
+    private SiteInfoDisplayPanel makeSiteInfoDisplayPanelFromID(UUID siteId, boolean isIntro) {
+        Site fetchedSite = ticketingSystem.getSite(siteId);
+        if (fetchedSite != null){
+            return new SiteInfoDisplayPanel(fetchedSite.id, fetchedSite.imageIcon, fetchedSite.title, fetchedSite.description, fetchedSite.address, fetchedSite.city, fetchedSite.state, fetchedSite.zip, fetchedSite.phoneNumber, fetchedSite.emailAddress, isIntro, this);
+        }
+        return null;
     }
 
-    private TicketPanel makeTicketPanelFromID(UUID ticketId, boolean isIntro){
+    private TicketPanel makeTicketPanelFromId(UUID ticketId, boolean isIntro){
         Ticket newTicket = ticketingSystem.getTicket(ticketId);
         List<UUID> ticketEntryIds = newTicket.entryIds();
         LocalDate mostRecentDate = LocalDate.MAX; //
@@ -88,6 +84,10 @@ public class ControllerImpl implements Controller {
     }
 
     // Methods for entry display
+    public Site fetchSite(UUID siteId){
+        return ticketingSystem.getSite(siteId);
+    }
+
     public Ticket fetchTicket(UUID ticketId){
         return ticketingSystem.getTicket(ticketId);
     }
@@ -104,7 +104,7 @@ public class ControllerImpl implements Controller {
     }
 
     public EntryDisplayFrameIntro assembleEntryDisplayPanelFrameIntro(EntryDisplayPanel entryDisplayPanel){
-        return new EntryDisplayFrameIntro(entryDisplayPanel);
+        return new EntryDisplayFrameIntro(entryDisplayPanel, this);
     }
 
     public void addEntryPanelsToEntryDisplayPanel(EntryDisplayPanel entryDisplayPanel, boolean isIntro){
@@ -116,7 +116,6 @@ public class ControllerImpl implements Controller {
                 entryDisplayPanel.addEntryPanel(newEntryPanel);
             }
         }
-
 
     }
 

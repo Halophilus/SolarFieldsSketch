@@ -8,6 +8,7 @@ import java.util.UUID;
 public class EntryDisplayFrameIntro {
     public UUID ticketID;
     public EntryDisplayPanel entryDisplayPanel;
+    public Controller controller;
 
     // Visual subunits
     // Structural elements
@@ -18,9 +19,10 @@ public class EntryDisplayFrameIntro {
     // Buttons
     public JButton exportButton = new JButton("EXPORT");
 
-    public EntryDisplayFrameIntro(EntryDisplayPanel entryDisplayPanel) {
+    public EntryDisplayFrameIntro(EntryDisplayPanel entryDisplayPanel, Controller controller) {
         this.ticketID = entryDisplayPanel.ticketId;
         this.entryDisplayPanel = entryDisplayPanel;
+        this.controller = controller;
 
         // Set up content panel
         panel = entryDisplayPanel.mainPanel();
@@ -33,7 +35,8 @@ public class EntryDisplayFrameIntro {
         frame.add(panel, BorderLayout.CENTER);
 
         // Set up export button
-        buttonPanel.add(exportButton, BorderLayout.EAST);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        buttonPanel.add(exportButton, BorderLayout.WEST);
 
         // TODO: Set up action listener that interacts with the controller to perform an export action
         exportButton.addActionListener(new ActionListener() {
@@ -47,4 +50,5 @@ public class EntryDisplayFrameIntro {
     public void setVisible(boolean visible) {
         frame.setVisible(visible);
     }
+
 }
