@@ -27,7 +27,6 @@ public class EntryPanel implements Comparable<EntryPanel> {
     public JLabel datePostedHeader;
     public JLabel imageLabel;
     public JLabel descriptionLabel;
-    public JLabel entryLabel;
 
 
     public EntryPanel(UUID entryId, LocalDate datePosted, String description, ImageIcon image, boolean reviewed, boolean isIntro) {

@@ -44,7 +44,7 @@ public class SiteInfoFrame {
         JButton exportButton = new JButton("EXPORT");
         JButton selectButton = new JButton("SELECT");
 
-        // Stream of TicketPanels for sorting
+        // Set of TicketPanels for sorting
         Set<TicketPanel> ticketPanels = new HashSet<>();
 
         // Formatting constant
