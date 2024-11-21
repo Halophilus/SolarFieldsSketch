@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +30,7 @@ public class TicketPanel implements Comparable<TicketPanel> {
     public JLabel dateLabel;
 
 
-    public TicketPanel(UUID ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved, boolean isIntro) {
+    public TicketPanel(UUID ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved, boolean isIntro, Controller c) {
         this.ticketId = ticketId;
         this.mostRecentEditDate = mostRecentEditDate;
         this.numEntries = numEntries;
@@ -80,6 +82,14 @@ public class TicketPanel implements Comparable<TicketPanel> {
         panel.add(idPanel, BorderLayout.WEST);
         panel.add(dateLabel, BorderLayout.EAST);
 
+        // Action that opens up a new ticket window when clicked on
+        idPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                c
+            }
+        })
 
 
 

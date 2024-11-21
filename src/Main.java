@@ -67,6 +67,6 @@ public class Main {
         c.siteSelectionFrame.setVisible(true);
 
         c.generateSiteInfoAndDisplay(siteIds.get(0));
-
+        c.displayEntryDisplayFrameIntro();
         }
     }

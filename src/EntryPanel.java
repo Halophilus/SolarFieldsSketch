@@ -80,6 +80,8 @@ public class EntryPanel implements Comparable<EntryPanel> {
     public void changeBackgroundColor(Color color) {
         idPanel.setBackground(color);
         outerPanel.setBackground(color);
+        stackedPanel.setBackground(color);
+        imageAndDescriptionPanel.setBackground(color);
     }
 
     @Override

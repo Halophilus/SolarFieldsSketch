@@ -95,8 +95,7 @@ public class SiteInfoFrame {
         }
 
         // Add ticket to stream
-        public void addTicketPanelIntroSection(UUID ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved){
-            TicketPanel newPanel = new TicketPanel(ticketId, mostRecentEditDate, numEntries, resolved, isIntro);
+        public void addTicketPanel(TicketPanel newPanel){
             ticketPanels.add(newPanel);
         }
 
