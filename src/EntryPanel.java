@@ -18,24 +18,26 @@ public class EntryPanel {
     // Panels
     public JPanel outerPanel;
     public JPanel stackedPanel;
+    public JPanel idPanel;
     public JPanel imageAndDescriptionPanel;
     public JPanel entryPanel;
 
     // Labels
     public JLabel idHeader;
+    public JLabel imageLabel;
+    public JLabel descriptionLabel;
     public JLabel entryLabel;
 
 
     public EntryPanel(UUID entryId, LocalDate datePosted, String description, ImageIcon image, boolean reviewed, boolean isIntro) {
         this.entryId = entryId;
         this.datePosted = datePosted;
-        this.description = description;
+        this.description = "<html><p>" + description + "</p></html>"; // Formatting description string to ensure wrapping text;
         this.image = image;
         this.reviewed = reviewed;
         this.isIntro = isIntro;
 
-        // Formatting description string to ensure wrapping text
-        this.description = "<html><p>" + description + "</p></html>";
+
 
         // Stores all entry data
         outerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
@@ -45,9 +47,21 @@ public class EntryPanel {
         BoxLayout boxLayout = new BoxLayout(stackedPanel, BoxLayout.Y_AXIS);
         stackedPanel.setLayout(boxLayout);
 
+        // Creates space for entry ID header
+        idPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        // Create ID label
+        
+
         // Creates space for Icon + Image
         imageAndDescriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        
+        // Create Icon and Image
+        imageLabel = new JLabel(image);
+        descriptionLabel = new JLabel(this.description);
+        // Add labels to relevant panel
+        imageAndDescriptionPanel.add(imageLabel);
+        imageAndDescriptionPanel.add(descriptionLabel);
+
+
         // Entry label
         entryLabel = new JLabel(image);
         entryLabel.setText(description);
