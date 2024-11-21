@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class SiteSelectionFrame {
     // Visual subunits
@@ -33,7 +34,7 @@ public class SiteSelectionFrame {
                 System.out.println("Download Button pressed");
 
                 // Duplicate the selected integer values
-                Set<Integer> selectedSites = new HashSet<Integer>();
+                Set<UUID> selectedSites = new HashSet<UUID>();
                 selectedSites.addAll(SiteSelectionPanel.selected);
 
                 // Perform some action
@@ -50,7 +51,7 @@ public class SiteSelectionFrame {
     }
 
     // Add site to selection screen
-    public void addSite(int id, String title, String state, String city){
+    public void addSite(UUID id, String title, String state, String city){
         SiteSelectionPanel newPanel = new SiteSelectionPanel(id, title, state, city);
         scrollPanel.add(newPanel.panel);
     }

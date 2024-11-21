@@ -1,18 +1,30 @@
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 // Ticket model general accessors
-public interface Ticket {
-    Site site();
-    int id();
+public class Ticket {
+    final UUID id;
 
-    String description();
-    boolean resolved();
+    int counter;
+    static int siteCounter = 0;
+    String description = "";
+    boolean resolved = false;
+    ArrayList<Entry> entries = new ArrayList<>();
 
-    ArrayList<Integer> entryIDs();
-    static Ticket getTicket(int id){
-        return null;
-    };
+    Ticket() {
+        this.id = UUID.randomUUID();
+    }
 
-    void addEntry(int id);
+    Ticket(UUID id) {
+        this.id = id;
+        this.counter = siteCounter++;
 
+        this.description = "Description for ticket " + this.counter;
+    }
+
+    List<UUID> entryIds() {
+        return entries.stream().map(entry -> entry.id).toList();
+    }
 }
+

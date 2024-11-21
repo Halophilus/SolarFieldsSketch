@@ -6,6 +6,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class SiteSelectionPanel{
     public JPanel panel;
@@ -15,18 +16,18 @@ public class SiteSelectionPanel{
     private Site site;
 
     // De-coupling view from controller
-    private final int id;
+    private final UUID id;
     private final String title;
     private final String state;
     private final String city;
 
     // User-manipulated state
-    public static Set<Integer> selected = new HashSet<>();
+    public static Set<UUID> selected = new HashSet<>();
 
     // Formatting
     private static int counter = 0;
 
-    public SiteSelectionPanel(int id, String title, String state, String city){
+    public SiteSelectionPanel(UUID id, String title, String state, String city){
         this.id = id;
         this.title = title;
         this.state = state;
@@ -44,12 +45,13 @@ public class SiteSelectionPanel{
         JPanel idPanel = new JPanel();
         idPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
+
         // Header
         titleLabel = new JLabel(this.title);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setForeground(Color.BLUE);
 
-        locationLabel = new JLabel("      " + this.state + ", " + this.city);
+        locationLabel = new JLabel( this.state + ", " + this.city);
         locationLabel.setFont(new Font("Arial", Font.ITALIC, 20));
         locationLabel.setForeground(Color.DARK_GRAY);
 

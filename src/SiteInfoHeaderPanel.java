@@ -1,9 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.UUID;
 
 public class SiteInfoHeaderPanel {
     // ID info
-    int id;
+    UUID id;
     ImageIcon icon;
 
     // Location information
@@ -37,7 +38,7 @@ public class SiteInfoHeaderPanel {
     JLabel contactLabel;
 
 
-    public SiteInfoHeaderPanel(int id, ImageIcon icon, String address, String city, String state, String zip, String phoneNumber, String emailAddress) {
+    public SiteInfoHeaderPanel(UUID id, ImageIcon icon, String address, String city, String state, String zip, String phoneNumber, String emailAddress) {
         // Assign fields
         this.id = id;
         this.icon = icon;
@@ -52,24 +53,37 @@ public class SiteInfoHeaderPanel {
         outerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
         // Create panel to store indented contact information
-        contactPanel = new JPanel(new GridLayout(2,1,5,5));
+        contactPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(contactPanel, BoxLayout.Y_AXIS);
+        contactPanel.setLayout(boxLayout);
         contactLabel = new JLabel(this.phoneNumber + "\n" + this.emailAddress);
+
+        JLabel phoneNumberLabel = new JLabel(this.phoneNumber);
+        JLabel emailAddressLabel = new JLabel(this.emailAddress);
         contactLabelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         contactLabelPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0)); //indent the label
-        contactLabelPanel.add(contactLabel);
+        //contactLabelPanel.add(contactLabel);
         contactPanel.add(contactHeader);
+        contactPanel.add(phoneNumberLabel);
+        contactPanel.add(emailAddressLabel);
         contactPanel.add(contactLabelPanel);
 
 
         // Create panel to store indented address information;
-        addressPanel = new JPanel(new GridLayout(2,1,5,5));
-        addressPanel.add(this.addressHeader);
-        addressLabel = new JLabel(this.address + "\n" + this.city + ", " + this.state + " " + this.zip);
+        addressPanel = new JPanel();
+        BoxLayout boxLayout2 = new BoxLayout(addressPanel, BoxLayout.Y_AXIS);
+        addressPanel.setLayout(boxLayout2);
+        //addressPanel.add(this.addressHeader);
+        addressLabel = new JLabel(this.address);
+        JLabel stateAndCityLabel = new JLabel(this.city + ", " + this.state + " " + this.zip);
+
+
         addressLabelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         addressLabelPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-        addressLabelPanel.add(addressLabel);
-        addressPanel.add(addressLabelPanel);
-        contactPanel.add(addressHeader);
+        //addressLabelPanel.add(addressLabel);
+        addressPanel.add(addressHeader);
+        addressPanel.add(addressLabel);
+        addressPanel.add(stateAndCityLabel);
 
         // Scale the image by the size of the contact panel (widest element in panel)
         this.icon = scaleImage(icon, contactPanel.getHeight());
@@ -85,6 +99,7 @@ public class SiteInfoHeaderPanel {
     // Scales image icon to appropriate height
     private ImageIcon scaleImage(ImageIcon icon, int newHeight)
     {
+        /*
         int currentWidth = icon.getIconWidth();
         int currentHeight = icon.getIconHeight();
 
@@ -92,6 +107,8 @@ public class SiteInfoHeaderPanel {
         currentWidth = (icon.getIconWidth() * currentHeight) / icon.getIconHeight();
 
         return new ImageIcon(icon.getImage().getScaledInstance(currentWidth, currentHeight, Image.SCALE_DEFAULT));
+         */
+        return icon;
     }
 
     public JPanel mainPanel() {

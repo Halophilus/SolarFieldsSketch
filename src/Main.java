@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -34,31 +37,35 @@ public class Main {
         frame.setVisible(true);
         */
 
-        int jStart = 0;
-        int kStart = 0;
+        TicketingSystem ticketingSystem = new TicketingSystem();
         for (int i = 0; i < 20; i++) {
-            System.out.println("Site number: " + i);
-            SiteImpl newSite = new SiteImpl(i);
-            int jEnd = jStart + 5;
-            for (int j = jStart; j < jEnd; j++) {
-                System.out.println("Ticket id: " + j);
-                TicketImpl ticket = new TicketImpl(i);
-                int kEnd = kStart + 5;
-                for (int k = kStart; k < kEnd; k++) {
-                    System.out.println("Entry id: " + k);
-                    EntryImpl entry = new EntryImpl(j);
+            Site newSite = new Site();
+            //System.out.println("Site number: " + newSite.id);
+            ticketingSystem.sites.add(newSite);
+
+            for (int j = 0; j < 5; j++) {
+                Ticket ticket = new Ticket();
+                //System.out.println("Ticket id: " + ticket.id);
+                newSite.tickets.add(ticket);
+
+                for (int k = 0; k < 5; k++) {
+                    Entry entry = new Entry();
+                    //System.out.println("Entry id: " + entry.id);
+                    ticket.entries.add(entry);
                 }
-                System.out.println("Entry ids for ticket " + j + ": " + TicketImpl.getTicket(j).entryIDs());
+
+                System.out.println("Entry ids for ticket " + j + ": " + ticket.entries.stream().map(entry -> entry.id).toList());
             }
-            jStart = jEnd;
-            System.out.println("Ticket ids for site " + i + ": " + SiteImpl.getSite(i).ticketIDs());
+            System.out.println("Ticket ids for site " + i + ": " + newSite.tickets.stream().map(ticket -> ticket.id).toList());
         }
-        Set<Integer> siteIds = SiteImpl.siteIds();
+        List<UUID> siteIds = ticketingSystem.sites.stream().map(site -> site.id).toList();
         System.out.println("SiteIDs: " + siteIds);
-        //Controller c = new Controller();
-        //c.addSitesToSiteSelectionFrame(siteIds);
+        Controller c = new Controller(ticketingSystem);
+        //c.addSitesToSiteSelectionFrame(Set.copyOf(siteIds));
 
         //c.siteSelectionFrame.setVisible(true);
+
+        c.generateSiteInfoAndDisplay(siteIds.get(0));
 
         }
     }

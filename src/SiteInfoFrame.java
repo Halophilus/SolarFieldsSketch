@@ -4,13 +4,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toCollection;
 
 public class SiteInfoFrame {
         // ID info
-        int iD;
+        UUID iD;
         String title;
         String description;
         ImageIcon icon;
@@ -45,9 +46,10 @@ public class SiteInfoFrame {
         Set<TicketPanel> ticketPanels = new HashSet<>();
 
 
-        public SiteInfoFrame(int id, String title, String description, String address, String city, String state, String zip, String phoneNumber, String emailAddress) {
+        public SiteInfoFrame(UUID id, ImageIcon icon, String title, String description, String address, String city, String state, String zip, String phoneNumber, String emailAddress) {
 
             this.iD = id;
+            this.icon = icon;
             this.title = title;
             this.description = description;
             this.address = address;
@@ -80,11 +82,15 @@ public class SiteInfoFrame {
             resolvedTicketsHeader.setFont(new Font("Arial", Font.ITALIC, 20));
             resolvedPanel.add(resolvedTicketsHeader);
 
+            SiteInfoHeaderPanel siteInfoHeader = new SiteInfoHeaderPanel(iD, icon, address, city, state, zip, phoneNumber, emailAddress);
+            scrollPanel.add(siteInfoHeader.mainPanel());
+
+
 
         }
 
         // Add ticket to stream
-        public void addTicket(int ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved){
+        public void addTicket(UUID ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved){
             TicketPanel newPanel = new TicketPanel(ticketId, mostRecentEditDate, numEntries, resolved);
             ticketPanels.add(newPanel);
         }

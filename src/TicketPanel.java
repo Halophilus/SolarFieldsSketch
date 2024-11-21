@@ -4,10 +4,11 @@ import java.awt.event.ItemEvent;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class TicketPanel implements Comparable<TicketPanel> {
     // ID Info
-    int ticketId;
+    UUID ticketId;
     LocalDate mostRecentEditDate;
     int numEntries;
     boolean resolved;
@@ -26,7 +27,7 @@ public class TicketPanel implements Comparable<TicketPanel> {
     // Formatting
     private static int counter = 0;
 
-    public TicketPanel(int ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved) {
+    public TicketPanel(UUID ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved) {
         this.ticketId = ticketId;
         this.mostRecentEditDate = mostRecentEditDate;
         this.numEntries = numEntries;
@@ -42,6 +43,7 @@ public class TicketPanel implements Comparable<TicketPanel> {
 
         // ID panel
         // Stores all identifying info about a ticket
+        idPanel = new JPanel();
         idPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0)); //; align left, horizontal gap of 5 pixels
 
         // The ticket number
