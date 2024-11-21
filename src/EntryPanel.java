@@ -1,48 +1,56 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
-public class TicketPanel implements Comparable<TicketPanel> {
+public class EntryPanel {
     // Determines whether the frame is from intro or edit section
     boolean isIntro;
 
     // ID Info
-    UUID ticketId;
-    LocalDate mostRecentEditDate;
-    int numEntries;
-    boolean resolved;
+    UUID entryId;
+    LocalDate datePosted;
+    String description;
+    ImageIcon image;
+    boolean reviewed;
 
     // Visual components
     // Panels
-    public JPanel panel;
-    public JPanel idPanel;
+    public JPanel outerPanel;
+    public JPanel stackedPanel;
+    public JPanel imageAndDescriptionPanel;
+    public JPanel entryPanel;
 
     // Labels
-    public JLabel idLabel;
-    public JLabel entriesLabel;
-    public JLabel dividerLabel;
-    public JLabel dateLabel;
+    public JLabel idHeader;
+    public JLabel entryLabel;
 
 
-    public TicketPanel(UUID ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved, boolean isIntro) {
-        this.ticketId = ticketId;
-        this.mostRecentEditDate = mostRecentEditDate;
-        this.numEntries = numEntries;
-        this.resolved = resolved;
+    public EntryPanel(UUID entryId, LocalDate datePosted, String description, ImageIcon image, boolean reviewed, boolean isIntro) {
+        this.entryId = entryId;
+        this.datePosted = datePosted;
+        this.description = description;
+        this.image = image;
+        this.reviewed = reviewed;
         this.isIntro = isIntro;
 
-        // Get site from ID
-        // site = SiteImpl.getSite(id);
+        // Formatting description string to ensure wrapping text
+        this.description = "<html><p>" + description + "</p></html>";
 
-        // root panel
-        panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        // Stores all entry data
+        outerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
+        // Creates space for Entry ID and Icon+Image
+        stackedPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(stackedPanel, BoxLayout.Y_AXIS);
+        stackedPanel.setLayout(boxLayout);
+
+        // Creates space for Icon + Image
+        imageAndDescriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        
+        // Entry label
+        entryLabel = new JLabel(image);
+        entryLabel.setText(description);
         // ID panel
         // Stores all identifying info about a ticket
         idPanel = new JPanel();
@@ -77,8 +85,8 @@ public class TicketPanel implements Comparable<TicketPanel> {
         dateLabel = new JLabel("Last edited: " + mostRecentEditDate);
 
         //panel.setPreferredSize(new Dimension(100, idPanel.getHeight()));
-        panel.add(idPanel, BorderLayout.WEST);
-        panel.add(dateLabel, BorderLayout.EAST);
+        outerPanel.add(idPanel, BorderLayout.WEST);
+        outerPanel.add(dateLabel, BorderLayout.EAST);
 
 
 
@@ -86,12 +94,12 @@ public class TicketPanel implements Comparable<TicketPanel> {
     }
 
     public JPanel mainPanel() {
-        return panel;
+        return outerPanel;
     }
 
     public void changeBackgroundColor(Color color) {
         idPanel.setBackground(color);
-        panel.setBackground(color);
+        outerPanel.setBackground(color);
     }
 
     @Override
@@ -104,4 +112,6 @@ public class TicketPanel implements Comparable<TicketPanel> {
             return 0;
         }
     }
+}
+
 }

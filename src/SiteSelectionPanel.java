@@ -39,6 +39,7 @@ public class SiteSelectionPanel{
         // root panel
         panel = new JPanel();
         panel.setLayout(new BorderLayout());
+
         //panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
         // ID panel

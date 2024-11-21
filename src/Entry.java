@@ -25,6 +25,7 @@ public class Entry {
         long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
         LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
 
+        // Generating a random image
         this.date = randomDate;
         this.description = "Description for entry " + this.counter;
     }

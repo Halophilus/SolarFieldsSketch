@@ -1,0 +1,88 @@
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+public class ControllerImpl {
+    public SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame();
+    public SiteInfoFrame siteInfoFrame;
+    TicketingSystem ticketingSystem;
+
+    ControllerImpl(TicketingSystem ticketingSystem) {
+        this.ticketingSystem = ticketingSystem;
+    }
+
+    // SiteSelectionFrame methods
+    // Takes a set of integers and adds the relevant IDs to the selection frame
+    public void addSitesToSiteSelectionFrame(Set<UUID> selectedSites){
+        Set.copyOf(selectedSites).forEach(this::addSiteToSiteSelectionFrameFromID);
+    }
+
+    // Takes an individual ID and attempts to add it to the selection frame
+    public void addSiteToSiteSelectionFrameFromID(UUID id){
+        Site newSite = ticketingSystem.getSite(id);
+        if (newSite != null){
+            addSiteToSiteSelectionFrame(newSite);
+        } else {
+            System.out.println("Couldn't find site with id " + id);
+        }
+    }
+
+    // Adds a site to the selection frame
+    private void addSiteToSiteSelectionFrame(Site site) {
+        siteSelectionFrame.addSite(site.id, site.title, site.state, site.city);
+    }
+
+    // SiteInfoFrameMethods
+    public void generateSiteInfoAndDisplay(UUID siteId){
+        makeSiteInfoFrameFromID(siteId);
+        siteInfoFrame.addTicketsToScrollPane();
+        siteInfoFrame.setVisible(true);
+    }
+
+    private void makeSiteInfoFrameFromID(UUID id){
+        Site newSite = ticketingSystem.getSite(id);
+        siteInfoFrame = new SiteInfoFrame(newSite.id,
+                                        newSite.imageIcon,
+                                        newSite.title,
+                                        newSite.description,
+                                        newSite.address,
+                                        newSite.city,
+                                        newSite.state,
+                                        newSite.zip,
+                                        newSite.phoneNumber,
+                                        newSite.emailAddress,
+                                        true);
+
+        parseTicketsFromListOfTicketIds(Set.copyOf(newSite.ticketIds()));
+    }
+
+    private void parseTicketsFromListOfTicketIds(Set<UUID> tickets){
+        for (UUID id : tickets){
+            //System.out.println("Parsing ticket " + id);
+            addTicketToSiteInfoFrameFromID(id);
+        }
+
+    }
+
+    private void addTicketToSiteInfoFrameFromID(UUID id) {
+        Ticket newTicket = ticketingSystem.getTicket(id);
+        List<UUID> ticketEntryIds = newTicket.entryIds();
+        LocalDate mostRecentDate = LocalDate.MAX; //
+        Entry currentEntry = null;
+
+        for (UUID entryId : ticketEntryIds){ // For each value in the ticket entries
+            currentEntry = ticketingSystem.getEntry(entryId); // Get the entry associated with that ticket
+            if (currentEntry != null){ // If that entry isn't null
+                if (mostRecentDate.isAfter(currentEntry.date)) {
+                    mostRecentDate = currentEntry.date;
+                }
+            }
+        }
+        siteInfoFrame.addTicketPanelIntroSection(newTicket.id, mostRecentDate, ticketEntryIds.size(), newTicket.resolved);
+    }
+
+
+
+}
+

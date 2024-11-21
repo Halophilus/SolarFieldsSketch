@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toCollection;
 
 public class SiteInfoFrame {
+        // Determines whether the frame is from intro or edit section
+        boolean isIntro;
+
         // ID info
         UUID iD;
         String title;
@@ -45,8 +47,10 @@ public class SiteInfoFrame {
         // Stream of TicketPanels for sorting
         Set<TicketPanel> ticketPanels = new HashSet<>();
 
+        // Formatting constant
+        int counter = 0;
 
-        public SiteInfoFrame(UUID id, ImageIcon icon, String title, String description, String address, String city, String state, String zip, String phoneNumber, String emailAddress) {
+        public SiteInfoFrame(UUID id, ImageIcon icon, String title, String description, String address, String city, String state, String zip, String phoneNumber, String emailAddress, boolean isIntro) {
 
             this.iD = id;
             this.icon = icon;
@@ -58,6 +62,7 @@ public class SiteInfoFrame {
             this.zip = zip;
             this.phoneNumber = phoneNumber;
             this.emailAddress = emailAddress;
+            this.isIntro = isIntro;
 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setTitle(this.title + " Site Information");
@@ -90,13 +95,16 @@ public class SiteInfoFrame {
         }
 
         // Add ticket to stream
-        public void addTicket(UUID ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved){
-            TicketPanel newPanel = new TicketPanel(ticketId, mostRecentEditDate, numEntries, resolved);
+        public void addTicketPanelIntroSection(UUID ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved){
+            TicketPanel newPanel = new TicketPanel(ticketId, mostRecentEditDate, numEntries, resolved, isIntro);
             ticketPanels.add(newPanel);
         }
 
         // Process tickets in stream and generate list of resolved and unresolved tickets
         public void addTicketsToScrollPane(){
+            // Formatting constant
+            counter = 0;
+
             if (ticketPanels.isEmpty()){
                 scrollPanel.add(new JLabel("No tickets found"));
                 System.out.println("No tickets found");
@@ -109,16 +117,31 @@ public class SiteInfoFrame {
 
             // Iterate through list of resolved tickets (if any) and add them to the display
             if (!resolvedTickets.isEmpty()){
+                resolvedPanel.setBackground(Color.BLACK);
                 scrollPanel.add(resolvedPanel);
                 for (TicketPanel ticket : resolvedTickets){
+                    ticket.changeBackgroundColor(Color.WHITE);
+                    if (counter % 2 == 0) {
+                        ticket.changeBackgroundColor(Color.LIGHT_GRAY);
+                    }
+                    counter++;
                     scrollPanel.add(ticket.mainPanel());
+
                 }
             }
 
             // Do the same with the
             if (!unresolvedTickets.isEmpty()){
+                unresolvedPanel.setBackground(Color.BLACK);
                 scrollPanel.add(unresolvedPanel);
                 for (TicketPanel ticket : unresolvedTickets){
+                    System.out.println(counter);
+                    ticket.changeBackgroundColor(Color.WHITE);
+                    if (counter % 2 == 0) {
+                        System.out.println(counter);
+                        ticket.changeBackgroundColor(Color.LIGHT_GRAY);
+                    }
+                    counter++;
                     scrollPanel.add(ticket.mainPanel());
                 }
             }

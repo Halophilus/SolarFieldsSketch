@@ -1,6 +1,3 @@
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -43,27 +40,31 @@ public class Main {
             //System.out.println("Site number: " + newSite.id);
             ticketingSystem.sites.add(newSite);
 
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < 10; j++) {
                 Ticket ticket = new Ticket();
                 //System.out.println("Ticket id: " + ticket.id);
+                if (j % 2 == 0){
+                    ticket.resolved = true;
+                }
                 newSite.tickets.add(ticket);
 
-                for (int k = 0; k < 5; k++) {
+                for (int k = 0; k < 20; k++) {
                     Entry entry = new Entry();
                     //System.out.println("Entry id: " + entry.id);
+
                     ticket.entries.add(entry);
                 }
 
-                System.out.println("Entry ids for ticket " + j + ": " + ticket.entries.stream().map(entry -> entry.id).toList());
+                //System.out.println("Entry ids for ticket " + j + ": " + ticket.entries.stream().map(entry -> entry.id).toList());
             }
-            System.out.println("Ticket ids for site " + i + ": " + newSite.tickets.stream().map(ticket -> ticket.id).toList());
+            //System.out.println("Ticket ids for site " + i + ": " + newSite.tickets.stream().map(ticket -> ticket.id).toList());
         }
         List<UUID> siteIds = ticketingSystem.sites.stream().map(site -> site.id).toList();
         System.out.println("SiteIDs: " + siteIds);
-        Controller c = new Controller(ticketingSystem);
-        //c.addSitesToSiteSelectionFrame(Set.copyOf(siteIds));
+        ControllerImpl c = new ControllerImpl(ticketingSystem);
+        c.addSitesToSiteSelectionFrame(Set.copyOf(siteIds));
 
-        //c.siteSelectionFrame.setVisible(true);
+        c.siteSelectionFrame.setVisible(true);
 
         c.generateSiteInfoAndDisplay(siteIds.get(0));
 
