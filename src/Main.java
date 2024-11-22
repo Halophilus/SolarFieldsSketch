@@ -63,7 +63,9 @@ public class Main {
         System.out.println("SiteIDs: " + siteIds);
         ControllerImpl c = new ControllerImpl(ticketingSystem);
 
-
+        c.displaySiteSelectionFrameIntro();
         c.displaySiteInfoFrameIntro(siteIds.getFirst());
+
+        c.displayEntryDisplayFrameIntro(ticketingSystem.sites.getFirst().ticketIds().getFirst());
         }
     }

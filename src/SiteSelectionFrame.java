@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class SiteSelectionFrame {
+
     // Visual subunits
     public JFrame frame = new JFrame();
     public JPanel scrollPanel = new JPanel();  // Used to be root
@@ -51,8 +52,8 @@ public class SiteSelectionFrame {
     }
 
     // Add site to selection screen
-    public void addSite(UUID id, String title, String state, String city){
-        SiteSelectionPanel newPanel = new SiteSelectionPanel(id, title, state, city);
+    public void addSite(UUID id, String title, String state, String city, boolean isIntro){
+        SiteSelectionPanel newPanel = new SiteSelectionPanel(id, title, state, city, isIntro);
         scrollPanel.add(newPanel.panel);
     }
 

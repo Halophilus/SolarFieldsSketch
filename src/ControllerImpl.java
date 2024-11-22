@@ -1,11 +1,11 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 public class ControllerImpl implements Controller {
     public SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame();
-    public SiteInfoFrame siteInfoFrame;
     TicketingSystem ticketingSystem;
 
     ControllerImpl(TicketingSystem ticketingSystem) {
@@ -13,30 +13,39 @@ public class ControllerImpl implements Controller {
     }
 
     // SiteSelectionFrame methods
+
+    public void displaySiteSelectionFrameIntro(){
+        SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame();
+        List<UUID> siteIdCollection = ticketingSystem.getAllSites().stream().map(site->site.id).toList();
+        addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollection, true);
+        siteSelectionFrame.setVisible(true);
+    }
     // Takes a set of integers and adds the relevant IDs to the selection frame
-    public void addSitesToSiteSelectionFrame(Set<UUID> selectedSites){
-        Set.copyOf(selectedSites).forEach(this::addSiteToSiteSelectionFrameFromID);
+    public void addSitesToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, List<UUID> selectedSites, boolean isIntro){
+        for (UUID siteId : selectedSites){
+            addSiteToSiteSelectionFrameFromID(siteSelectionFrame, siteId, isIntro);
+        }
     }
 
     // Takes an individual ID and attempts to add it to the selection frame
-    public void addSiteToSiteSelectionFrameFromID(UUID id){
+    public void addSiteToSiteSelectionFrameFromID(SiteSelectionFrame siteSelectionFrame, UUID id, boolean isIntro){
         Site newSite = ticketingSystem.getSite(id);
         if (newSite != null){
-            addSiteToSiteSelectionFrame(newSite);
+            addSiteToSiteSelectionFrame(siteSelectionFrame, newSite, isIntro);
         } else {
             System.out.println("Couldn't find site with id " + id);
         }
     }
 
     // Adds a site to the selection frame
-    private void addSiteToSiteSelectionFrame(Site site) {
-        siteSelectionFrame.addSite(site.id, site.title, site.state, site.city);
+    private void addSiteToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, Site site, boolean isIntro) {
+        siteSelectionFrame.addSite(site.id, site.title, site.state, site.city, isIntro);
     }
+
 
     // SiteInfoFrameMethods
     public void displaySiteInfoFrameIntro(UUID siteId){
         SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelFromID(siteId, true);
-        assert innerDisplayPanel != null;
         addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, true);
         innerDisplayPanel.addTicketsToScrollPane();
         SiteInfoFrameIntro newFrame = assembleSiteInfoFrameIntro(innerDisplayPanel);
@@ -99,6 +108,7 @@ public class ControllerImpl implements Controller {
     public void displayEntryDisplayFrameIntro(UUID ticketId){
         EntryDisplayPanel innerDisplayPanel = makeEntryDisplayPanelFromID(ticketId, true);
         addEntryPanelsToEntryDisplayPanel(innerDisplayPanel, true);
+        innerDisplayPanel.addEntriesToScrollPanel();
         EntryDisplayFrameIntro newFrame = assembleEntryDisplayPanelFrameIntro(innerDisplayPanel);
         newFrame.setVisible(true);
     }

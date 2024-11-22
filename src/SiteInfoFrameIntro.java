@@ -49,6 +49,7 @@ public class SiteInfoFrameIntro {
             System.out.println("Select button pressed");
         });
 
+        panel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
     public void setVisible(boolean visible) {

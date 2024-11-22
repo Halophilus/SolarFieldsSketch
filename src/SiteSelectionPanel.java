@@ -9,6 +9,9 @@ import java.util.Set;
 import java.util.UUID;
 
 public class SiteSelectionPanel{
+    // App section flag
+    boolean isIntro;
+
     public JPanel panel;
     private final JCheckBox checkBox;
     private final JLabel titleLabel;
@@ -27,11 +30,12 @@ public class SiteSelectionPanel{
     // Formatting
     private static int counter = 0;
 
-    public SiteSelectionPanel(UUID id, String title, String state, String city){
+    public SiteSelectionPanel(UUID id, String title, String state, String city, boolean isIntro){
         this.id = id;
         this.title = title;
         this.state = state;
         this.city = city;
+        this.isIntro = isIntro;
 
         // Get site from ID
         // site = SiteImpl.getSite(id);

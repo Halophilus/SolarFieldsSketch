@@ -44,6 +44,8 @@ public class EntryDisplayFrameIntro {
                 System.out.println("Export button pressed");
             }
         });
+
+        panel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
     // Makes the frame visible

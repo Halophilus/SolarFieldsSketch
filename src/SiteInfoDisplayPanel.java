@@ -36,15 +36,15 @@ public class SiteInfoDisplayPanel {
     int counter = 0;
 
     // Visual subunits
-    JPanel outerPanel = new JPanel(new BorderLayout());
+    public JPanel outerPanel = new JPanel(new BorderLayout());
     public JPanel scrollPanel = new JPanel();  // Used to be root
-    JScrollPane scrollPane = new JScrollPane(scrollPanel);
+    public JScrollPane scrollPane = new JScrollPane(scrollPanel);
 
-    JPanel unresolvedPanel = new JPanel(new BorderLayout());
-    JLabel unresolvedTicketsHeader = new JLabel("Unresolved Tickets", JLabel.CENTER);
+    public JPanel unresolvedPanel = new JPanel(new BorderLayout());
+    public JLabel unresolvedTicketsHeader = new JLabel("Unresolved Tickets", JLabel.CENTER);
 
-    JPanel resolvedPanel = new JPanel(new BorderLayout());
-    JLabel resolvedTicketsHeader = new JLabel("Resolved Tickets", JLabel.CENTER);
+    public JPanel resolvedPanel = new JPanel(new BorderLayout());
+    public JLabel resolvedTicketsHeader = new JLabel("Resolved Tickets", JLabel.CENTER);
 
     public SiteInfoDisplayPanel(UUID siteId, ImageIcon icon, String title, String description, String address, String city, String state, String zip, String phoneNumber, String emailAddress, boolean isIntro, Controller controller) {
 
@@ -61,9 +61,10 @@ public class SiteInfoDisplayPanel {
         this.isIntro = isIntro;
         this.controller = controller;
 
-
+        // Stack elements in scrollPanel
         scrollPanel.setLayout(new BoxLayout(scrollPanel, BoxLayout.Y_AXIS));
 
+        // Add scrollPane to outerPanel
         outerPanel.setSize(800, 500);
         outerPanel.add(scrollPane);
 

@@ -37,4 +37,8 @@ public class TicketingSystem {
         }
         return null;
     }
+
+    ArrayList<Site> getAllSites(){
+        return sites;
+    }
 }

@@ -42,7 +42,7 @@ public class EntryDisplayPanel {
     public EntryDisplayPanel(UUID ticketId, String description, boolean resolved, boolean isIntro) {
         // Assign fields
         this.ticketId = ticketId;
-        this.description = "<html><p>" + description + "</p></html>"; // Format description to wrap text
+        this.description = description; // Format description to wrap text
         this.resolved = resolved;
         this.isIntro = isIntro;
 
@@ -59,7 +59,7 @@ public class EntryDisplayPanel {
         idPanel.add(idLabel);
 
         // Create description header
-        descriptionLabel.setText(this.description);
+        descriptionLabel.setText(description);
         descriptionLabel.setBackground(Color.LIGHT_GRAY);
         descriptionPanel.add(descriptionLabel);
 
@@ -67,8 +67,7 @@ public class EntryDisplayPanel {
         scrollPanel.add(idPanel);
         scrollPanel.add(descriptionPanel);
 
-        // Add scrollPanel to outerPanel
-        outerPanel.add(scrollPanel);
+
     }
 
     // Add Entry to set
@@ -95,6 +94,7 @@ public class EntryDisplayPanel {
             }
             counter++;
             scrollPanel.add(entryPanel.mainPanel());
+
         }
 
     }

@@ -20,4 +20,7 @@ public interface Controller {
     void openAddTicketScreenFromEditSection(UUID siteID);
     // Adding a new entry
     void openAddEntryToTicketScreenFromEditSection(UUID siteID);
+
+    // Methods I'm actually using through this interface
+    public void displayEntryDisplayFrameIntro(UUID ticketId);
 }

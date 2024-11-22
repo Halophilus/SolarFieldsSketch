@@ -18,7 +18,7 @@ public class EntryPanel implements Comparable<EntryPanel> {
     // Panels
     public JPanel outerPanel;
     public JPanel stackedPanel;
-    public JPanel idPanel;
+    public JPanel idPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
     public JPanel imageAndDescriptionPanel;
     public JPanel entryPanel;
 
@@ -46,14 +46,14 @@ public class EntryPanel implements Comparable<EntryPanel> {
         stackedPanel.setLayout(boxLayout);
 
         // Creates space for entry ID + date header
-        idPanel = new JPanel(new BorderLayout());
         // Create ID label
         idHeader = new JLabel(entryId.toString());
+        idHeader.setForeground(Color.BLACK);
         // Create date panel
         datePostedHeader = new JLabel(datePosted.toString());
         // Add it to iDPanel
-        idPanel.add(BorderLayout.WEST, idHeader);
-        idPanel.add(BorderLayout.EAST, datePostedHeader);
+        idPanel.add(idHeader);
+        idPanel.add(datePostedHeader);
 
         // Creates space for Icon + Image
         imageAndDescriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));

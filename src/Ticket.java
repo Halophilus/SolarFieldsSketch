@@ -14,10 +14,6 @@ public class Ticket {
 
     Ticket() {
         this.id = UUID.randomUUID();
-    }
-
-    Ticket(UUID id) {
-        this.id = id;
         this.counter = siteCounter++;
 
         this.description = "Description for ticket " + this.counter;

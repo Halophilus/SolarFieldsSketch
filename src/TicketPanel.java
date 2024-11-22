@@ -11,12 +11,14 @@ import java.util.UUID;
 public class TicketPanel implements Comparable<TicketPanel> {
     // Determines whether the frame is from intro or edit section
     boolean isIntro;
+    Controller controller;
 
     // ID Info
     UUID ticketId;
     LocalDate mostRecentEditDate;
     int numEntries;
     boolean resolved;
+
 
     // Visual components
     // Panels
@@ -30,12 +32,13 @@ public class TicketPanel implements Comparable<TicketPanel> {
     public JLabel dateLabel;
 
 
-    public TicketPanel(UUID ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved, boolean isIntro, Controller c) {
+    public TicketPanel(UUID ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved, boolean isIntro, Controller controller) {
         this.ticketId = ticketId;
         this.mostRecentEditDate = mostRecentEditDate;
         this.numEntries = numEntries;
         this.resolved = resolved;
         this.isIntro = isIntro;
+        this.controller = controller;
 
         // Get site from ID
         // site = SiteImpl.getSite(id);
@@ -83,12 +86,13 @@ public class TicketPanel implements Comparable<TicketPanel> {
         panel.add(dateLabel, BorderLayout.EAST);
 
         // Action that opens up a new ticket window when clicked on
-        // TODO: assign a controller action to this mouseCLicked event
+        // TODO: Create an edit section event 
         idPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Mouse clicked on TicketPanel " + ticketId);
+                if (isIntro) controller.displayEntryDisplayFrameIntro(ticketId);
             }
         });
 

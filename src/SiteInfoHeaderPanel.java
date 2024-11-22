@@ -112,7 +112,7 @@ public class SiteInfoHeaderPanel {
     }
 
     public JPanel mainPanel() {
-        return outerPanel;
+        return this.outerPanel;
     }
 
 }
