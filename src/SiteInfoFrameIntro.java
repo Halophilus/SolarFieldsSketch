@@ -32,7 +32,7 @@ public class SiteInfoFrameIntro {
 
         // Format frame
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setTitle(this.title + " Site Information");
+        frame.setTitle(this.title + " GlobalSite Information");
         frame.setSize(800, 500);
         // Add SiteInfoDisplayContent
         frame.add(panel, BorderLayout.CENTER);

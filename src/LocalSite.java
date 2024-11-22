@@ -1,12 +1,13 @@
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class LocalSite {
     final UUID id;
 
-    int counter;
     String title;
+    boolean updated = false; // Used to filter sites that have new tickets/entries
 
     // Display fields (may repeat)
     String state;
@@ -21,12 +22,10 @@ public class LocalSite {
     ImageIcon imageIcon;
 
     // Backup information
-    boolean isNew;
     ArrayList<LocalTicket> localTickets = new ArrayList<>();
 
-    LocalSite(Site globalSite) {
+    LocalSite(GlobalSite globalSite) {
         this.id = globalSite.id;
-        this.counter = globalSite.counter;
         this.title = globalSite.title;
         this.state = globalSite.state;
         this.city = globalSite.city;
@@ -37,18 +36,25 @@ public class LocalSite {
         this.emailAddress = globalSite.emailAddress;
         this.imageIcon = globalSite.imageIcon;
 
-        this.isNew = false;
-        for(Ticket globalTicket : globalSite.tickets) {
+        for(GlobalTicket globalTicket : globalSite.globalTickets) {
             LocalTicket downloadedTicket = new LocalTicket(globalTicket);
             localTickets.add(downloadedTicket);
         }
-        TicketingSystem.sites.add(this);
+
+        LocalTicketingSystem.downloadedSites.add(this);
     }
 
-    Site(UUID id) {
-        this.id = id;
-
+    // Gets associated ticket IDs for a downloaded site
+    public List<UUID> ticketIds() {
+        return localTickets.stream().map(ticket -> ticket.id).toList();
     }
 
-    ArrayList<LocalTicket> tickets = new ArrayList<>();
+    public void indicateUpdated() {
+        updated = true;
+    }
+
+
+    public UUID id() {
+        return id;
+    }
 }

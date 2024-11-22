@@ -12,7 +12,7 @@ public class SiteInfoDisplayPanel {
     boolean isIntro;
     Controller controller;
 
-    // Site info
+    // GlobalSite info
     UUID siteId;
     String title;
     String description;
@@ -90,12 +90,12 @@ public class SiteInfoDisplayPanel {
         ticketPanels.add(newPanel);
     }
 
-    // Process tickets in stream and generate list of resolved and unresolved tickets
+    // Process globalTickets in stream and generate list of resolved and unresolved globalTickets
     public void addTicketsToScrollPane(){
 
         if (ticketPanels.isEmpty()){
-            scrollPanel.add(new JLabel("No tickets found"));
-            System.out.println("No tickets found");
+            scrollPanel.add(new JLabel("No globalTickets found"));
+            System.out.println("No globalTickets found");
             return;
         }
 
@@ -103,7 +103,7 @@ public class SiteInfoDisplayPanel {
         ArrayList<TicketPanel> resolvedTickets = ticketPanels.stream().filter(ticket->ticket.resolved).sorted().collect(toCollection(ArrayList::new));
         ArrayList<TicketPanel> unresolvedTickets = ticketPanels.stream().filter(ticket->!ticket.resolved).collect(toCollection(ArrayList::new));
 
-        // Iterate through list of resolved tickets (if any) and add them to the display
+        // Iterate through list of resolved globalTickets (if any) and add them to the display
         if (!resolvedTickets.isEmpty()){
             resolvedPanel.setBackground(Color.BLACK);
             scrollPanel.add(resolvedPanel);
@@ -118,7 +118,7 @@ public class SiteInfoDisplayPanel {
             }
         }
 
-        // Do the same with the unresolved tickets
+        // Do the same with the unresolved globalTickets
         if (!unresolvedTickets.isEmpty()){
             unresolvedPanel.setBackground(Color.BLACK);
             scrollPanel.add(unresolvedPanel);

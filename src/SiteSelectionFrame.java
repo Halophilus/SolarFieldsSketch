@@ -26,7 +26,7 @@ public class SiteSelectionFrame {
         this.controller = controller;
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setTitle("Select target sites");
+        frame.setTitle("Select target globalSites");
         frame.setSize(800, 500);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -40,7 +40,7 @@ public class SiteSelectionFrame {
         if (isIntro) frame.add(downloadButton, BorderLayout.SOUTH);
         downloadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO: pass data from selected panes to download all the data related to the selected sites
+                // TODO: pass data from selected panes to download all the data related to the selected globalSites
                 System.out.println("Download Button pressed");
 
                 // Duplicate the selected integer values
@@ -51,7 +51,7 @@ public class SiteSelectionFrame {
                 // In this case, pass them to the controller to download site data
                 System.out.println(selectedSites);
 
-                // Clear the set of selected sites
+                // Clear the set of selected globalSites
                 SiteSelectionPanel.selected.clear();
 
                 //setVisible(false);

@@ -40,7 +40,7 @@ public class EntryPanel implements Comparable<EntryPanel> {
         // Stores all entry data
         outerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
-        // Creates space for Entry ID and Icon+Image
+        // Creates space for GlobalEntry ID and Icon+Image
         stackedPanel = new JPanel();
         BoxLayout boxLayout = new BoxLayout(stackedPanel, BoxLayout.Y_AXIS);
         stackedPanel.setLayout(boxLayout);

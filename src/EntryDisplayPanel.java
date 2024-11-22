@@ -10,7 +10,7 @@ public class EntryDisplayPanel {
     // Determines whether the frame is from intro or edit section
     boolean isIntro;
 
-    // Ticket info
+    // GlobalTicket info
     UUID ticketId;
     String description;
     boolean resolved;
@@ -28,7 +28,7 @@ public class EntryDisplayPanel {
     public JScrollPane scrollPane = new JScrollPane(scrollPanel);
 
     // Inserted Panels
-    // Ticket ID header
+    // GlobalTicket ID header
     public JLabel idLabel = new JLabel();
     public JPanel idPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -70,7 +70,7 @@ public class EntryDisplayPanel {
 
     }
 
-    // Add Entry to set
+    // Add GlobalEntry to set
     public void addEntryPanel(EntryPanel newPanel) {
         entryPanels.add(newPanel);
     }

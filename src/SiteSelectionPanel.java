@@ -15,7 +15,7 @@ public class SiteSelectionPanel{
     private final JCheckBox checkBox;
     private final JLabel titleLabel;
     private final JLabel locationLabel;
-    private Site site;
+    private GlobalSite globalSite;
 
     // De-coupling view from controller
     public final UUID siteId;
@@ -38,8 +38,8 @@ public class SiteSelectionPanel{
         this.controller = controller;
         this.parentFrame = parentFrame;
 
-        // Get site from ID
-        // site = SiteImpl.getSite(id);
+        // Get globalSite from ID
+        // globalSite = SiteImpl.getSite(id);
 
         // root panel
         panel = new JPanel();

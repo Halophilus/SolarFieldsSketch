@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -8,35 +7,35 @@ public class Main {
     public static void main(String[] args) {
 
 
-        TicketingSystem ticketingSystem = new TicketingSystem();
+        GlobalTicketingSystem globalTicketingSystem = new GlobalTicketingSystem();
         for (int i = 0; i < 20; i++) {
-            Site newSite = new Site();
-            //System.out.println("Site number: " + newSite.id);
-            ticketingSystem.sites.add(newSite);
+            GlobalSite newGlobalSite = new GlobalSite();
+            //System.out.println("GlobalSite number: " + newGlobalSite.id);
+            globalTicketingSystem.globalSites.add(newGlobalSite);
 
             for (int j = 0; j < 10; j++) {
-                Ticket ticket = new Ticket();
-                //System.out.println("Ticket id: " + ticket.id);
+                GlobalTicket globalTicket = new GlobalTicket();
+                //System.out.println("GlobalTicket id: " + globalTicket.id);
                 if (j % 2 == 0){
-                    ticket.resolved = true;
+                    globalTicket.resolved = true;
                 }
-                newSite.tickets.add(ticket);
+                newGlobalSite.globalTickets.add(globalTicket);
 
                 for (int k = 0; k < 20; k++) {
-                    Entry entry = new Entry();
-                    //System.out.println("Entry id: " + entry.id);
+                    GlobalEntry globalEntry = new GlobalEntry();
+                    //System.out.println("GlobalEntry id: " + globalEntry.id);
 
-                    ticket.entries.add(entry);
+                    globalTicket.entries.add(globalEntry);
                 }
 
-                //System.out.println("Entry ids for ticket " + j + ": " + ticket.entries.stream().map(entry -> entry.id).toList());
+                //System.out.println("GlobalEntry ids for globalTicket " + j + ": " + globalTicket.entries.stream().map(entry -> entry.id).toList());
             }
-            //System.out.println("Ticket ids for site " + i + ": " + newSite.tickets.stream().map(ticket -> ticket.id).toList());
+            //System.out.println("GlobalTicket ids for site " + i + ": " + newGlobalSite.globalTickets.stream().map(ticket -> ticket.id).toList());
         }
 
-        List<UUID> siteIds = ticketingSystem.sites.stream().map(site -> site.id).toList();
+        List<UUID> siteIds = globalTicketingSystem.globalSites.stream().map(site -> site.id).toList();
         System.out.println("SiteIDs: " + siteIds);
-        ControllerImpl c = new ControllerImpl(ticketingSystem);
+        ControllerImpl c = new ControllerImpl(globalTicketingSystem);
 
         c.displaySiteSelectionFrameIntro();
 

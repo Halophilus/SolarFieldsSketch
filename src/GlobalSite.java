@@ -1,11 +1,10 @@
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
-// Site model general accessors
-public class Site {
+// GlobalSite model general accessors
+public class GlobalSite {
     // ID fields (unique to instance)
     final UUID id;
 
@@ -25,9 +24,9 @@ public class Site {
     // Swing components
     ImageIcon imageIcon = new CustomImageIcon();
 
-    ArrayList<Ticket> tickets = new ArrayList<>();
+    ArrayList<GlobalTicket> globalTickets = new ArrayList<>();
 
-    Site() {
+    GlobalSite() {
         this.id = UUID.randomUUID();
         this.counter = siteCounter++;
 
@@ -40,15 +39,23 @@ public class Site {
         this.phoneNumber = "Phone " + this.counter;
         this.emailAddress = "Email " + this.counter;
 
-        TicketingSystem.sites.add(this);
+        GlobalTicketingSystem.globalSites.add(this);
     }
 
-    Site(UUID id) {
+    GlobalSite(UUID id) {
         this.id = id;
 
     }
 
+    UUID id() {
+        return id;
+    }
+
     List<UUID> ticketIds() {
-        return tickets.stream().map(ticket -> ticket.id).toList();
+        return globalTickets.stream().map(ticket -> ticket.id).toList();
+    }
+
+    public void addTicket(GlobalTicket newGlobalTicket) {
+        globalTickets.add(newGlobalTicket);
     }
 }

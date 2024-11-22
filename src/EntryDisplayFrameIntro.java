@@ -29,7 +29,7 @@ public class EntryDisplayFrameIntro {
 
         // Format frame
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setTitle("Entries for Ticket No. " + this.ticketID);
+        frame.setTitle("Entries for GlobalTicket No. " + this.ticketID);
         frame.setSize(800, 500);
         // Add EntryDisplayPanelContent
         frame.add(panel, BorderLayout.CENTER);

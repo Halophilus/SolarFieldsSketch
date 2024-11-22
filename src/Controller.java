@@ -1,7 +1,7 @@
 import java.util.UUID;
 
 public interface Controller {
-    // Site Info Screen Operations
+    // GlobalSite Info Screen Operations
     // Intro section operations on Sites
     void openSiteInfoScreenFromIntroSection(UUID siteID);
     void exportSiteWindowFromIntroSiteInfoScreen(UUID siteID);
@@ -12,9 +12,9 @@ public interface Controller {
     void exportTicketInfoFromIntroSiteInfoScreen(UUID siteID);
 
     // Edit Section operations
-    // Open Site Info Window
+    // Open GlobalSite Info Window
     void openSiteInfoWindowFromEditSection(UUID siteID);
-    // Open Ticket Info Window
+    // Open GlobalTicket Info Window
     void openTicketInfoWindowFromEditSection(UUID ticketID);
     // Adding a new ticket
     void openAddTicketScreenFromEditSection(UUID siteID);
