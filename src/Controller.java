@@ -23,5 +23,5 @@ public interface Controller {
 
     // Methods I'm actually using through this interface
     public void displayEntryDisplayFrameIntro(UUID ticketId);
-    public void displaySiteInfoFrameIntro(UUID siteId);
+    public void displaySiteInfoFrameIntro(UUID siteId, SiteSelectionFrame siteSelectionFrame);
 }

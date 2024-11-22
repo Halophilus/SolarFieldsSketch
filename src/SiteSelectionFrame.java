@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -10,6 +11,7 @@ public class SiteSelectionFrame {
     // Control
     boolean isIntro;
     Controller controller;
+    ArrayList<SiteSelectionPanel> addedPanels = new ArrayList<>();
 
     // Visual subunits
     public JFrame frame = new JFrame();
@@ -17,6 +19,7 @@ public class SiteSelectionFrame {
     JScrollPane scrollPane = new JScrollPane(scrollPanel);
     JPanel outerPanel = new JPanel(new BorderLayout());
     JButton downloadButton = new JButton("DOWNLOAD");
+
 
     public SiteSelectionFrame(boolean isIntro, Controller controller) {
         this.isIntro = isIntro;
@@ -59,14 +62,31 @@ public class SiteSelectionFrame {
 
     // Add site to selection screen
     public void addSite(UUID id, String title, String state, String city, boolean isIntro, Controller controller){
-        SiteSelectionPanel newPanel = new SiteSelectionPanel(id, title, state, city, isIntro, controller);
+        SiteSelectionPanel newPanel = new SiteSelectionPanel(id, title, state, city, isIntro, controller, this);
+        addedPanels.add(newPanel);
         scrollPanel.add(newPanel.panel);
+    }
+
+    // Find a SiteSelectionPanel and check its box
+    public void selectChildPanel(UUID panelId){
+        SiteSelectionPanel targetPanel = null;
+        for (SiteSelectionPanel panel : addedPanels) {
+            if (panel.siteId.equals(panelId)) {
+                targetPanel = panel;
+            }
+        }
+        assert targetPanel != null;
+        targetPanel.checkSelectionBox();
     }
 
     // Reveal the frame
     public void setVisible(boolean visible) {
         frame.setVisible(visible);
     }
+
+
+
+
 
 
 }

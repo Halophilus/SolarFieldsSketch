@@ -46,16 +46,16 @@ public class ControllerImpl implements Controller {
 
 
     // SiteInfoFrameMethods
-    public void displaySiteInfoFrameIntro(UUID siteId){
+    public void displaySiteInfoFrameIntro(UUID siteId, SiteSelectionFrame siteSelectionFrame){
         SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelFromID(siteId, true);
         addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, true);
         innerDisplayPanel.addTicketsToScrollPane();
-        SiteInfoFrameIntro newFrame = assembleSiteInfoFrameIntro(innerDisplayPanel);
+        SiteInfoFrameIntro newFrame = assembleSiteInfoFrameIntro(innerDisplayPanel, siteSelectionFrame);
         newFrame.setVisible(true);
     }
 
-    public SiteInfoFrameIntro assembleSiteInfoFrameIntro(SiteInfoDisplayPanel siteInfoDisplayPanel){
-        return new SiteInfoFrameIntro(siteInfoDisplayPanel, this);
+    public SiteInfoFrameIntro assembleSiteInfoFrameIntro(SiteInfoDisplayPanel siteInfoDisplayPanel, SiteSelectionFrame siteSelectionFrame) {
+        return new SiteInfoFrameIntro(siteInfoDisplayPanel, this, siteSelectionFrame);
     }
 
     public void addTicketPanelsToSiteInfoDisplayPanel(SiteInfoDisplayPanel siteInfoDisplayPanel, boolean isIntro){

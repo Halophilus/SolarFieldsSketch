@@ -8,6 +8,7 @@ public class SiteInfoFrameIntro {
     public String title;
     public SiteInfoDisplayPanel siteInfoDisplayPanel;
     public Controller controller;
+    public SiteSelectionFrame siteSelectionFrame;
 
     // Visual subunits
     // Structural elements
@@ -19,11 +20,12 @@ public class SiteInfoFrameIntro {
     public JButton exportButton = new JButton("EXPORT");
     public JButton selectButton = new JButton("SELECT");
 
-    public SiteInfoFrameIntro(SiteInfoDisplayPanel siteInfoDisplayPanel, Controller controller) {
+    public SiteInfoFrameIntro(SiteInfoDisplayPanel siteInfoDisplayPanel, Controller controller, SiteSelectionFrame siteSelectionFrame) {
         this.siteId = siteInfoDisplayPanel.siteId;
         this.title = siteInfoDisplayPanel.title;
         this.siteInfoDisplayPanel = siteInfoDisplayPanel;
         this.controller = controller;
+        this.siteSelectionFrame = siteSelectionFrame;
 
         // Set up content panel
         panel = siteInfoDisplayPanel.mainPanel();
@@ -41,12 +43,15 @@ public class SiteInfoFrameIntro {
         buttonPanel.add(selectButton, BorderLayout.EAST);
 
         // Set up action listeners for the buttons
-        // TODO: Set up action listener that interacts with the controller to perform some action
+
         exportButton.addActionListener(e -> {
             System.out.println("Export button pressed");
+            // TODO: Set up an export screen/function
         });
         selectButton.addActionListener(e -> {
             System.out.println("Select button pressed");
+            siteSelectionFrame.selectChildPanel(this.siteId);
+            frame.dispose();
         });
 
         panel.add(buttonPanel, BorderLayout.SOUTH);

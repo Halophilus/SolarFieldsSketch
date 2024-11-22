@@ -9,6 +9,7 @@ public class SiteSelectionPanel{
     // App section flag
     boolean isIntro;
     Controller controller;
+    SiteSelectionFrame parentFrame;
 
     public JPanel panel;
     private final JCheckBox checkBox;
@@ -17,7 +18,7 @@ public class SiteSelectionPanel{
     private Site site;
 
     // De-coupling view from controller
-    private final UUID siteId;
+    public final UUID siteId;
     private final String title;
     private final String state;
     private final String city;
@@ -28,12 +29,14 @@ public class SiteSelectionPanel{
     // Formatting
     private static int counter = 0;
 
-    public SiteSelectionPanel(UUID siteId, String title, String state, String city, boolean isIntro, Controller controller){
+    public SiteSelectionPanel(UUID siteId, String title, String state, String city, boolean isIntro, Controller controller, SiteSelectionFrame parentFrame){
         this.siteId = siteId;
         this.title = title;
         this.state = state;
         this.city = city;
         this.isIntro = isIntro;
+        this.controller = controller;
+        this.parentFrame = parentFrame;
 
         // Get site from ID
         // site = SiteImpl.getSite(id);
@@ -76,10 +79,9 @@ public class SiteSelectionPanel{
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Mouse clicked on SiteSelectionPanel " + siteId);
-                if (isIntro) controller.displaySiteInfoFrameIntro(siteId);
+                if (isIntro) controller.displaySiteInfoFrameIntro(siteId, parentFrame);
             }
         });
-
 
         panel.add(idPanel, BorderLayout.WEST);
         panel.add(checkBox, BorderLayout.EAST);
@@ -92,5 +94,8 @@ public class SiteSelectionPanel{
 
         counter++;
 
+    }
+    public void checkSelectionBox(){
+        checkBox.doClick();
     }
 }

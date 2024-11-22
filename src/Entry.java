@@ -33,4 +33,5 @@ public class Entry {
     Entry(UUID id) {
         this.id = id;
     }
+
 }

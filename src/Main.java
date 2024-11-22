@@ -6,33 +6,7 @@ import java.util.UUID;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        /*
-        var frame = new JFrame();
-        frame.setTitle("Solar Fields");
-        frame.setSize(800, 500);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        // Set up main panel
-        JPanel root = new JPanel();
-        root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
-
-        // Add some example panels to the main panel
-
-
-        JScrollPane jScrollPane = new JScrollPane(root);
-        frame.add(jScrollPane);
-
-        JPanel outerPanel = new JPanel(new BorderLayout());
-        outerPanel.setSize(800, 500);
-        outerPanel.add(jScrollPane);
-        frame.add(outerPanel);
-
-        // Bottom nav bar
-        frame.add(new JButton("SOUTH"), BorderLayout.SOUTH);
-
-        //frame.pack();
-        frame.setVisible(true);
-        */
 
         TicketingSystem ticketingSystem = new TicketingSystem();
         for (int i = 0; i < 20; i++) {
@@ -59,6 +33,7 @@ public class Main {
             }
             //System.out.println("Ticket ids for site " + i + ": " + newSite.tickets.stream().map(ticket -> ticket.id).toList());
         }
+
         List<UUID> siteIds = ticketingSystem.sites.stream().map(site -> site.id).toList();
         System.out.println("SiteIDs: " + siteIds);
         ControllerImpl c = new ControllerImpl(ticketingSystem);

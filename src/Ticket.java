@@ -19,6 +19,12 @@ public class Ticket {
         this.description = "Description for ticket " + this.counter;
     }
 
+    Ticket(LocalTicket uploadedTicket){
+        this.id = uploadedTicket.id;
+        this.description = uploadedTicket.description;
+        
+    }
+
     List<UUID> entryIds() {
         return entries.stream().map(entry -> entry.id).toList();
     }
