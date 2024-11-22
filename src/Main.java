@@ -64,8 +64,6 @@ public class Main {
         ControllerImpl c = new ControllerImpl(ticketingSystem);
 
         c.displaySiteSelectionFrameIntro();
-        c.displaySiteInfoFrameIntro(siteIds.getFirst());
 
-        c.displayEntryDisplayFrameIntro(ticketingSystem.sites.getFirst().ticketIds().getFirst());
         }
     }

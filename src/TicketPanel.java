@@ -86,7 +86,7 @@ public class TicketPanel implements Comparable<TicketPanel> {
         panel.add(dateLabel, BorderLayout.EAST);
 
         // Action that opens up a new ticket window when clicked on
-        // TODO: Create an edit section event 
+        // TODO: Create an edit section event
         idPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
+import java.awt.event.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -11,6 +8,7 @@ import java.util.UUID;
 public class SiteSelectionPanel{
     // App section flag
     boolean isIntro;
+    Controller controller;
 
     public JPanel panel;
     private final JCheckBox checkBox;
@@ -19,7 +17,7 @@ public class SiteSelectionPanel{
     private Site site;
 
     // De-coupling view from controller
-    private final UUID id;
+    private final UUID siteId;
     private final String title;
     private final String state;
     private final String city;
@@ -30,8 +28,8 @@ public class SiteSelectionPanel{
     // Formatting
     private static int counter = 0;
 
-    public SiteSelectionPanel(UUID id, String title, String state, String city, boolean isIntro){
-        this.id = id;
+    public SiteSelectionPanel(UUID siteId, String title, String state, String city, boolean isIntro, Controller controller){
+        this.siteId = siteId;
         this.title = title;
         this.state = state;
         this.city = city;
@@ -63,15 +61,24 @@ public class SiteSelectionPanel{
         checkBox = new JCheckBox(); // Selection checkbox
         checkBox.addItemListener(e->{
              if(e.getStateChange() == ItemEvent.SELECTED) {
-                 selected.add(this.id);
-                 System.out.println(this.id + " selected");
+                 selected.add(this.siteId);
+                 System.out.println(this.siteId + " selected");
              } else {
-                 selected.remove(this.id);
-                 System.out.println(this.id + " removed");
+                 selected.remove(this.siteId);
+                 System.out.println(this.siteId + " removed");
              }
         });
         idPanel.add(titleLabel);
         idPanel.add(locationLabel);
+
+        idPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                System.out.println("Mouse clicked on SiteSelectionPanel " + siteId);
+                if (isIntro) controller.displaySiteInfoFrameIntro(siteId);
+            }
+        });
 
 
         panel.add(idPanel, BorderLayout.WEST);

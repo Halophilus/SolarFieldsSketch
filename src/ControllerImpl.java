@@ -3,9 +3,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class ControllerImpl implements Controller {
-    public SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame();
     TicketingSystem ticketingSystem;
 
     ControllerImpl(TicketingSystem ticketingSystem) {
@@ -13,13 +13,15 @@ public class ControllerImpl implements Controller {
     }
 
     // SiteSelectionFrame methods
-
+    // Intro
     public void displaySiteSelectionFrameIntro(){
-        SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame();
-        List<UUID> siteIdCollection = ticketingSystem.getAllSites().stream().map(site->site.id).toList();
-        addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollection, true);
+        SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame(true, this);
+        List<UUID> siteIdCollectionList = ticketingSystem.getAllSites().stream().map(site -> site.id).distinct().collect(Collectors.toList());
+        addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, true);
         siteSelectionFrame.setVisible(true);
     }
+
+    //
     // Takes a set of integers and adds the relevant IDs to the selection frame
     public void addSitesToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, List<UUID> selectedSites, boolean isIntro){
         for (UUID siteId : selectedSites){
@@ -39,7 +41,7 @@ public class ControllerImpl implements Controller {
 
     // Adds a site to the selection frame
     private void addSiteToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, Site site, boolean isIntro) {
-        siteSelectionFrame.addSite(site.id, site.title, site.state, site.city, isIntro);
+        siteSelectionFrame.addSite(site.id, site.title, site.state, site.city, isIntro, this);
     }
 
 

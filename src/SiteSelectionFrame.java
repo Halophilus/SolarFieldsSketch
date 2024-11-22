@@ -7,6 +7,9 @@ import java.util.Set;
 import java.util.UUID;
 
 public class SiteSelectionFrame {
+    // Control
+    boolean isIntro;
+    Controller controller;
 
     // Visual subunits
     public JFrame frame = new JFrame();
@@ -15,7 +18,10 @@ public class SiteSelectionFrame {
     JPanel outerPanel = new JPanel(new BorderLayout());
     JButton downloadButton = new JButton("DOWNLOAD");
 
-    public SiteSelectionFrame() {
+    public SiteSelectionFrame(boolean isIntro, Controller controller) {
+        this.isIntro = isIntro;
+        this.controller = controller;
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Select target sites");
         frame.setSize(800, 500);
@@ -28,7 +34,7 @@ public class SiteSelectionFrame {
         outerPanel.add(scrollPane);
         frame.add(outerPanel);
 
-        frame.add(downloadButton, BorderLayout.SOUTH);
+        if (isIntro) frame.add(downloadButton, BorderLayout.SOUTH);
         downloadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // TODO: pass data from selected panes to download all the data related to the selected sites
@@ -52,8 +58,8 @@ public class SiteSelectionFrame {
     }
 
     // Add site to selection screen
-    public void addSite(UUID id, String title, String state, String city, boolean isIntro){
-        SiteSelectionPanel newPanel = new SiteSelectionPanel(id, title, state, city, isIntro);
+    public void addSite(UUID id, String title, String state, String city, boolean isIntro, Controller controller){
+        SiteSelectionPanel newPanel = new SiteSelectionPanel(id, title, state, city, isIntro, controller);
         scrollPanel.add(newPanel.panel);
     }
 
