@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,18 @@ public class ControllerImpl implements Controller {
     }
 
     // Download data associated with specific site Ids
-    public void downloadSiteData
+    public void downloadSiteData(Set<UUID> selectedSiteIds){
+        // For each UUID passed to the method
+        for (UUID siteId : selectedSiteIds){
+            // Find the corresponding global site
+            GlobalSite globalSite = GlobalTicketingSystem.getSite(siteId);
+            // Generate a new local site based on it
+            // Thereby downloading the hierarchical data associated with it
+            LocalSite newLocalSite = new LocalSite(globalSite);
+            LocalTicketingSystem.addSite(newLocalSite);
+
+        }
+    }
 
     // Upload local entries to global database
     public void uploadLocalEntries(){
@@ -61,9 +73,8 @@ public class ControllerImpl implements Controller {
             }
         }
 
-        //TODO: add means of disposing of old saved data
-
-
+        // Delete locally stored data
+        LocalTicketingSystem.clearSites();
     }
 
     // SiteSelectionFrame methods

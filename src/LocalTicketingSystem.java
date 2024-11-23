@@ -38,4 +38,12 @@ public class LocalTicketingSystem {
         return null;
     }
 
+    public static void addSite(LocalSite site) {
+        downloadedSites.add(site);
+    }
+
+    public static void clearSites(){
+        downloadedSites.clear();
+    }
+
 }
