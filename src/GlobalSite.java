@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 // GlobalSite model general accessors
-public class GlobalSite {
+public class GlobalSite implements Site{
     // ID fields (unique to instance)
     final UUID id;
 
@@ -24,7 +24,7 @@ public class GlobalSite {
     // Swing components
     ImageIcon imageIcon = new CustomImageIcon();
 
-    ArrayList<GlobalTicket> globalTickets = new ArrayList<>();
+    ArrayList<Ticket> globalTickets = new ArrayList<>();
 
     GlobalSite() {
         this.id = UUID.randomUUID();
@@ -47,12 +47,59 @@ public class GlobalSite {
 
     }
 
-    UUID id() {
+    public UUID id() {
         return id;
     }
 
+    public ArrayList<Ticket> tickets() { return globalTickets;}
+
+    @Override
+    public String title() {
+        return this.title;
+    }
+
+    @Override
+    public String state() {
+        return this.state;
+    }
+
+    @Override
+    public String city() {
+        return this.city;
+    }
+
+    @Override
+    public ImageIcon imageIcon() {
+        return imageIcon;
+    }
+
+    @Override
+    public String description() {
+        return this.description;
+    }
+
+    @Override
+    public String address() {
+        return this.address;
+    }
+
+    @Override
+    public String zip() {
+        return this.zip;
+    }
+
+    @Override
+    public String phoneNumber() {
+        return this.phoneNumber;
+    }
+
+    @Override
+    public String emailAddress() {
+        return this.emailAddress;
+    }
+
     List<UUID> ticketIds() {
-        return globalTickets.stream().map(ticket -> ticket.id).toList();
+        return globalTickets.stream().map(Ticket::id).toList();
     }
 
     public void addTicket(GlobalTicket newGlobalTicket) {

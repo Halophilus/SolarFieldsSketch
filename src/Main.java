@@ -33,7 +33,7 @@ public class Main {
             //System.out.println("GlobalTicket ids for site " + i + ": " + newGlobalSite.globalTickets.stream().map(ticket -> ticket.id).toList());
         }
 
-        List<UUID> siteIds = globalTicketingSystem.globalSites.stream().map(site -> site.id).toList();
+        List<UUID> siteIds = globalTicketingSystem.globalSites.stream().map(site -> site.id()).toList();
         System.out.println("SiteIDs: " + siteIds);
         ControllerImpl c = new ControllerImpl(globalTicketingSystem);
 

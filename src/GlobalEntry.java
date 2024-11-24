@@ -64,4 +64,9 @@ public class GlobalEntry implements Entry{
     public ImageIcon icon() {
         return this.icon;
     }
+
+    @Override
+    public boolean isNew() {
+        return false;
+    }
 }

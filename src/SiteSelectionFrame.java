@@ -18,7 +18,16 @@ public class SiteSelectionFrame {
     public JPanel scrollPanel = new JPanel();  // Used to be root
     JScrollPane scrollPane = new JScrollPane(scrollPanel);
     JPanel outerPanel = new JPanel(new BorderLayout());
+
+    // Button formatting
+    public JPanel buttonPanel = new JPanel(new BorderLayout()); // general button panel
+
+
+    // Intro buttons
     JButton downloadButton = new JButton("DOWNLOAD");
+    // Edit buttons
+    JButton exportButton = new JButton("EXPORT");
+    JButton importButton = new JButton("IMPORT");
 
 
     public SiteSelectionFrame(boolean isIntro, Controller controller) {
@@ -37,26 +46,42 @@ public class SiteSelectionFrame {
         outerPanel.add(scrollPane);
         frame.add(outerPanel);
 
-        if (isIntro) frame.add(downloadButton, BorderLayout.SOUTH);
-        downloadButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO: pass data from selected panes to download all the data related to the selected globalSites
-                System.out.println("Download Button pressed");
+        // Formatting button panel
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        // Button panel when intro
+        if (isIntro) {
+            frame.add(downloadButton, BorderLayout.SOUTH);
+            downloadButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    // TODO: pass data from selected panes to download all the data related to the selected globalSites
+                    System.out.println("Download Button pressed");
 
-                // Duplicate the selected integer values
-                Set<UUID> selectedSites = new HashSet<UUID>();
-                selectedSites.addAll(SiteSelectionPanel.selected);
+                    // Duplicate the selected integer values
+                    Set<UUID> selectedSites = new HashSet<UUID>();
+                    selectedSites.addAll(SiteSelectionPanel.selected);
 
-                // Perform some action
-                // In this case, pass them to the controller to download site data
-                System.out.println(selectedSites);
+                    // Perform some action
+                    // In this case, pass them to the controller to download site data
+                    System.out.println(selectedSites);
+                    controller.displaySiteSelectionFrameEdit(selectedSites);
+                    // Clear the set of selected globalSites
+                    SiteSelectionPanel.selected.clear();
+                    frame.dispose();
 
-                // Clear the set of selected globalSites
-                SiteSelectionPanel.selected.clear();
+                    //setVisible(false);
+                }
+            });
+        }
 
-                //setVisible(false);
-            }
-        });
+        // Button panel when edit
+        if (!isIntro) {
+            frame.add(exportButton, BorderLayout.EAST);
+            frame.add(importButton, BorderLayout.WEST);
+
+            // Set action listeners 
+        }
+
+
 
     }
 

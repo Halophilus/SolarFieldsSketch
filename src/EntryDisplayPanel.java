@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -60,6 +61,8 @@ public class EntryDisplayPanel {
 
         // Create description header
         descriptionLabel.setText(description);
+        Border blackline = BorderFactory.createLineBorder(Color.BLACK);
+        descriptionLabel.setBorder(blackline);
         descriptionLabel.setBackground(Color.LIGHT_GRAY);
         descriptionPanel.add(descriptionLabel);
 

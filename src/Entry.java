@@ -8,4 +8,6 @@ public interface Entry {
     LocalDate date();
     boolean reviewed();
     ImageIcon icon();
+
+    boolean isNew();
 }

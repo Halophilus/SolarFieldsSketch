@@ -3,21 +3,21 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class GlobalTicketingSystem {
-    public static ArrayList<GlobalSite> globalSites = new ArrayList<>();
+    public static ArrayList<Site> globalSites = new ArrayList<>();
 
-    static GlobalSite getSite(UUID id) {
-        for (GlobalSite globalSite : globalSites) {
-            if (globalSite.id.equals(id)) {
+    static Site getSite(UUID id) {
+        for (Site globalSite : globalSites) {
+            if (globalSite.id().equals(id)) {
                 return globalSite;
             }
         }
         return null;
     }
 
-    static GlobalTicket getTicket(UUID id) {
-        for (GlobalSite globalSite : globalSites) {
-            for (GlobalTicket globalTicket : globalSite.globalTickets) {
-                if (globalTicket.id.equals(id)) {
+    static Ticket getTicket(UUID id) {
+        for (Site globalSite : globalSites) {
+            for (Ticket globalTicket : globalSite.tickets()) {
+                if (globalTicket.id().equals(id)) {
                     return globalTicket;
                 }
             }
@@ -25,11 +25,11 @@ public class GlobalTicketingSystem {
         return null;
     }
 
-    static GlobalEntry getEntry(UUID id) {
-        for (GlobalSite globalSite : globalSites) {
-            for (GlobalTicket globalTicket : globalSite.globalTickets) {
-                for (GlobalEntry globalEntry : globalTicket.entries) {
-                    if (globalEntry.id.equals(id)) {
+    static Entry getEntry(UUID id) {
+        for (Site globalSite : globalSites) {
+            for (Ticket globalTicket : globalSite.tickets()) {
+                for (Entry globalEntry : globalTicket.entries()) {
+                    if (globalEntry.id().equals(id)) {
                         return globalEntry;
                     }
                 }
@@ -39,7 +39,7 @@ public class GlobalTicketingSystem {
         return null;
     }
 
-    public ArrayList<GlobalSite> getAllSites() {
+    public static ArrayList<Site> getAllSites() {
         return globalSites;
     }
 }

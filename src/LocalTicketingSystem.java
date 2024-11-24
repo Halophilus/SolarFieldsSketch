@@ -1,22 +1,23 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class LocalTicketingSystem {
     public static ArrayList<LocalSite> downloadedSites = new ArrayList<>();
 
-    static LocalSite getSite(UUID id) {
-        for (LocalSite localSite : downloadedSites) {
-            if (localSite.id.equals(id)) {
+    static Site getSite(UUID id) {
+        for (Site localSite : downloadedSites) {
+            if (localSite.id().equals(id)) {
                 return localSite;
             }
         }
         return null;
     }
 
-    static LocalTicket getTicket(UUID id) {
-        for (LocalSite localSite : downloadedSites) {
-            for (LocalTicket localTicket : localSite.localTickets) {
-                if (localTicket.id.equals(id)) {
+    static Ticket getTicket(UUID id) {
+        for (Site localSite : downloadedSites) {
+            for (Ticket localTicket : localSite.tickets()) {
+                if (localTicket.id().equals(id)) {
                     return localTicket;
                 }
             }
@@ -24,11 +25,11 @@ public class LocalTicketingSystem {
         return null;
     }
 
-    static LocalEntry getEntry(UUID id) {
-        for (LocalSite localSite : downloadedSites) {
-            for (LocalTicket localTicket : localSite.localTickets) {
-                for (LocalEntry localEntry : localTicket.localEntries) {
-                    if (localEntry.id.equals(id)) {
+    static Entry getEntry(UUID id) {
+        for (Site localSite : downloadedSites) {
+            for (Ticket localTicket : localSite.tickets()) {
+                for (Entry localEntry : localTicket.entries()) {
+                    if (localEntry.id().equals(id)) {
                         return localEntry;
                     }
                 }
@@ -46,4 +47,6 @@ public class LocalTicketingSystem {
         downloadedSites.clear();
     }
 
+    public static ArrayList<LocalSite> getAllSites() { return downloadedSites;
+    }
 }

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class LocalSite {
+public class LocalSite implements Site{
     final UUID id;
 
     String title;
@@ -36,8 +36,8 @@ public class LocalSite {
         this.emailAddress = globalSite.emailAddress;
         this.imageIcon = globalSite.imageIcon;
 
-        for(GlobalTicket globalTicket : globalSite.globalTickets) {
-            LocalTicket downloadedTicket = new LocalTicket(globalTicket);
+        for(Ticket globalTicket : globalSite.globalTickets) {
+            LocalTicket downloadedTicket = new LocalTicket((GlobalTicket)globalTicket);
             localTickets.add(downloadedTicket);
         }
 
@@ -56,5 +56,55 @@ public class LocalSite {
 
     public UUID id() {
         return id;
+    }
+
+    @Override
+    public ArrayList<Ticket> tickets() {
+        return null;
+    }
+
+    @Override
+    public String title() {
+        return this.title;
+    }
+
+    @Override
+    public String state() {
+        return this.state;
+    }
+
+    @Override
+    public String city() {
+        return this.city;
+    }
+
+    @Override
+    public ImageIcon imageIcon() {
+        return null;
+    }
+
+    @Override
+    public String description() {
+        return "";
+    }
+
+    @Override
+    public String address() {
+        return "";
+    }
+
+    @Override
+    public String zip() {
+        return "";
+    }
+
+    @Override
+    public String phoneNumber() {
+        return "";
+    }
+
+    @Override
+    public String emailAddress() {
+        return "";
     }
 }

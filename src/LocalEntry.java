@@ -31,13 +31,13 @@ public class LocalEntry implements Entry{
 
         // Indicate parent ticket has been updated and add new entry to the list
         assert LocalTicketingSystem.getTicket(parentTicketId) == null;
-        LocalTicket parentTicket = LocalTicketingSystem.getTicket(parentTicketId);
+        LocalTicket parentTicket = (LocalTicket)LocalTicketingSystem.getTicket(parentTicketId);
         parentTicket.indicateUpdated();
-        parentTicket.localEntryList().add(this);
+        parentTicket.entries().add(this);
 
         // Indicate that the parent site has been updated
         assert LocalTicketingSystem.getSite(parentSiteId) == null;
-        LocalSite parentSite = LocalTicketingSystem.getSite(parentSiteId);
+        LocalSite parentSite = (LocalSite)LocalTicketingSystem.getSite(parentSiteId);
         parentSite.indicateUpdated();
     }
 
@@ -66,5 +66,10 @@ public class LocalEntry implements Entry{
     @Override
     public ImageIcon icon() {
         return this.icon;
+    }
+
+    @Override
+    public boolean isNew() {
+        return false;
     }
 }

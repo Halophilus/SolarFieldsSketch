@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -10,7 +11,7 @@ public class LocalTicket implements Ticket{
     boolean updated = false;
 
     // Special local variables
-    List<LocalEntry> localEntries = new ArrayList<>();
+    ArrayList<Entry> localEntries = new ArrayList<>();
     boolean isNew;
 
     // For downloading globalTickets
@@ -20,8 +21,9 @@ public class LocalTicket implements Ticket{
         this.resolved = globalTicket.resolved();
         this.isNew = false;
 
-        for (GlobalEntry globalEntry : globalTicket.entries) {
-            LocalEntry downloadedEntry = new LocalEntry(globalEntry);
+        for (Entry globalEntry : globalTicket.entries()) {
+            GlobalEntry savedEntry = (GlobalEntry) globalEntry;
+            LocalEntry downloadedEntry = new LocalEntry(savedEntry);
             localEntries.add(downloadedEntry);
         }
     }
@@ -35,7 +37,7 @@ public class LocalTicket implements Ticket{
 
         // Add the new ticket to the locally stored site's list of tickets
         assert LocalTicketingSystem.getSite(destinationSiteId) != null;
-        LocalSite parentSite = LocalTicketingSystem.getSite(destinationSiteId);
+        LocalSite parentSite = (LocalSite)LocalTicketingSystem.getSite(destinationSiteId);
         parentSite.indicateUpdated(); // Indicate that the parent site has been updated
         parentSite.localTickets.add(this);
     }
@@ -57,12 +59,24 @@ public class LocalTicket implements Ticket{
 
     @Override
     public List<UUID> entryIds() {
-        return localEntries.stream().map(entry -> entry.id).toList();
+        return localEntries.stream().map(entry -> entry.id()).toList();
     }
 
-    public List<LocalEntry> localEntryList() {
-        return this.localEntries;
+    @Override
+    public ArrayList<Entry> entries() {
+        return localEntries;
     }
+
+    @Override
+    public boolean isNew() {
+        return this.isNew;
+    }
+
+    @Override
+    public boolean updated() {
+        return false;
+    }
+
 
     public void indicateUpdated(){
         this.updated = true;

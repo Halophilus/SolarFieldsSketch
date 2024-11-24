@@ -18,7 +18,7 @@ public class ControllerImpl implements Controller {
         // For each UUID passed to the method
         for (UUID siteId : selectedSiteIds){
             // Find the corresponding global site
-            GlobalSite globalSite = GlobalTicketingSystem.getSite(siteId);
+            GlobalSite globalSite = (GlobalSite)GlobalTicketingSystem.getSite(siteId);
             // Generate a new local site based on it
             // Thereby downloading the hierarchical data associated with it
             LocalSite newLocalSite = new LocalSite(globalSite);
@@ -36,37 +36,39 @@ public class ControllerImpl implements Controller {
 
         // For all updated sites
         for (LocalSite updatedSite : updatedLocalSites) {
-            List<LocalTicket> oldTicketsWithNewEntries = updatedSite.localTickets.stream().filter(ticket->ticket.updated).filter(ticket->!ticket.isNew).toList();
-            List<LocalTicket> newTickets = updatedSite.localTickets.stream().filter(ticket->ticket.isNew).toList();
+            List<Ticket> oldTicketsWithNewEntries = updatedSite.tickets().stream().filter(ticket->ticket.updated()).filter(ticket->!ticket.isNew()).toList();
+            List<Ticket> newTickets = updatedSite.tickets().stream().filter(ticket->ticket.isNew()).toList();
 
             // Iterate through the old updated tickets
-            for (LocalTicket updatedTicket : oldTicketsWithNewEntries) {
+            for (Ticket updatedTicket : oldTicketsWithNewEntries) {
                 // Filter out existing tickets
-                List<LocalEntry> newEntries = updatedTicket.localEntries.stream().filter(entry->entry.isNew).toList();
+                List<Entry> newEntries = updatedTicket.entries().stream().filter(entry->entry.isNew()).toList();
                 // For all the new entries in the updated tickets
-                for (LocalEntry newEntry : newEntries) {
+                for (Entry newEntry : newEntries) {
+                    LocalEntry newLocalEntry = (LocalEntry)newEntry;
                     // Generate a new global entry from the local entry
-                    GlobalEntry newGlobalEntry = new GlobalEntry(newEntry);
+                    GlobalEntry newGlobalEntry = new GlobalEntry(newLocalEntry);
                     // Get the corresponding global ticket
-                    GlobalTicket correspondingGlobalTicket = GlobalTicketingSystem.getTicket(updatedTicket.id());
+                    GlobalTicket correspondingGlobalTicket = (GlobalTicket)GlobalTicketingSystem.getTicket(updatedTicket.id());
                     // Add the newly generated global entry to the in-memory local entry
                     correspondingGlobalTicket.addEntry(newGlobalEntry);
                 }
             }
 
             // Iterate through all the new tickets
-            for (LocalTicket newTicket : newTickets) {
+            for (Ticket newTicket : newTickets) {
                 // Generate a new global ticket
-                GlobalTicket newGlobalTicket = new GlobalTicket(newTicket);
+                GlobalTicket newGlobalTicket = new GlobalTicket((LocalTicket)newTicket);
                 // Iterate through the local ticket's entries
-                for (LocalEntry newEntry : newTicket.localEntries) {
+                for (Entry newEntry : newTicket.entries()) {
+                    LocalEntry newLocalEntry = (LocalEntry)newEntry;
                     // Generate a new global entry
-                    GlobalEntry newGlobalEntry = new GlobalEntry(newEntry);
+                    GlobalEntry newGlobalEntry = new GlobalEntry(newLocalEntry);
                     // Add it to the new global ticket
                     newGlobalTicket.addEntry(newGlobalEntry);
                 }
                 // Fetch the corresponding global site
-                GlobalSite correspondingGlobalSite = GlobalTicketingSystem.getSite(updatedSite.id());
+                GlobalSite correspondingGlobalSite = (GlobalSite) GlobalTicketingSystem.getSite(updatedSite.id());
                 // Add the ticket to the existing global site
                 correspondingGlobalSite.addTicket(newGlobalTicket);
 
@@ -81,12 +83,22 @@ public class ControllerImpl implements Controller {
     // Intro
     public void displaySiteSelectionFrameIntro(){
         SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame(true, this);
-        List<UUID> siteIdCollectionList = globalTicketingSystem.getAllSites().stream().map(site -> site.id).distinct().collect(Collectors.toList());
+        List<UUID> siteIdCollectionList = GlobalTicketingSystem.getAllSites().stream().map(Site::id).distinct().collect(Collectors.toList());
         addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, true);
         siteSelectionFrame.setVisible(true);
     }
 
-    //
+    // EDIT
+    public void displaySiteSelectionFrameEdit(Set<UUID> selectedSiteIds){
+        SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame(false, this);
+        downloadSiteData(selectedSiteIds);
+
+        List<UUID> siteIdCollectionList = LocalTicketingSystem.getAllSites().stream().map(LocalSite::id).distinct().collect(Collectors.toList());
+        addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, false);
+        siteSelectionFrame.setVisible(true);
+    }
+
+
     // Takes a set of integers and adds the relevant IDs to the selection frame
     public void addSitesToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, List<UUID> selectedSites, boolean isIntro){
         for (UUID siteId : selectedSites){
@@ -96,17 +108,22 @@ public class ControllerImpl implements Controller {
 
     // Takes an individual ID and attempts to add it to the selection frame
     public void addSiteToSiteSelectionFrameFromID(SiteSelectionFrame siteSelectionFrame, UUID id, boolean isIntro){
-        GlobalSite newGlobalSite = GlobalTicketingSystem.getSite(id);
-        if (newGlobalSite != null){
-            addSiteToSiteSelectionFrame(siteSelectionFrame, newGlobalSite, isIntro);
+        Site newSite;
+        if (isIntro){
+            newSite = GlobalTicketingSystem.getSite(id);
+        } else {
+            newSite = LocalTicketingSystem.getSite(id);
+        }
+        if (newSite != null){
+            addSiteToSiteSelectionFrame(siteSelectionFrame, newSite, isIntro);
         } else {
             System.out.println("Couldn't find site with id " + id);
         }
     }
 
     // Adds a globalSite to the selection frame
-    private void addSiteToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, GlobalSite globalSite, boolean isIntro) {
-        siteSelectionFrame.addSite(globalSite.id, globalSite.title, globalSite.state, globalSite.city, isIntro, this);
+    private void addSiteToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, Site site, boolean isIntro) {
+        siteSelectionFrame.addSite(site.id(), site.title(), site.state(), site.city(), isIntro, this);
     }
 
 
@@ -124,7 +141,14 @@ public class ControllerImpl implements Controller {
     }
 
     public void addTicketPanelsToSiteInfoDisplayPanel(SiteInfoDisplayPanel siteInfoDisplayPanel, boolean isIntro){
-        List<UUID> listOfTickets = fetchSite(siteInfoDisplayPanel.siteId).ticketIds();
+        Site targetSite = null;
+        if (isIntro) {
+            targetSite = GlobalTicketingSystem.getSite(siteInfoDisplayPanel.siteId);
+        } else {
+            targetSite = GlobalTicketingSystem.getSite(siteInfoDisplayPanel.siteId);
+        }
+
+        List<UUID> listOfTickets = targetSite.tickets().stream().map(Ticket::id).distinct().toList();
 
         if(!listOfTickets.isEmpty()){
             for (UUID ticketId : listOfTickets){
@@ -135,42 +159,69 @@ public class ControllerImpl implements Controller {
     }
 
     private SiteInfoDisplayPanel makeSiteInfoDisplayPanelFromID(UUID siteId, boolean isIntro) {
-        GlobalSite fetchedGlobalSite = GlobalTicketingSystem.getSite(siteId);
-        if (fetchedGlobalSite != null){
-            return new SiteInfoDisplayPanel(fetchedGlobalSite.id, fetchedGlobalSite.imageIcon, fetchedGlobalSite.title, fetchedGlobalSite.description, fetchedGlobalSite.address, fetchedGlobalSite.city, fetchedGlobalSite.state, fetchedGlobalSite.zip, fetchedGlobalSite.phoneNumber, fetchedGlobalSite.emailAddress, isIntro, this);
+        Site site = null;
+        if (isIntro) {
+            site = GlobalTicketingSystem.getSite(siteId);
+        } else {
+            site = LocalTicketingSystem.getSite(siteId);
+        }
+        if (site != null){
+            return new SiteInfoDisplayPanel(site.id(), site.imageIcon(), site.title(), site.description(), site.address(), site.city(), site.state(), site.zip(), site.phoneNumber(), site.emailAddress(), isIntro, this);
         }
         return null;
     }
 
     private TicketPanel makeTicketPanelFromId(UUID ticketId, boolean isIntro){
-        GlobalTicket newGlobalTicket = GlobalTicketingSystem.getTicket(ticketId);
-        List<UUID> ticketEntryIds = newGlobalTicket.entryIds();
+        Ticket newTicket = null;
+        if (isIntro) {
+            newTicket = GlobalTicketingSystem.getTicket(ticketId);
+        } else {
+            newTicket = LocalTicketingSystem.getTicket(ticketId);
+        }
+        List<UUID> ticketEntryIds = newTicket.entries().stream().map(Entry::id).distinct().toList();
         LocalDate mostRecentDate = LocalDate.MAX; //
-        GlobalEntry currentGlobalEntry = null;
+        Entry currentEntry = null;
 
         for (UUID entryId : ticketEntryIds){ // For each value in the ticket entries
-            currentGlobalEntry = GlobalTicketingSystem.getEntry(entryId); // Get the entry associated with that ticket
-            if (currentGlobalEntry != null){ // If that entry isn't null
-                if (mostRecentDate.isAfter(currentGlobalEntry.date)) {
-                    mostRecentDate = currentGlobalEntry.date;
+            if (isIntro) {
+                currentEntry = GlobalTicketingSystem.getEntry(entryId);
+            } else {
+                currentEntry = LocalTicketingSystem.getEntry(ticketId);
+            }
+            if (currentEntry != null){ // If that entry isn't null
+                if (mostRecentDate.isAfter(currentEntry.date())) {
+                    mostRecentDate = currentEntry.date();
                 }
             }
         }
-        return new TicketPanel(ticketId, mostRecentDate, ticketEntryIds.size(), newGlobalTicket.resolved, isIntro, this);
+        return new TicketPanel(ticketId, mostRecentDate, ticketEntryIds.size(), newTicket.resolved(), isIntro, this);
     }
 
     // Methods for entry display
-    public GlobalSite fetchSite(UUID siteId){
+    // Global database
+    public Site fetchSiteGlobal(UUID siteId){
         return GlobalTicketingSystem.getSite(siteId);
     }
 
-    public GlobalTicket fetchTicket(UUID ticketId){
+    public Ticket fetchTicketGlobal(UUID ticketId){
         return GlobalTicketingSystem.getTicket(ticketId);
     }
 
-    public GlobalEntry fetchEntry(UUID entryId){
+    public Entry fetchEntryGlobal(UUID entryId){
         return GlobalTicketingSystem.getEntry(entryId);
     }
+
+    public Site fetchSiteLocal(UUID siteId){
+        return LocalTicketingSystem.getSite(siteId);
+    }
+    public Ticket fetchTicketLocal(UUID ticketId){
+        return LocalTicketingSystem.getTicket(ticketId);
+    }
+
+    public Entry fetchEntryLocal(UUID entryId){
+        return LocalTicketingSystem.getEntry(entryId);
+    }
+
 
     public void displayEntryDisplayFrameIntro(UUID ticketId){
         EntryDisplayPanel innerDisplayPanel = makeEntryDisplayPanelFromID(ticketId, true);
@@ -185,7 +236,13 @@ public class ControllerImpl implements Controller {
     }
 
     public void addEntryPanelsToEntryDisplayPanel(EntryDisplayPanel entryDisplayPanel, boolean isIntro){
-        List<UUID> listOfEntries = fetchTicket(entryDisplayPanel.ticketId).entryIds();
+        Ticket newTicket = null;
+        if (isIntro) {
+            newTicket = fetchTicketGlobal(entryDisplayPanel.ticketId);
+        } else {
+            newTicket = fetchTicketLocal(entryDisplayPanel.ticketId);
+        }
+        List<UUID> listOfEntries = newTicket.entryIds();
 
         if (!listOfEntries.isEmpty()){
             for (UUID entryId : listOfEntries){
@@ -198,21 +255,35 @@ public class ControllerImpl implements Controller {
 
     // Generate a display panel for ticket entries in the intro section of the app
     public EntryDisplayPanel makeEntryDisplayPanelFromID(UUID ticketId, boolean isIntro){
-        GlobalTicket fetchedGlobalTicket = fetchTicket(ticketId);
-        if (fetchedGlobalTicket != null){
-            return new EntryDisplayPanel(ticketId, fetchedGlobalTicket.description, fetchedGlobalTicket.resolved, isIntro);
+        Ticket newTicket = null;
+        if (isIntro) {
+            newTicket = fetchTicketGlobal(ticketId);
+        } else {
+            newTicket = fetchTicketLocal(ticketId);
+        }
+        if (newTicket != null){
+            return new EntryDisplayPanel(ticketId, newTicket.description(), newTicket.resolved(), isIntro);
         }
         return null;
     }
 
+
+
     // Generate an entry panel to be added to the ticket entry screen in the intro section of the app
     public EntryPanel makeEntryPanelFromId(UUID entryId, boolean isIntro){
-        GlobalEntry fetchedGlobalEntry = fetchEntry(entryId);
-        if (fetchedGlobalEntry != null){
-            return new EntryPanel(fetchedGlobalEntry.id, fetchedGlobalEntry.date, fetchedGlobalEntry.description,  fetchedGlobalEntry.icon, fetchedGlobalEntry.reviewed, isIntro);
+        Entry newEntry = null;
+        if (isIntro) {
+            newEntry = fetchEntryGlobal(entryId);
+        } else {
+            newEntry = fetchEntryLocal(entryId);
+        }
+        if (newEntry != null){
+            return new EntryPanel(newEntry.id(), newEntry.date(), newEntry.description(),  newEntry.icon(), newEntry.reviewed(), isIntro);
         }
         return null;
     }
+
+
 
     @Override
     public void openSiteInfoScreenFromIntroSection(UUID siteID) {

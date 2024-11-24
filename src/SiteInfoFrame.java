@@ -78,13 +78,13 @@ public class SiteInfoFrame {
             // Format unresolvedTicketsHeader
             unresolvedTicketsHeader.setBackground(Color.BLACK);
             unresolvedTicketsHeader.setForeground(Color.WHITE);
-            unresolvedTicketsHeader.setFont(new Font("Arial", Font.ITALIC, 20));
+            //unresolvedTicketsHeader.setFont(new Font("Arial", Font.ITALIC, 20));
             unresolvedPanel.add(unresolvedTicketsHeader);
 
             // Format resolvedTicketsHeader
             resolvedTicketsHeader.setBackground(Color.BLACK);
             resolvedTicketsHeader.setForeground(Color.WHITE);
-            resolvedTicketsHeader.setFont(new Font("Arial", Font.ITALIC, 20));
+            //resolvedTicketsHeader.setFont(new Font("Arial", Font.ITALIC, 20));
             resolvedPanel.add(resolvedTicketsHeader);
 
             SiteInfoHeaderPanel siteInfoHeader = new SiteInfoHeaderPanel(iD, icon, address, city, state, zip, phoneNumber, emailAddress);

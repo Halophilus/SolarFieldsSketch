@@ -54,11 +54,11 @@ public class SiteSelectionPanel{
 
         // Header
         titleLabel = new JLabel(this.title);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        //titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setForeground(Color.BLUE);
 
         locationLabel = new JLabel( this.state + ", " + this.city);
-        locationLabel.setFont(new Font("Arial", Font.ITALIC, 20));
+        //locationLabel.setFont(new Font("Arial", Font.ITALIC, 20));
         locationLabel.setForeground(Color.DARK_GRAY);
 
         checkBox = new JCheckBox(); // Selection checkbox
