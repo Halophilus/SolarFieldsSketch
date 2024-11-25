@@ -88,7 +88,7 @@ public class ControllerImpl implements Controller {
         siteSelectionFrame.setVisible(true);
     }
 
-    // EDIT
+    // Edit
     public void displaySiteSelectionFrameEdit(Set<UUID> selectedSiteIds){
         SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame(false, this);
         downloadSiteData(selectedSiteIds);
@@ -96,6 +96,11 @@ public class ControllerImpl implements Controller {
         List<UUID> siteIdCollectionList = LocalTicketingSystem.getAllSites().stream().map(LocalSite::id).distinct().collect(Collectors.toList());
         addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, false);
         siteSelectionFrame.setVisible(true);
+    }
+
+    @Override
+    public void displayExportScreenForSelectLocations(Set<UUID> selectedSites) {
+
     }
 
 
@@ -128,6 +133,7 @@ public class ControllerImpl implements Controller {
 
 
     // SiteInfoFrameMethods
+    // For intro
     public void displaySiteInfoFrameIntro(UUID siteId, SiteSelectionFrame siteSelectionFrame){
         SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelFromID(siteId, true);
         addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, true);
@@ -135,10 +141,28 @@ public class ControllerImpl implements Controller {
         SiteInfoFrameIntro newFrame = assembleSiteInfoFrameIntro(innerDisplayPanel, siteSelectionFrame);
         newFrame.setVisible(true);
     }
+    // For the edit section
+    public void displaySiteInfoFrameEdit(UUID siteId, SiteSelectionFrame siteSelectionFrame){
+        SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelFromID(siteId, false);
+        addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, false);
+        innerDisplayPanel.addTicketsToScrollPane();
+        SiteInfoFrameEdit newFrame = assembleSiteInfoFrameEdit(innerDisplayPanel, siteSelectionFrame);
+        newFrame.setVisible(true);
 
+
+    }
+
+
+    // Assembling site info frame
+    // Intro
     public SiteInfoFrameIntro assembleSiteInfoFrameIntro(SiteInfoDisplayPanel siteInfoDisplayPanel, SiteSelectionFrame siteSelectionFrame) {
         return new SiteInfoFrameIntro(siteInfoDisplayPanel, this, siteSelectionFrame);
     }
+
+    public SiteInfoFrameEdit assembleSiteInfoFrameEdit(SiteInfoDisplayPanel siteInfoDisplayPanel, SiteSelectionFrame siteSelectionFrame) {
+        return new SiteInfoFrameEdit(siteInfoDisplayPanel, this, siteSelectionFrame);
+    }
+
 
     public void addTicketPanelsToSiteInfoDisplayPanel(SiteInfoDisplayPanel siteInfoDisplayPanel, boolean isIntro){
         Site targetSite = null;
@@ -178,23 +202,16 @@ public class ControllerImpl implements Controller {
         } else {
             newTicket = LocalTicketingSystem.getTicket(ticketId);
         }
-        List<UUID> ticketEntryIds = newTicket.entries().stream().map(Entry::id).distinct().toList();
+        List<Entry> entries = newTicket.entries();
         LocalDate mostRecentDate = LocalDate.MAX; //
-        Entry currentEntry = null;
 
-        for (UUID entryId : ticketEntryIds){ // For each value in the ticket entries
-            if (isIntro) {
-                currentEntry = GlobalTicketingSystem.getEntry(entryId);
-            } else {
-                currentEntry = LocalTicketingSystem.getEntry(ticketId);
-            }
-            if (currentEntry != null){ // If that entry isn't null
-                if (mostRecentDate.isAfter(currentEntry.date())) {
-                    mostRecentDate = currentEntry.date();
-                }
+        for (Entry entry : entries){ // For each value in the ticket entries
+            System.out.println("CURRENT DATE" + entry.date());
+                if (mostRecentDate.isAfter(entry.date())) {
+                    mostRecentDate = entry.date();
             }
         }
-        return new TicketPanel(ticketId, mostRecentDate, ticketEntryIds.size(), newTicket.resolved(), isIntro, this);
+        return new TicketPanel(ticketId, mostRecentDate, entries.size(), newTicket.resolved(), isIntro, this);
     }
 
     // Methods for entry display
@@ -222,13 +239,24 @@ public class ControllerImpl implements Controller {
         return LocalTicketingSystem.getEntry(entryId);
     }
 
-
+    // Displaying the entries associated with a certain ticket
+    // Intro
     public void displayEntryDisplayFrameIntro(UUID ticketId){
         EntryDisplayPanel innerDisplayPanel = makeEntryDisplayPanelFromID(ticketId, true);
         addEntryPanelsToEntryDisplayPanel(innerDisplayPanel, true);
         innerDisplayPanel.addEntriesToScrollPanel();
         EntryDisplayFrameIntro newFrame = assembleEntryDisplayPanelFrameIntro(innerDisplayPanel);
         newFrame.setVisible(true);
+    }
+    //Edit section
+    @Override
+    public void displayEntryDisplayFrameEdit(UUID ticketId) {
+        EntryDisplayPanel innerDisplayPanel = makeEntryDisplayPanelFromID(ticketId, false);
+        addEntryPanelsToEntryDisplayPanel(innerDisplayPanel, false);
+        innerDisplayPanel.addEntriesToScrollPanel();
+
+        //EntryDisplayFrameEdit
+
     }
 
     public EntryDisplayFrameIntro assembleEntryDisplayPanelFrameIntro(EntryDisplayPanel entryDisplayPanel){

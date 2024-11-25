@@ -22,6 +22,7 @@ public class LocalTicket implements Ticket{
         this.isNew = false;
 
         for (Entry globalEntry : globalTicket.entries()) {
+            System.out.println(globalEntry.date());
             GlobalEntry savedEntry = (GlobalEntry) globalEntry;
             LocalEntry downloadedEntry = new LocalEntry(savedEntry);
             localEntries.add(downloadedEntry);

@@ -79,7 +79,12 @@ public class SiteSelectionPanel{
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Mouse clicked on SiteSelectionPanel " + siteId);
-                if (isIntro) controller.displaySiteInfoFrameIntro(siteId, parentFrame);
+                if (isIntro) {
+                    controller.displaySiteInfoFrameIntro(siteId, parentFrame);
+                } else {
+                    controller.displaySiteInfoFrameEdit(siteId, parentFrame);
+                }
+
             }
         });
 

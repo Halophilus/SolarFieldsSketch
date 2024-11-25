@@ -27,13 +27,12 @@ public class SiteSelectionFrame {
     JButton downloadButton = new JButton("DOWNLOAD");
     // Edit buttons
     JButton exportButton = new JButton("EXPORT");
-    JButton importButton = new JButton("IMPORT");
+    JButton uploadButton = new JButton("UPLOAD");
 
 
     public SiteSelectionFrame(boolean isIntro, Controller controller) {
         this.isIntro = isIntro;
         this.controller = controller;
-
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Select target globalSites");
         frame.setSize(800, 500);
@@ -50,7 +49,7 @@ public class SiteSelectionFrame {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         // Button panel when intro
         if (isIntro) {
-            frame.add(downloadButton, BorderLayout.SOUTH);
+            buttonPanel.add(downloadButton, BorderLayout.EAST);
             downloadButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     // TODO: pass data from selected panes to download all the data related to the selected globalSites
@@ -71,16 +70,37 @@ public class SiteSelectionFrame {
                     //setVisible(false);
                 }
             });
+
         }
 
         // Button panel when edit
         if (!isIntro) {
-            frame.add(exportButton, BorderLayout.EAST);
-            frame.add(importButton, BorderLayout.WEST);
+            buttonPanel.add(exportButton, BorderLayout.EAST);
+            buttonPanel.add(uploadButton, BorderLayout.WEST);
 
-            // Set action listeners 
+            // Set action listeners
+            // Export button
+            exportButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Export Button pressed");
+
+                    Set<UUID> selectedSites = new HashSet<UUID>();
+                    selectedSites.addAll(SiteSelectionPanel.selected);
+
+                    // todo: implement an export screen for selected site IDs
+                    controller.displayExportScreenForSelectLocations(selectedSites);
+                    SiteSelectionPanel.selected.clear();
+                }
+            });
+            uploadButton.addActionListener(new ActionListener() {
+                // TODO: Create an upload operation
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Upload Button pressed");
+                }
+            });
         }
 
+        outerPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 
     }

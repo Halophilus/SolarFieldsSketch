@@ -35,4 +35,10 @@ public interface Controller {
     public void displaySiteInfoFrameIntro(UUID siteId, SiteSelectionFrame siteSelectionFrame);
 
     void displaySiteSelectionFrameEdit(Set<UUID> selectedSiteIds);
+
+    void displayExportScreenForSelectLocations(Set<UUID> selectedSites);
+
+    void displaySiteInfoFrameEdit(UUID siteId, SiteSelectionFrame parentFrame);
+
+    void displayEntryDisplayFrameEdit(UUID ticketId);
 }

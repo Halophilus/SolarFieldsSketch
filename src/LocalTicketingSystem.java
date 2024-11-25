@@ -39,6 +39,19 @@ public class LocalTicketingSystem {
         return null;
     }
 
+    // Mapping association between ticket ID and download ID
+    static Site getSiteFromTicket(UUID ticketId) {
+        for (Site localSite : downloadedSites) {
+            for (Ticket localTicket : localSite.tickets()) {
+                if (localTicket.id().equals(ticketId)) {
+                    return localSite;
+                }
+            }
+        }
+        return null;
+    }
+
+
     public static void addSite(LocalSite site) {
         downloadedSites.add(site);
     }

@@ -22,7 +22,7 @@ public class LocalSite implements Site{
     ImageIcon imageIcon;
 
     // Backup information
-    ArrayList<LocalTicket> localTickets = new ArrayList<>();
+    ArrayList<Ticket> localTickets = new ArrayList<>();
 
     LocalSite(GlobalSite globalSite) {
         this.id = globalSite.id;
@@ -37,6 +37,7 @@ public class LocalSite implements Site{
         this.imageIcon = globalSite.imageIcon;
 
         for(Ticket globalTicket : globalSite.globalTickets) {
+            System.out.println(globalTicket.id());
             LocalTicket downloadedTicket = new LocalTicket((GlobalTicket)globalTicket);
             localTickets.add(downloadedTicket);
         }
@@ -46,7 +47,7 @@ public class LocalSite implements Site{
 
     // Gets associated ticket IDs for a downloaded site
     public List<UUID> ticketIds() {
-        return localTickets.stream().map(ticket -> ticket.id).toList();
+        return localTickets.stream().map(ticket -> ticket.id()).toList();
     }
 
     public void indicateUpdated() {
@@ -60,7 +61,7 @@ public class LocalSite implements Site{
 
     @Override
     public ArrayList<Ticket> tickets() {
-        return null;
+        return localTickets;
     }
 
     @Override
@@ -80,31 +81,31 @@ public class LocalSite implements Site{
 
     @Override
     public ImageIcon imageIcon() {
-        return null;
+        return this.imageIcon;
     }
 
     @Override
     public String description() {
-        return "";
+        return this.description;
     }
 
     @Override
     public String address() {
-        return "";
+        return this.address;
     }
 
     @Override
     public String zip() {
-        return "";
+        return this.zip;
     }
 
     @Override
     public String phoneNumber() {
-        return "";
+        return this.phoneNumber;
     }
 
     @Override
     public String emailAddress() {
-        return "";
+        return this.emailAddress;
     }
 }
