@@ -85,6 +85,7 @@ public class SiteInfoDisplayPanel {
 
     }
 
+
     // Add ticket to stream
     public void addTicketPanel(TicketPanel newPanel){
         ticketPanels.add(newPanel);
@@ -137,11 +138,16 @@ public class SiteInfoDisplayPanel {
 
     // Resets display after a new ticket is generated
     public void clearAndRefresh(){
+        // Clear panel
         scrollPanel.removeAll();
+        // Generate new header
+        SiteInfoHeaderPanel siteInfoHeader = new SiteInfoHeaderPanel(siteId, icon, address, city, state, zip, phoneNumber, emailAddress);
+        scrollPanel.add(siteInfoHeader.mainPanel());
+        // Add new tickets to control panel
         addTicketsToScrollPane();
+        // Refresh
         scrollPanel.revalidate();
         scrollPanel.repaint();
-
     }
 
     public JPanel mainPanel() {

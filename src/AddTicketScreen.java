@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.UUID;
@@ -74,7 +75,8 @@ public class AddTicketScreen {
 
         // Set up JFrame
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setTitle("Generate a new ticket");
+        frame.setTitle("Generate a new ticket for " + this.title);
+        frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         frame.pack();
     }
 

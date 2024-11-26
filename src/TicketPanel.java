@@ -29,7 +29,7 @@ public class TicketPanel implements Comparable<TicketPanel> {
     public JLabel idLabel;
     public JLabel entriesLabel;
     public JLabel dividerLabel;
-    public JLabel dateLabel;
+    public JLabel dateLabel = new JLabel();
 
 
     public TicketPanel(UUID ticketId, LocalDate mostRecentEditDate, int numEntries, boolean resolved, boolean isIntro, Controller controller) {
@@ -79,7 +79,8 @@ public class TicketPanel implements Comparable<TicketPanel> {
         idPanel.add(dividerLabel);
         idPanel.add(entriesLabel);
 
-        dateLabel = new JLabel("Last edited: " + mostRecentEditDate);
+        String dateUpdatedIndicator;
+        if (mostRecentEditDate != LocalDate.MAX) {dateLabel.setText("Last edited: " + this.mostRecentEditDate);}
 
         //panel.setPreferredSize(new Dimension(100, idPanel.getHeight()));
         panel.add(idPanel, BorderLayout.WEST);
