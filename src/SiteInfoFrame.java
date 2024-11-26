@@ -134,10 +134,8 @@ public class SiteInfoFrame {
                 unresolvedPanel.setBackground(Color.BLACK);
                 scrollPanel.add(unresolvedPanel);
                 for (TicketPanel ticket : unresolvedTickets){
-                    System.out.println(counter);
                     ticket.changeBackgroundColor(Color.WHITE);
                     if (counter % 2 == 0) {
-                        System.out.println(counter);
                         ticket.changeBackgroundColor(Color.LIGHT_GRAY);
                     }
                     counter++;

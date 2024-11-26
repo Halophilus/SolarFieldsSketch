@@ -30,9 +30,9 @@ public interface Controller {
     void openAddEntryToTicketScreenFromEditSection(UUID siteID);
 
     // Methods I'm actually using through this interface
-    public void displayEntryDisplayFrameIntro(UUID ticketId);
+    void displayEntryDisplayFrameIntro(UUID ticketId);
 
-    public void displaySiteInfoFrameIntro(UUID siteId, SiteSelectionFrame siteSelectionFrame);
+    void displaySiteInfoFrameIntro(UUID siteId, SiteSelectionFrame siteSelectionFrame);
 
     void displaySiteSelectionFrameEdit(Set<UUID> selectedSiteIds);
 
@@ -41,4 +41,8 @@ public interface Controller {
     void displaySiteInfoFrameEdit(UUID siteId, SiteSelectionFrame parentFrame);
 
     void displayEntryDisplayFrameEdit(UUID ticketId);
+
+    void generateLocalTicket(UUID ticketId, String ticketDescriptionInput, UUID siteId);
+
+    TicketPanel makeTicketPanelFromId(UUID ticketId, boolean b);
 }

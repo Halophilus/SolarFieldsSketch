@@ -37,7 +37,6 @@ public class LocalSite implements Site{
         this.imageIcon = globalSite.imageIcon;
 
         for(Ticket globalTicket : globalSite.globalTickets) {
-            System.out.println(globalTicket.id());
             LocalTicket downloadedTicket = new LocalTicket((GlobalTicket)globalTicket);
             localTickets.add(downloadedTicket);
         }

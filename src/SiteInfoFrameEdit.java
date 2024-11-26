@@ -49,7 +49,8 @@ public class SiteInfoFrameEdit {
         });
         newTicketButton.addActionListener(e -> {
             System.out.println("New ticket button pressed");
-            // TODO: Set up a new ticket menu
+            AddTicketScreen newAddTicketScreen = new AddTicketScreen(this.siteId, this, controller);
+            newAddTicketScreen.setVisible(true);
         });
 
         panel.add(buttonPanel, BorderLayout.SOUTH);
@@ -57,5 +58,9 @@ public class SiteInfoFrameEdit {
 
     public void setVisible(boolean visible) {
         frame.setVisible(visible);
+    }
+
+    public void updateDisplay(){
+
     }
 }

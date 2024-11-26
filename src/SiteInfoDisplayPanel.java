@@ -123,10 +123,8 @@ public class SiteInfoDisplayPanel {
             unresolvedPanel.setBackground(Color.BLACK);
             scrollPanel.add(unresolvedPanel);
             for (TicketPanel ticket : unresolvedTickets){
-                System.out.println(counter);
                 ticket.changeBackgroundColor(Color.WHITE);
                 if (counter % 2 == 0) {
-                    System.out.println(counter);
                     ticket.changeBackgroundColor(Color.LIGHT_GRAY);
                 }
                 counter++;
@@ -134,6 +132,15 @@ public class SiteInfoDisplayPanel {
             }
         }
 
+
+    }
+
+    // Resets display after a new ticket is generated
+    public void clearAndRefresh(){
+        scrollPanel.removeAll();
+        addTicketsToScrollPane();
+        scrollPanel.revalidate();
+        scrollPanel.repaint();
 
     }
 

@@ -61,7 +61,6 @@ public class SiteSelectionFrame {
 
                     // Perform some action
                     // In this case, pass them to the controller to download site data
-                    System.out.println(selectedSites);
                     controller.displaySiteSelectionFrameEdit(selectedSites);
                     // Clear the set of selected globalSites
                     SiteSelectionPanel.selected.clear();

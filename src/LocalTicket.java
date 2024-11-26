@@ -20,9 +20,7 @@ public class LocalTicket implements Ticket{
         this.description = globalTicket.description();
         this.resolved = globalTicket.resolved();
         this.isNew = false;
-
         for (Entry globalEntry : globalTicket.entries()) {
-            System.out.println(globalEntry.date());
             GlobalEntry savedEntry = (GlobalEntry) globalEntry;
             LocalEntry downloadedEntry = new LocalEntry(savedEntry);
             localEntries.add(downloadedEntry);
@@ -35,12 +33,18 @@ public class LocalTicket implements Ticket{
         this.description = description;
         this.resolved = false;
         this.isNew = true;
+        System.out.println("New ticket ID: " + this.id());
+        System.out.println("New ticket generated with description: " + this.description);
 
         // Add the new ticket to the locally stored site's list of tickets
         assert LocalTicketingSystem.getSite(destinationSiteId) != null;
         LocalSite parentSite = (LocalSite)LocalTicketingSystem.getSite(destinationSiteId);
+        System.out.println("Site title: " + parentSite.title());
+        System.out.println("Current list of local tickets: " + parentSite.localTickets);
         parentSite.indicateUpdated(); // Indicate that the parent site has been updated
         parentSite.localTickets.add(this);
+        System.out.println("Updated list of local tickets: " + parentSite.localTickets);
+        System.out.println(LocalTicketingSystem.getTicket(this.id));
     }
 
     @Override

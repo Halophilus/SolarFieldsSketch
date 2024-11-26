@@ -79,6 +79,12 @@ public class ControllerImpl implements Controller {
         LocalTicketingSystem.clearSites();
     }
 
+    // Add ticket screen for edit section
+    public void generateLocalTicket(UUID ticketId, String ticketDescriptionInput, UUID siteId){
+        LocalTicket newTicket = new LocalTicket(ticketId, ticketDescriptionInput, siteId);
+
+    };
+
     // SiteSelectionFrame methods
     // Intro
     public void displaySiteSelectionFrameIntro(){
@@ -169,7 +175,7 @@ public class ControllerImpl implements Controller {
         if (isIntro) {
             targetSite = GlobalTicketingSystem.getSite(siteInfoDisplayPanel.siteId);
         } else {
-            targetSite = GlobalTicketingSystem.getSite(siteInfoDisplayPanel.siteId);
+            targetSite = LocalTicketingSystem.getSite(siteInfoDisplayPanel.siteId);
         }
 
         List<UUID> listOfTickets = targetSite.tickets().stream().map(Ticket::id).distinct().toList();
@@ -195,7 +201,7 @@ public class ControllerImpl implements Controller {
         return null;
     }
 
-    private TicketPanel makeTicketPanelFromId(UUID ticketId, boolean isIntro){
+    public TicketPanel makeTicketPanelFromId(UUID ticketId, boolean isIntro){
         Ticket newTicket = null;
         if (isIntro) {
             newTicket = GlobalTicketingSystem.getTicket(ticketId);
@@ -206,7 +212,6 @@ public class ControllerImpl implements Controller {
         LocalDate mostRecentDate = LocalDate.MAX; //
 
         for (Entry entry : entries){ // For each value in the ticket entries
-            System.out.println("CURRENT DATE" + entry.date());
                 if (mostRecentDate.isAfter(entry.date())) {
                     mostRecentDate = entry.date();
             }

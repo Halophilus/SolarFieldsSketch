@@ -92,6 +92,7 @@ public class TicketPanel implements Comparable<TicketPanel> {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 System.out.println("Mouse clicked on TicketPanel " + ticketId);
+                System.out.println("IsIntro: " + isIntro);
                 if (isIntro) {
                     controller.displayEntryDisplayFrameIntro(ticketId);
                 } else {
