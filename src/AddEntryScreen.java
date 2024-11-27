@@ -128,8 +128,8 @@ public class AddEntryScreen {
         submitButton.addActionListener(e->{
             controller.generateLocalEntry(this.date, this.entryDescriptionInput.getText(), this.icon, this.ticketId, this.siteId, this.entryId);
             EntryPanel newEntryPanel = controller.makeEntryPanelFromId(this.entryId, false);
-            entryDisplayPanel.addEntryPanel(newEntryPanel);
-            entryDisplayPanel.clearAndRefresh();
+            entryDisplayFrame.entryDisplayPanel.addEntryPanel(newEntryPanel);
+            entryDisplayFrame.entryDisplayPanel.clearAndRefresh();
             associatedTicketPanel.updateEntries(this.date); // Automatically assigns date to current date
         });
 

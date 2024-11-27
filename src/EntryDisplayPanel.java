@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 // Displays all the entries for a given ticket
 public class EntryDisplayPanel {
@@ -70,8 +71,8 @@ public class EntryDisplayPanel {
         scrollPanel.add(idPanel);
         scrollPanel.add(descriptionPanel);
 
-        // Update the scrollpanel
         clearAndRefresh();
+
     }
 
     // Add GlobalEntry to set
@@ -90,10 +91,11 @@ public class EntryDisplayPanel {
             System.out.println("No entries found");
             return;
         }
+        Set<EntryPanel> entryPanelSet = entryPanels.stream().sorted().collect(Collectors.toSet());
 
         // Add all the entries in the list
-        for (EntryPanel entryPanel : entryPanels){
-            if (counter % 2 == 1){
+        for (EntryPanel entryPanel : entryPanelSet){
+            if (counter % 2 == 0){
                 entryPanel.changeBackgroundColor(Color.LIGHT_GRAY);
             }
             counter++;
@@ -106,19 +108,6 @@ public class EntryDisplayPanel {
         // Clear panel
         scrollPanel.removeAll();
         // Generate new header
-        // Create id header
-        idLabel.setText(this.description);
-        idLabel.setBackground(Color.WHITE);
-        idPanel.add(idLabel);
-
-        // Create description header
-        descriptionLabel.setText(description);
-        Border blackline = BorderFactory.createLineBorder(Color.BLACK);
-        descriptionLabel.setBorder(blackline);
-        descriptionLabel.setBackground(Color.LIGHT_GRAY);
-        descriptionPanel.add(descriptionLabel);
-
-        // Add header elements to idPanel
         scrollPanel.add(idPanel);
         scrollPanel.add(descriptionPanel);
 
