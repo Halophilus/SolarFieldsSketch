@@ -70,7 +70,8 @@ public class EntryDisplayPanel {
         scrollPanel.add(idPanel);
         scrollPanel.add(descriptionPanel);
 
-
+        // Update the scrollpanel
+        clearAndRefresh();
     }
 
     // Add GlobalEntry to set
@@ -100,6 +101,33 @@ public class EntryDisplayPanel {
 
         }
 
+    }
+    public void clearAndRefresh(){
+        // Clear panel
+        scrollPanel.removeAll();
+        // Generate new header
+        // Create id header
+        idLabel.setText(this.description);
+        idLabel.setBackground(Color.WHITE);
+        idPanel.add(idLabel);
+
+        // Create description header
+        descriptionLabel.setText(description);
+        Border blackline = BorderFactory.createLineBorder(Color.BLACK);
+        descriptionLabel.setBorder(blackline);
+        descriptionLabel.setBackground(Color.LIGHT_GRAY);
+        descriptionPanel.add(descriptionLabel);
+
+        // Add header elements to idPanel
+        scrollPanel.add(idPanel);
+        scrollPanel.add(descriptionPanel);
+
+        // Add new tickets to control panel
+        addEntriesToScrollPanel();
+
+        // Refresh
+        scrollPanel.revalidate();
+        scrollPanel.repaint();
     }
 
 }

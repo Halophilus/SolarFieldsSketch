@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +84,12 @@ public class ControllerImpl implements Controller {
     public void generateLocalTicket(UUID ticketId, String ticketDescriptionInput, UUID siteId){
         LocalTicket newTicket = new LocalTicket(ticketId, ticketDescriptionInput, siteId);
 
-    };
+    }
+
+    @Override
+    public void generateLocalEntry(LocalDate date, String description, ImageIcon icon, UUID ticketId, UUID siteId, UUID entryId) {
+        LocalEntry newLocalEntry = new LocalEntry(date, description, icon, ticketId, siteId, entryId);
+    }
 
     // SiteSelectionFrame methods
     // Intro
@@ -282,6 +288,8 @@ public class ControllerImpl implements Controller {
         AddEntryScreen addEntryScreen = new AddEntryScreen(entryDisplayFrame, entryDisplayPanel, parentTicketPanel, this);
         addEntryScreen.setVisible(true);
     }
+
+
 
 
     public void addEntryPanelsToEntryDisplayPanel(EntryDisplayPanel entryDisplayPanel, boolean isIntro){

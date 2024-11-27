@@ -58,7 +58,6 @@ public class EntryDisplayFrameEdit {
                 // TODO: add functionality for different date settings
                 // TODO: generate a new entry screen
                 controller.displayAddEntryScreen(thisAlias, entryDisplayPanel, parentTicketPanel);
-                //parentTicketPanel.updateEntries(LocalDate.now()); // Automatically assigns date to current date
             }
         });
         frame.add(buttonPanel, BorderLayout.SOUTH);

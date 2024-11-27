@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.Set;
@@ -50,7 +51,7 @@ public interface Controller {
 
     void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame, EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel);
 
-    void generateLocalEntry(LocalDate date, String description, UUID ticketId, UUID siteId, UUID entryId);
+    void generateLocalEntry(LocalDate date, String description, ImageIcon icon, UUID ticketId, UUID siteId, UUID entryId);
 
     EntryPanel makeEntryPanelFromId(UUID entryId, boolean b);
 }
