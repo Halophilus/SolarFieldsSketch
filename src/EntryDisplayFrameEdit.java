@@ -57,7 +57,7 @@ public class EntryDisplayFrameEdit {
                 System.out.println("New Entry Button Pressed");
                 // TODO: add functionality for different date settings
                 // TODO: generate a new entry screen
-                controller.displayAddEntryScreen(thisAlias, parentTicketPanel);
+                controller.displayAddEntryScreen(thisAlias, entryDisplayPanel, parentTicketPanel);
                 //parentTicketPanel.updateEntries(LocalDate.now()); // Automatically assigns date to current date
             }
         });

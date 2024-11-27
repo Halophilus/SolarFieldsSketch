@@ -278,8 +278,8 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame, TicketPanel parentTicketPanel){
-        AddEntryScreen addEntryScreen = new AddEntryScreen(entryDisplayFrame, parentTicketPanel, this);
+    public void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame,  EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel){
+        AddEntryScreen addEntryScreen = new AddEntryScreen(entryDisplayFrame, entryDisplayPanel, parentTicketPanel, this);
         addEntryScreen.setVisible(true);
     }
 

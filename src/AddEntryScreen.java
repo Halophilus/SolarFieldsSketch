@@ -1,13 +1,8 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.image.ImageFilter;
 import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
 import java.time.LocalDate;
-import java.util.Scanner;
 import java.util.UUID;
 
 public class AddEntryScreen {
@@ -15,7 +10,8 @@ public class AddEntryScreen {
     public UUID ticketId;
     public UUID siteId;
     public UUID entryId;
-    public EntryDisplayFrameEdit parentDisplayFrame;
+    public EntryDisplayFrameEdit entryDisplayFrame;
+    public EntryDisplayPanel entryDisplayPanel;
     public TicketPanel associatedTicketPanel; // To update the ticketPanel in the previous screen
     public Controller controller;
 
@@ -33,8 +29,8 @@ public class AddEntryScreen {
     public JLabel ticketIdHeader = new JLabel(); // Short title for ID
     public JLabel ticketIdLabel = new JLabel();
     // Description
-    public JTextArea ticketDescriptionInput = new JTextArea("Enter Entry description", 5, 0);
-    public JScrollPane descriptionInputScrollPane = new JScrollPane(ticketDescriptionInput);
+    public JTextArea entryDescriptionInput = new JTextArea("Enter Entry description", 5, 0);
+    public JScrollPane descriptionInputScrollPane = new JScrollPane(entryDescriptionInput);
 
     JPanel dateSelectionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
     JLabel dateSelectionHeader = new JLabel("Date:");
@@ -44,11 +40,11 @@ public class AddEntryScreen {
     // Default to today's date
 
     // Selecting an image icon
-    JPanel imageSelectionPanel = new JPanel(); // Stacked components
+    JPanel imageSelectionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0)); // Stacked components
     JLabel imageSelectionLabel = new JLabel();
     JButton fileSelectButton = new JButton("Upload Image");
     JFileChooser imageChooser = new JFileChooser(".");
-    JTextField imageFilepath = new JTextField();
+    JTextField imageFilepath = new JTextField("Select a file",15);
     public String filepath;
 
     // Bottom button panel
@@ -56,24 +52,22 @@ public class AddEntryScreen {
     public JButton submitButton = new JButton("SUBMIT");
     public JButton cancelButton = new JButton("CANCEL");
 
-    public AddEntryScreen(EntryDisplayFrameEdit parentDisplayFrame, TicketPanel associatedTicketPanel, Controller controller){
+    public AddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame,  EntryDisplayPanel entryDisplayPanel, TicketPanel associatedTicketPanel, Controller controller){
         // Establish context
-        this.parentDisplayFrame = parentDisplayFrame;
+        this.entryDisplayFrame = entryDisplayFrame;
+        this.entryDisplayPanel = entryDisplayPanel;
         this.associatedTicketPanel = associatedTicketPanel;
         // Connect to controller
         this.controller = controller;
 
         // Pull state variables
-        this.ticketId = parentDisplayFrame.ticketId;
-        this.siteId = parentDisplayFrame.siteId;
+        this.ticketId = entryDisplayPanel.ticketId;
+        this.siteId = entryDisplayFrame.siteId;
         this.entryId = UUID.randomUUID(); // Generate a new entry ID
         this.date = LocalDate.now();
 
         // Format frame
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setTitle(STR."Generate a new entry for T# \{this.ticketId}");
-        frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         // Date Panel
         dateSelectionPanel.add(dateSelectionHeader);
@@ -84,6 +78,7 @@ public class AddEntryScreen {
         frame.getContentPane().add(dateSelectionPanel);
 
         // Image selection panel
+        // Set up image chooser
         FileNameExtensionFilter filter = new FileNameExtensionFilter("ImageIcon file formats", "gif", "jpg", "png");
         imageChooser.addChoosableFileFilter(filter);
         fileSelectButton.addActionListener(e->{
@@ -100,6 +95,7 @@ public class AddEntryScreen {
                 try {
                     if (file.isFile()){
                         icon = new ImageIcon(file.getAbsolutePath());
+                        imageFilepath.setText(file.getName());
 
                     } else {
                         System.out.println("File not selected");
@@ -111,7 +107,34 @@ public class AddEntryScreen {
                 }
             }
         });
+        // Add buttons and textfield to panel
+        imageSelectionPanel.add(fileSelectButton);
+        imageSelectionPanel.add(imageFilepath);
+        frame.getContentPane().add(imageSelectionPanel);
 
+        // Insert description input field
+        frame.getContentPane().add(descriptionInputScrollPane);
+
+        // Generate button panel and insert
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        buttonPanel.add(cancelButton, BorderLayout.WEST);
+        buttonPanel.add(submitButton, BorderLayout.EAST);
+        frame.getContentPane().add(buttonPanel);
+
+        // Add action listeners to bottom button panel
+        cancelButton.addActionListener(e->{
+            frame.dispose();
+        });
+        submitButton.addActionListener(e->{
+            controller.generateLocalEntry(this.date, this.entryDescriptionInput.getText(), this.ticketId, this.siteId, this.entryId);
+            EntryPanel newEntryPanel = controller.makeEntryPanelFromId(this.entryId, false);
+            entryDisplayPanel.addEntryPanel(newEntryPanel);
+        });
+
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setTitle(STR."Generate a new entry for T# \{this.ticketId}");
+        frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        frame.pack();
 
     }
 

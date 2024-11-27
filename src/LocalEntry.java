@@ -22,8 +22,8 @@ public class LocalEntry implements Entry{
     }
 
     // For new entries
-    LocalEntry(LocalDate date, String description, ImageIcon icon, UUID parentTicketId, UUID parentSiteId){
-        this.id = UUID.randomUUID();
+    LocalEntry(LocalDate date, String description, ImageIcon icon, UUID parentTicketId, UUID parentSiteId, UUID id){
+        this.id = id;
         this.date = date;
         this.description = description;
         this.icon = icon;
