@@ -40,7 +40,7 @@ public interface Controller {
 
     void displaySiteInfoFrameEdit(UUID siteId, SiteSelectionFrame parentFrame);
 
-    void displayEntryDisplayFrameEdit(UUID ticketId);
+    void displayEntryDisplayFrameEdit(UUID ticketId, TicketPanel ticketPanel);
 
     void generateLocalTicket(UUID ticketId, String ticketDescriptionInput, UUID siteId);
 

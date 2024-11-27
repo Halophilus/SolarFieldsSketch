@@ -86,6 +86,7 @@ public class TicketPanel implements Comparable<TicketPanel> {
         panel.add(idPanel, BorderLayout.WEST);
         panel.add(dateLabel, BorderLayout.EAST);
 
+        TicketPanel parentPanel = this;
         // Action that opens up a new ticket window when clicked on
         // TODO: Create an edit section event
         idPanel.addMouseListener(new MouseAdapter() {
@@ -97,7 +98,7 @@ public class TicketPanel implements Comparable<TicketPanel> {
                 if (isIntro) {
                     controller.displayEntryDisplayFrameIntro(ticketId);
                 } else {
-                    controller.displayEntryDisplayFrameEdit(ticketId);
+                    controller.displayEntryDisplayFrameEdit(ticketId, parentPanel);// this points to a MouseAdapter
                 }
             }
         });
@@ -113,6 +114,19 @@ public class TicketPanel implements Comparable<TicketPanel> {
     public void changeBackgroundColor(Color color) {
         idPanel.setBackground(color);
         panel.setBackground(color);
+    }
+
+    // Method for updating the original ticket panel when a new ticket is added
+    public void updateEntries(LocalDate newDate){
+        // Update state variables
+        this.numEntries++;
+        this.mostRecentEditDate = newDate;
+        // Update labels
+        this.entriesLabel.setText("No. Entries: " + this.numEntries);
+        this.dateLabel.setText("Last edited: " + this.mostRecentEditDate);
+        // Refresh the panel
+        panel.revalidate();
+        panel.repaint();
     }
 
     @Override

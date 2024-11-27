@@ -255,17 +255,26 @@ public class ControllerImpl implements Controller {
     }
     //Edit section
     @Override
-    public void displayEntryDisplayFrameEdit(UUID ticketId) {
+    public void displayEntryDisplayFrameEdit(UUID ticketId, TicketPanel ticketPanel) {
+        // Set up display panel
         EntryDisplayPanel innerDisplayPanel = makeEntryDisplayPanelFromID(ticketId, false);
         addEntryPanelsToEntryDisplayPanel(innerDisplayPanel, false);
         innerDisplayPanel.addEntriesToScrollPanel();
 
+        // Fetch Site Data
+        EntryDisplayFrameEdit newFrame = assembleEntryDisplayPanelFrameEdit(ticketId, innerDisplayPanel, ticketPanel);
+        newFrame.setVisible(true);
         //EntryDisplayFrameEdit
 
     }
 
     public EntryDisplayFrameIntro assembleEntryDisplayPanelFrameIntro(EntryDisplayPanel entryDisplayPanel){
         return new EntryDisplayFrameIntro(entryDisplayPanel, this);
+    }
+
+    public EntryDisplayFrameEdit assembleEntryDisplayPanelFrameEdit(UUID ticketId, EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel){
+        UUID parentSiteId = LocalTicketingSystem.getSiteFromTicket(ticketId).id();
+        return new EntryDisplayFrameEdit(entryDisplayPanel, parentTicketPanel, parentSiteId, this);
     }
 
     public void addEntryPanelsToEntryDisplayPanel(EntryDisplayPanel entryDisplayPanel, boolean isIntro){

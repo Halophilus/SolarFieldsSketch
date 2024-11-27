@@ -15,6 +15,7 @@ public class LocalEntry implements Entry{
     LocalEntry(GlobalEntry downloadedEntry){
         this.id = downloadedEntry.id();
         this.date = downloadedEntry.date();
+        this.icon = downloadedEntry.icon();
         this.description = downloadedEntry.description();
         this.reviewed = downloadedEntry.reviewed();
         this.isNew = false;
