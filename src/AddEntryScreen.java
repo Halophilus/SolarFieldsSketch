@@ -1,6 +1,13 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.image.ImageFilter;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.util.Scanner;
 import java.util.UUID;
 
 public class AddEntryScreen {
@@ -13,6 +20,8 @@ public class AddEntryScreen {
     public Controller controller;
 
     // State variables
+    // TODO: link the title into the addTicketScreen
+    public String siteTitle;
     public String description;
     public ImageIcon icon;
     public LocalDate date;
@@ -24,17 +33,90 @@ public class AddEntryScreen {
     public JLabel ticketIdHeader = new JLabel(); // Short title for ID
     public JLabel ticketIdLabel = new JLabel();
     // Description
-    public JTextArea ticketDescriptionInput = new JTextArea("Enter ticket description", 5, 0);
+    public JTextArea ticketDescriptionInput = new JTextArea("Enter Entry description", 5, 0);
     public JScrollPane descriptionInputScrollPane = new JScrollPane(ticketDescriptionInput);
-    JPanel dateSelectionPanel = new JPanel();
-    JLabel dateSelectionHeader = new JLabel();
+
+    JPanel dateSelectionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+    JLabel dateSelectionHeader = new JLabel("Date:");
+    JLabel currentDate = new JLabel();
     //TODO: Implement a means of designating a date
 
     // Default to today's date
-    //Selecting an image icon
+
+    // Selecting an image icon
     JPanel imageSelectionPanel = new JPanel(); // Stacked components
     JLabel imageSelectionLabel = new JLabel();
-    JFileChooser imageChooser = new JFileChooser();
+    JButton fileSelectButton = new JButton("Upload Image");
+    JFileChooser imageChooser = new JFileChooser(".");
+    JTextField imageFilepath = new JTextField();
+    public String filepath;
 
+    // Bottom button panel
+    public JPanel buttonPanel = new JPanel(new BorderLayout());
+    public JButton submitButton = new JButton("SUBMIT");
+    public JButton cancelButton = new JButton("CANCEL");
+
+    public AddEntryScreen(EntryDisplayFrameEdit parentDisplayFrame, TicketPanel associatedTicketPanel, Controller controller){
+        // Establish context
+        this.parentDisplayFrame = parentDisplayFrame;
+        this.associatedTicketPanel = associatedTicketPanel;
+        // Connect to controller
+        this.controller = controller;
+
+        // Pull state variables
+        this.ticketId = parentDisplayFrame.ticketId;
+        this.siteId = parentDisplayFrame.siteId;
+        this.entryId = UUID.randomUUID(); // Generate a new entry ID
+        this.date = LocalDate.now();
+
+        // Format frame
+        frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setTitle(STR."Generate a new entry for T# \{this.ticketId}");
+        frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        // Date Panel
+        dateSelectionPanel.add(dateSelectionHeader);
+        // TODO: Modify this to accept an arbitrary range of dates
+        currentDate.setText(date.toString());
+        //currentDate.setHorizontalAlignment(SwingConstants.EAST);
+        dateSelectionPanel.add(currentDate);
+        frame.getContentPane().add(dateSelectionPanel);
+
+        // Image selection panel
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("ImageIcon file formats", "gif", "jpg", "png");
+        imageChooser.addChoosableFileFilter(filter);
+        fileSelectButton.addActionListener(e->{
+            File file;
+            int response;
+
+            imageChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            response = imageChooser.showOpenDialog(null);
+
+            if (response == JFileChooser.APPROVE_OPTION){
+                file = imageChooser.getSelectedFile();
+                imageFilepath.setText(file.getName());
+
+                try {
+                    if (file.isFile()){
+                        icon = new ImageIcon(file.getAbsolutePath());
+
+                    } else {
+                        System.out.println("File not selected");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+
+    }
+
+    public void setVisible(boolean visible){
+        frame.setVisible(visible);
+    }
 
 }

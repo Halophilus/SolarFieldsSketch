@@ -7,6 +7,7 @@ import java.util.UUID;
 public class AddTicketScreen {
     public UUID siteId;
     public UUID ticketId;
+    // TODO: Link the title into the AddTicketScreen
     public String title;
     public Controller controller;
     public SiteInfoFrameEdit parentSiteFrame;

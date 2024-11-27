@@ -277,6 +277,13 @@ public class ControllerImpl implements Controller {
         return new EntryDisplayFrameEdit(entryDisplayPanel, parentTicketPanel, parentSiteId, this);
     }
 
+    @Override
+    public void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame, TicketPanel parentTicketPanel){
+        AddEntryScreen addEntryScreen = new AddEntryScreen(entryDisplayFrame, parentTicketPanel, this);
+        addEntryScreen.setVisible(true);
+    }
+
+
     public void addEntryPanelsToEntryDisplayPanel(EntryDisplayPanel entryDisplayPanel, boolean isIntro){
         Ticket newTicket = null;
         if (isIntro) {

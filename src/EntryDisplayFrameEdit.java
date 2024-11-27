@@ -44,6 +44,7 @@ public class EntryDisplayFrameEdit {
         buttonPanel.add(newEntryButton, BorderLayout.EAST);
 
         // Set up action listeners
+        EntryDisplayFrameEdit thisAlias = this;
         exportButton.addActionListener(new ActionListener() {
             // TODO: Generate an export screen
             public void actionPerformed(ActionEvent e) {
@@ -56,7 +57,8 @@ public class EntryDisplayFrameEdit {
                 System.out.println("New Entry Button Pressed");
                 // TODO: add functionality for different date settings
                 // TODO: generate a new entry screen
-                parentTicketPanel.updateEntries(LocalDate.now()); // Automatically assigns date to current date
+                controller.displayAddEntryScreen(thisAlias, parentTicketPanel);
+                //parentTicketPanel.updateEntries(LocalDate.now()); // Automatically assigns date to current date
             }
         });
         frame.add(buttonPanel, BorderLayout.SOUTH);

@@ -1,3 +1,4 @@
+import java.awt.event.ActionListener;
 import java.util.Set;
 import java.util.UUID;
 
@@ -45,4 +46,6 @@ public interface Controller {
     void generateLocalTicket(UUID ticketId, String ticketDescriptionInput, UUID siteId);
 
     TicketPanel makeTicketPanelFromId(UUID ticketId, boolean b);
+
+    void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame, TicketPanel parentTicketPanel);
 }
