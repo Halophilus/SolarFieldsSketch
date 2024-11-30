@@ -53,5 +53,7 @@ public interface Controller {
 
     void generateLocalEntry(LocalDate date, String description, ImageIcon icon, UUID ticketId, UUID siteId, UUID entryId);
 
+    boolean checkOnlineStatus();
+
     EntryPanel makeEntryPanelFromId(UUID entryId, boolean b);
 }

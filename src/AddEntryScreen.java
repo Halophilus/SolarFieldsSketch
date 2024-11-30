@@ -127,10 +127,15 @@ public class AddEntryScreen {
         });
         submitButton.addActionListener(e->{
             controller.generateLocalEntry(this.date, this.entryDescriptionInput.getText(), this.icon, this.ticketId, this.siteId, this.entryId);
+            associatedTicketPanel.updateEntries(this.date); // Automatically assigns date to current date
+            entryDisplayFrame.frame.dispose();
+            controller.displayEntryDisplayFrameEdit(this.ticketId, this.associatedTicketPanel);
+            this.frame.dispose();
+            /*
             EntryPanel newEntryPanel = controller.makeEntryPanelFromId(this.entryId, false);
             entryDisplayFrame.entryDisplayPanel.addEntryPanel(newEntryPanel);
             entryDisplayFrame.entryDisplayPanel.clearAndRefresh();
-            associatedTicketPanel.updateEntries(this.date); // Automatically assigns date to current date
+             */
         });
 
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

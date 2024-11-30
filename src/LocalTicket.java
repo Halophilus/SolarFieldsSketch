@@ -47,6 +47,10 @@ public class LocalTicket implements Ticket{
         System.out.println(LocalTicketingSystem.getTicket(this.id));
     }
 
+    public void unresolve(){
+        this.resolved = false;
+    }
+
     @Override
     public UUID id() {
         return this.id;

@@ -91,6 +91,11 @@ public class ControllerImpl implements Controller {
         LocalEntry newLocalEntry = new LocalEntry(date, description, icon, ticketId, siteId, entryId);
     }
 
+    @Override
+    public boolean checkOnlineStatus() {
+        return false;
+    }
+
     // SiteSelectionFrame methods
     // Intro
     public void displaySiteSelectionFrameIntro(){

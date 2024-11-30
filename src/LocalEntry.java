@@ -34,6 +34,7 @@ public class LocalEntry implements Entry{
         assert LocalTicketingSystem.getTicket(parentTicketId) == null;
         LocalTicket parentTicket = (LocalTicket)LocalTicketingSystem.getTicket(parentTicketId);
         parentTicket.indicateUpdated();
+        parentTicket.unresolve();
         parentTicket.entries().add(this);
 
         // Indicate that the parent site has been updated

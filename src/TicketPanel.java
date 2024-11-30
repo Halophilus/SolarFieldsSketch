@@ -121,6 +121,7 @@ public class TicketPanel implements Comparable<TicketPanel> {
         // Update state variables
         this.numEntries++;
         this.mostRecentEditDate = newDate;
+        this.resolved = false;
         // Update labels
         this.entriesLabel.setText("No. Entries: " + this.numEntries);
         this.dateLabel.setText("Last edited: " + this.mostRecentEditDate);
