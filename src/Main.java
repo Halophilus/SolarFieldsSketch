@@ -36,17 +36,7 @@ public class Main {
 
         List<UUID> siteIds = globalTicketingSystem.globalSites.stream().map(site -> site.id()).toList();
         System.out.println("SiteIDs: " + siteIds);
-        Thread.startVirtualThread(() -> {
-            while (true) {
-                System.out.println("Bingus bungus");
 
-                try {
-                    Thread.sleep(Duration.ofSeconds(15));
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
         ControllerImpl c = new ControllerImpl(globalTicketingSystem);
 
         c.displaySiteSelectionFrameIntro();

@@ -86,7 +86,6 @@ public class EntryDisplayPanel {
 
     // Add entries to scrollPanel
     public void addEntriesToScrollPanel(){
-        System.out.println("ADDING ENTRIES TO SCROLL PANEL");
         if (entryPanels.isEmpty()){
             scrollPanel.add(new JLabel("No entries found"));
             System.out.println("No entries found");
@@ -96,9 +95,7 @@ public class EntryDisplayPanel {
 
         // Add all the entries in the list
         for (EntryPanel entryPanel : entryPanelSet){
-            System.out.println("NEW CELL");
             if (counter % 2 == 0){
-                System.out.println("GRAY");
                 entryPanel.changeBackgroundColor(Color.LIGHT_GRAY);
             }
             counter++;

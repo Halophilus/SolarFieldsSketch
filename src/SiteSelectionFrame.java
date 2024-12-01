@@ -119,6 +119,9 @@ public class SiteSelectionFrame {
                 // TODO: Create an upload operation
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Upload Button pressed");
+                    controller.uploadLocalEntries(); // Add all new local entries
+                    controller.markLocalStorageAsUploaded(); // Lower updated flags for local data
+                    frame.dispose();
                 }
             });
         }
@@ -154,8 +157,10 @@ public class SiteSelectionFrame {
 
     public void attemptSyncLoop(){
         // Check to see if the connection has been restored
+        System.out.println("Checking for internet connection...");
         try {
             if (controller.checkOnlineStatus()){
+                System.out.println("Connection is restored");
                 // If the user hasn't been notified yet
                 if (!beenNotified[0]){
                     controller.displayConnectionRestoredPopup(); // Prompt them to sync now
@@ -163,6 +168,7 @@ public class SiteSelectionFrame {
                 beenNotified[0] = true;  // Flag the user as having been notified
                 uploadButton.setEnabled(true); // Enable the download button on site selection
             } else { // If the connection is lost
+                System.out.println("Connection has been lost");
                 beenNotified[0] = false; // Restore notification flag
                 uploadButton.setEnabled(false); // Disable download
             }
