@@ -1,7 +1,10 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -74,9 +77,58 @@ public class SiteSelectionFrame {
 
         // Button panel when edit
         if (!isIntro) {
+            // Store notification flag as an array to make it accessible from a stack
+            final boolean[] beenNotified = {false};
+            downloadButton.setEnabled(false);
             buttonPanel.add(exportButton, BorderLayout.EAST);
             buttonPanel.add(uploadButton, BorderLayout.WEST);
 
+            // Start checking to see if the system is online
+            Thread.startVirtualThread(() -> {
+                for(;;) {
+                    if (controller.checkOnlineStatus()) {
+                        downloadButton.setEnabled(true);
+                        if (!beenNotified[0]) {
+                            // Create an anonymous class that creates a popup screen
+                            class NotificationScreen extends JFrame{
+                                JLabel descriptionLabel = new JLabel();
+                                JPanel buttonPanel = new JPanel(new BorderLayout());
+
+                                JButton uploadButton = new JButton("UPLOAD");
+                                JButton cancelButton = new JButton("CANCEL");
+                                public NotificationScreen(){
+                                    this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
+
+                                    // Create a description object and append it to the warning window
+                                    descriptionLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+                                    descriptionLabel.setText("Internet connection has been restored! Upload local storage now?");
+                                    this.getContentPane().add(descriptionLabel);
+
+                                    // Build buttonPanel
+                                    buttonPanel.add(uploadButton, BorderLayout.EAST);
+                                    buttonPanel.add(cancelButton, BorderLayout.WEST);
+
+                                    // Set action listeners
+                                    uploadButton.addActionListener(new ActionListener() {
+                                        @Override
+                                        public void actionPerformed()
+                                    });
+
+
+                                }
+                            }
+                        }
+                        beenNotified[0] = true;
+                    } else {
+
+                    }
+                    try {
+                        Thread.sleep(Duration.ofMinutes(1));
+                    } catch (InterruptedException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            });
             // Set action listeners
             // Export button
             exportButton.addActionListener(new ActionListener() {

@@ -1,4 +1,8 @@
 import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +96,14 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public boolean checkOnlineStatus() {
+    public boolean checkOnlineStatus(){
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader("res/online.txt"));
+            return br.readLine() != null;
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
         return false;
     }
 
