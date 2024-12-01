@@ -4,6 +4,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +17,10 @@ public class SiteSelectionFrame {
     boolean isIntro;
     Controller controller;
     ArrayList<SiteSelectionPanel> addedPanels = new ArrayList<>();
+
+    // Indicates whether the user has been notified of a restored internet connection
+    final boolean[] beenNotified = {false}; // Array allows boolean to be accessible on the heap
+    final boolean[] endSyncCheck = {false};
 
     // Visual subunits
     public JFrame frame = new JFrame();
@@ -50,6 +56,7 @@ public class SiteSelectionFrame {
 
         // Formatting button panel
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
         // Button panel when intro
         if (isIntro) {
             buttonPanel.add(downloadButton, BorderLayout.EAST);
@@ -61,7 +68,7 @@ public class SiteSelectionFrame {
                     // Duplicate the selected integer values
                     Set<UUID> selectedSites = new HashSet<UUID>();
                     selectedSites.addAll(SiteSelectionPanel.selected);
-
+                    controller.closeAllOpenedFrames();
                     // Perform some action
                     // In this case, pass them to the controller to download site data
                     controller.displaySiteSelectionFrameEdit(selectedSites);
@@ -75,68 +82,25 @@ public class SiteSelectionFrame {
 
         }
 
-        // Button panel when edit
+        // Close method
+        frame.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    super.windowClosing(e);
+                    controller.closeAllOpenedFrames();
+                }
+            });
+
+                // Button panel when edit
         if (!isIntro) {
 
-
-
-
             // Store notification flag as an array to make it accessible from the heap
-            final boolean[] beenNotified = {false};
             downloadButton.setEnabled(false);
             buttonPanel.add(exportButton, BorderLayout.EAST);
             buttonPanel.add(uploadButton, BorderLayout.WEST);
 
             // Start checking to see if the system is online
-            Thread.startVirtualThread(() -> {
-
-                for(;;) {
-                    if (controller.checkOnlineStatus()) {
-                        downloadButton.setEnabled(true);
-                        if (!beenNotified[0]) {
-                            // Create an anonymous class that creates a popup screen
-                            class NotificationScreen extends JFrame{
-                                JLabel descriptionLabel = new JLabel();
-                                JPanel buttonPanel = new JPanel(new BorderLayout());
-
-                                JButton uploadButton = new JButton("UPLOAD");
-                                JButton cancelButton = new JButton("CANCEL");
-                                public NotificationScreen(){
-                                    this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
-
-                                    // Create a description object and append it to the warning window
-                                    descriptionLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-                                    descriptionLabel.setText("Internet connection has been restored! Upload local storage now?");
-                                    this.getContentPane().add(descriptionLabel);
-
-                                    // Build buttonPanel
-                                    buttonPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-                                    buttonPanel.add(uploadButton, BorderLayout.EAST);
-                                    buttonPanel.add(cancelButton, BorderLayout.WEST);
-
-                                    // Set action listeners
-                                    uploadButton.addActionListener(new ActionListener() {
-                                        @Override
-                                        public void actionPerformed(ActionEvent e) {
-
-                                        }
-                                    });
-
-
-                                }
-                            }
-                        }
-                        beenNotified[0] = true;
-                    } else {
-
-                    }
-                    try {
-                        Thread.sleep(Duration.ofMinutes(1));
-                    } catch (InterruptedException e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
-            });
+            Thread.startVirtualThread(this::attemptSyncLoop);
             // Set action listeners
             // Export button
             exportButton.addActionListener(new ActionListener() {
@@ -188,7 +152,35 @@ public class SiteSelectionFrame {
         frame.setVisible(visible);
     }
 
+    public void attemptSyncLoop(){
+        // Check to see if the connection has been restored
+        try {
+            if (controller.checkOnlineStatus()){
+                // If the user hasn't been notified yet
+                if (!beenNotified[0]){
+                    controller.displayConnectionRestoredPopup(); // Prompt them to sync now
+                }
+                beenNotified[0] = true;  // Flag the user as having been notified
+                uploadButton.setEnabled(true); // Enable the download button on site selection
+            } else { // If the connection is lost
+                beenNotified[0] = false; // Restore notification flag
+                uploadButton.setEnabled(false); // Disable download
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        // Mechanism for breaking the infinite recursion
+        if (endSyncCheck[0]) {return;}
 
+        // Wait and then call the method again
+        try {
+            Thread.sleep(Duration.ofMinutes(1));
+            attemptSyncLoop();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
 
 

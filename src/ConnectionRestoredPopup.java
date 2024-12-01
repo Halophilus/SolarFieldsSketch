@@ -24,12 +24,15 @@ public class ConnectionRestoredPopup extends JFrame {
         buttonPanel.add(uploadButton, BorderLayout.EAST);
         buttonPanel.add(cancelButton, BorderLayout.WEST);
 
+        JFrame thisAlias = this;
+
         // Set action listeners
         uploadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.uploadLocalEntries(); // Add all new local entries
                 controller.markLocalStorageAsUploaded(); // Lower updated flags for local data
+                thisAlias.dispose();
             }
         });
 

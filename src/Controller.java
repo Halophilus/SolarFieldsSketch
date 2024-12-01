@@ -65,4 +65,8 @@ public interface Controller {
     EntryPanel makeEntryPanelFromId(UUID entryId, boolean b);
 
     void markLocalStorageAsUploaded();
+
+    void closeAllOpenedFrames();
+
+    void displayConnectionRestoredPopup();
 }

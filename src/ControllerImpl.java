@@ -48,6 +48,13 @@ public class ControllerImpl implements Controller {
         openFrames.clear();
     }
 
+    @Override
+    public void displayConnectionRestoredPopup() {
+        ConnectionRestoredPopup connectionRestoredPopup = new ConnectionRestoredPopup(this);
+        openFrames.add(connectionRestoredPopup);
+        connectionRestoredPopup.setVisible(true);
+    }
+
     // Iterates through all local data and updates and lowers the flags that indicate new entries/tickets
     public void markLocalStorageAsUploaded(){
         for(LocalSite site : LocalTicketingSystem.getAllSites()){
