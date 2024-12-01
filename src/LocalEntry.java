@@ -74,4 +74,8 @@ public class LocalEntry implements Entry{
     public boolean isNew() {
         return false;
     }
+
+    public void reset(){
+        isNew = false;
+    }
 }

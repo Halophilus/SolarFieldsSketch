@@ -69,4 +69,5 @@ public class GlobalEntry implements Entry{
     public boolean isNew() {
         return false;
     }
+
 }

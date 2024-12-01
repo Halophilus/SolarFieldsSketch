@@ -77,7 +77,11 @@ public class SiteSelectionFrame {
 
         // Button panel when edit
         if (!isIntro) {
-            // Store notification flag as an array to make it accessible from a stack
+
+
+
+
+            // Store notification flag as an array to make it accessible from the heap
             final boolean[] beenNotified = {false};
             downloadButton.setEnabled(false);
             buttonPanel.add(exportButton, BorderLayout.EAST);
@@ -85,6 +89,7 @@ public class SiteSelectionFrame {
 
             // Start checking to see if the system is online
             Thread.startVirtualThread(() -> {
+
                 for(;;) {
                     if (controller.checkOnlineStatus()) {
                         downloadButton.setEnabled(true);
@@ -105,13 +110,16 @@ public class SiteSelectionFrame {
                                     this.getContentPane().add(descriptionLabel);
 
                                     // Build buttonPanel
+                                    buttonPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
                                     buttonPanel.add(uploadButton, BorderLayout.EAST);
                                     buttonPanel.add(cancelButton, BorderLayout.WEST);
 
                                     // Set action listeners
                                     uploadButton.addActionListener(new ActionListener() {
                                         @Override
-                                        public void actionPerformed()
+                                        public void actionPerformed(ActionEvent e) {
+
+                                        }
                                     });
 
 

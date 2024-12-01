@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +14,14 @@ import java.util.stream.Collectors;
 public class ControllerImpl implements Controller {
     GlobalTicketingSystem globalTicketingSystem;
     LocalTicketingSystem localTicketingSystem;
+    ArrayList<JFrame> openFrames;
 
     ControllerImpl(GlobalTicketingSystem globalTicketingSystem) {
         this.globalTicketingSystem = globalTicketingSystem;
+        openFrames = new ArrayList<JFrame>();
     }
+
+
 
     // Download data associated with specific site Ids
     public void downloadSiteData(Set<UUID> selectedSiteIds){
@@ -32,6 +37,33 @@ public class ControllerImpl implements Controller {
         }
     }
 
+    public void clearLocalStorage(){
+        LocalTicketingSystem.clearSites();
+    }
+
+    public void closeAllOpenedFrames(){
+        for (JFrame frame : openFrames){
+            frame.dispose();
+        }
+        openFrames.clear();
+    }
+
+    // Iterates through all local data and updates and lowers the flags that indicate new entries/tickets
+    public void markLocalStorageAsUploaded(){
+        for(LocalSite site : LocalTicketingSystem.getAllSites()){
+            site.reset();
+            for (Ticket ticket : site.tickets()){
+                LocalTicket localTicket = (LocalTicket) ticket;
+                localTicket.reset();
+                for (Entry entry : ticket.entries()){
+                    LocalEntry localEntry = (LocalEntry) entry;
+                    localEntry.reset();
+                }
+
+            }
+        }
+    }
+
     // Upload local entries to global database
     public void uploadLocalEntries(){
         // Extract local sites
@@ -41,13 +73,13 @@ public class ControllerImpl implements Controller {
 
         // For all updated sites
         for (LocalSite updatedSite : updatedLocalSites) {
-            List<Ticket> oldTicketsWithNewEntries = updatedSite.tickets().stream().filter(ticket->ticket.updated()).filter(ticket->!ticket.isNew()).toList();
-            List<Ticket> newTickets = updatedSite.tickets().stream().filter(ticket->ticket.isNew()).toList();
+            List<Ticket> oldTicketsWithNewEntries = updatedSite.tickets().stream().filter(Ticket::updated).filter(ticket->!ticket.isNew()).toList();
+            List<Ticket> newTickets = updatedSite.tickets().stream().filter(Ticket::isNew).toList();
 
             // Iterate through the old updated tickets
             for (Ticket updatedTicket : oldTicketsWithNewEntries) {
                 // Filter out existing tickets
-                List<Entry> newEntries = updatedTicket.entries().stream().filter(entry->entry.isNew()).toList();
+                List<Entry> newEntries = updatedTicket.entries().stream().filter(Entry::isNew).toList();
                 // For all the new entries in the updated tickets
                 for (Entry newEntry : newEntries) {
                     LocalEntry newLocalEntry = (LocalEntry)newEntry;
@@ -111,6 +143,7 @@ public class ControllerImpl implements Controller {
     // Intro
     public void displaySiteSelectionFrameIntro(){
         SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame(true, this);
+        openFrames.add(siteSelectionFrame.frame);
         List<UUID> siteIdCollectionList = GlobalTicketingSystem.getAllSites().stream().map(Site::id).distinct().collect(Collectors.toList());
         addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, true);
         siteSelectionFrame.setVisible(true);
@@ -119,6 +152,7 @@ public class ControllerImpl implements Controller {
     // Edit
     public void displaySiteSelectionFrameEdit(Set<UUID> selectedSiteIds){
         SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame(false, this);
+        openFrames.add(siteSelectionFrame.frame);
         downloadSiteData(selectedSiteIds);
 
         List<UUID> siteIdCollectionList = LocalTicketingSystem.getAllSites().stream().map(LocalSite::id).distinct().collect(Collectors.toList());
@@ -167,6 +201,7 @@ public class ControllerImpl implements Controller {
         addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, true);
         innerDisplayPanel.addTicketsToScrollPane();
         SiteInfoFrameIntro newFrame = assembleSiteInfoFrameIntro(innerDisplayPanel, siteSelectionFrame);
+        openFrames.add(newFrame.frame);
         newFrame.setVisible(true);
     }
     // For the edit section
@@ -175,6 +210,7 @@ public class ControllerImpl implements Controller {
         addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, false);
         innerDisplayPanel.addTicketsToScrollPane();
         SiteInfoFrameEdit newFrame = assembleSiteInfoFrameEdit(innerDisplayPanel, siteSelectionFrame);
+        openFrames.add(newFrame.frame);
         newFrame.setVisible(true);
 
 
@@ -273,6 +309,7 @@ public class ControllerImpl implements Controller {
         addEntryPanelsToEntryDisplayPanel(innerDisplayPanel, true);
         innerDisplayPanel.addEntriesToScrollPanel();
         EntryDisplayFrameIntro newFrame = assembleEntryDisplayPanelFrameIntro(innerDisplayPanel);
+        openFrames.add(newFrame.frame);
         newFrame.setVisible(true);
     }
     //Edit section
@@ -285,6 +322,7 @@ public class ControllerImpl implements Controller {
 
         // Fetch Site Data
         EntryDisplayFrameEdit newFrame = assembleEntryDisplayPanelFrameEdit(ticketId, innerDisplayPanel, ticketPanel);
+        openFrames.add(newFrame.frame);
         newFrame.setVisible(true);
         //EntryDisplayFrameEdit
 
@@ -302,6 +340,7 @@ public class ControllerImpl implements Controller {
     @Override
     public void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame,  EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel){
         AddEntryScreen addEntryScreen = new AddEntryScreen(entryDisplayFrame, entryDisplayPanel, parentTicketPanel, this);
+        openFrames.add(addEntryScreen.frame);
         addEntryScreen.setVisible(true);
     }
 

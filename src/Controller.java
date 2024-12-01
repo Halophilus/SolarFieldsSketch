@@ -57,5 +57,12 @@ public interface Controller {
 
     boolean checkOnlineStatus();
 
+    public void uploadLocalEntries();
+
+    public void clearLocalStorage();
+
+
     EntryPanel makeEntryPanelFromId(UUID entryId, boolean b);
+
+    void markLocalStorageAsUploaded();
 }

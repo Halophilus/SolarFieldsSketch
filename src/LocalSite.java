@@ -107,4 +107,8 @@ public class LocalSite implements Site{
     public String emailAddress() {
         return this.emailAddress;
     }
+
+    public void reset(){
+        this.updated = false;
+    }
 }

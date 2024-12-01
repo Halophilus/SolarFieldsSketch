@@ -15,4 +15,5 @@ public interface Ticket {
     boolean isNew();
 
     boolean updated();
+
 }

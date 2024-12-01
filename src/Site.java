@@ -24,4 +24,5 @@ public interface Site {
     String phoneNumber();
 
     String emailAddress();
+
 }

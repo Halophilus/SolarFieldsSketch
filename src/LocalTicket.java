@@ -91,4 +91,9 @@ public class LocalTicket implements Ticket{
         this.updated = true;
     }
 
+    public void reset(){
+        this.isNew = false;
+        this.updated = false;
+    }
+
 }
