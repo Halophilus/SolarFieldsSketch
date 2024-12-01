@@ -87,7 +87,11 @@ public class SiteSelectionFrame {
                 @Override
                 public void windowClosing(WindowEvent e) {
                     super.windowClosing(e);
+                    endSyncCheck[0] = true;
                     controller.closeAllOpenedFrames();
+                    if (!isIntro){
+                        controller.displaySiteSelectionFrameIntro();
+                    }
                 }
             });
 
@@ -121,7 +125,6 @@ public class SiteSelectionFrame {
                     System.out.println("Upload Button pressed");
                     controller.uploadLocalEntries(); // Add all new local entries
                     controller.markLocalStorageAsUploaded(); // Lower updated flags for local data
-                    frame.dispose();
                 }
             });
         }
@@ -155,6 +158,7 @@ public class SiteSelectionFrame {
         frame.setVisible(visible);
     }
 
+    // Recursive function to synchronize local and global databases
     public void attemptSyncLoop(){
         // Check to see if the connection has been restored
         System.out.println("Checking for internet connection...");

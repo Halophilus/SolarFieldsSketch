@@ -69,4 +69,6 @@ public interface Controller {
     void closeAllOpenedFrames();
 
     void displayConnectionRestoredPopup();
+
+    void displaySiteSelectionFrameIntro();
 }
