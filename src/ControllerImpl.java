@@ -19,7 +19,6 @@ public class ControllerImpl implements Controller {
     }
 
 
-
     // Download data associated with specific site Ids
     public void downloadSiteData(Set<UUID> selectedSiteIds){
         // For each UUID passed to the method
@@ -71,7 +70,7 @@ public class ControllerImpl implements Controller {
     // Upload local entries to global database
     public void uploadLocalEntries(){
         // Extract local sites
-        ArrayList<LocalSite> locallyStoredSites = LocalTicketingSystem.downloadedSites;
+        ArrayList<LocalSite> locallyStoredSites = LocalTicketingSystem.getAllSites();
         // Filter out unchanged sites
         List<LocalSite> updatedLocalSites = locallyStoredSites.stream().filter(site->site.updated).toList();
 
@@ -280,7 +279,6 @@ public class ControllerImpl implements Controller {
         } else {
             newTicket = LocalTicketingSystem.getTicket(ticketId);
         }
-        System.out.println("CURRENT ENTRIES " + newTicket.entries());
         List<Entry> entries = newTicket.entries().stream().distinct().toList();
         LocalDate mostRecentDate = LocalDate.MAX; //
 
