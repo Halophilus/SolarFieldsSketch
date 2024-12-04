@@ -23,6 +23,8 @@ public class LocalEntry implements Entry{
 
     // For new entries
     LocalEntry(LocalDate date, String description, ImageIcon icon, UUID parentTicketId, UUID parentSiteId, UUID id){
+        System.out.println("Generating new LocalEntry " + id.toString());
+        System.out.println("Description: " + description);
         this.id = id;
         this.date = date;
         this.description = description;
@@ -36,11 +38,16 @@ public class LocalEntry implements Entry{
         parentTicket.indicateUpdated();
         parentTicket.unresolve();
         parentTicket.entries().add(this);
+        System.out.println("Parent ticket: " + parentTicketId );
+        System.out.println("PT description: " + parentTicket.description());
+        System.out.println("Res. Upd. New: " + parentTicket.resolved() + " " + parentTicket.updated() + " " + parentTicket.isNew());
 
         // Indicate that the parent site has been updated
         assert LocalTicketingSystem.getSite(parentSiteId) == null;
         LocalSite parentSite = (LocalSite)LocalTicketingSystem.getSite(parentSiteId);
         parentSite.indicateUpdated();
+        System.out.println("Parent site: " + parentSite.title());
+        System.out.println("Upd. " + parentSite.updated);
     }
 
 
@@ -72,10 +79,15 @@ public class LocalEntry implements Entry{
 
     @Override
     public boolean isNew() {
-        return false;
+        return this.isNew;
     }
 
     public void reset(){
         isNew = false;
+    }
+
+    @Override
+    public String toString(){
+        return "Ticket ID: " + this.id() + "\nDescription: " + this.description() + "\nisNew: " + this.isNew();
     }
 }

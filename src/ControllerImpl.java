@@ -5,10 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Array;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ControllerImpl implements Controller {
@@ -80,15 +77,22 @@ public class ControllerImpl implements Controller {
 
         // For all updated sites
         for (LocalSite updatedSite : updatedLocalSites) {
-            List<Ticket> oldTicketsWithNewEntries = updatedSite.tickets().stream().filter(Ticket::updated).filter(ticket->!ticket.isNew()).toList();
+            List<Ticket> oldTicketsWithNewEntries = updatedSite.tickets().stream().filter(Ticket::updated).filter(ticket ->!ticket.isNew()).toList();
+            System.out.println("Old tickets with new entries: " + oldTicketsWithNewEntries);
             List<Ticket> newTickets = updatedSite.tickets().stream().filter(Ticket::isNew).toList();
+            System.out.println("New tickets: " + newTickets);
 
             // Iterate through the old updated tickets
             for (Ticket updatedTicket : oldTicketsWithNewEntries) {
+                System.out.println("Processing old tickets with new entries");
                 // Filter out existing tickets
                 List<Entry> newEntries = updatedTicket.entries().stream().filter(Entry::isNew).toList();
+                System.out.println("Current ticket: " + updatedTicket);
+                System.out.println("Updated ticket entries: " + updatedTicket.entries());
                 // For all the new entries in the updated tickets
-                for (Entry newEntry : newEntries) {
+                Set<Entry> entriesSet = new HashSet<>(newEntries);
+                for (Entry newEntry : entriesSet) {
+                    System.out.println("Processing newEntry " + newEntry);
                     LocalEntry newLocalEntry = (LocalEntry)newEntry;
                     // Generate a new global entry from the local entry
                     GlobalEntry newGlobalEntry = new GlobalEntry(newLocalEntry);
@@ -96,11 +100,13 @@ public class ControllerImpl implements Controller {
                     GlobalTicket correspondingGlobalTicket = (GlobalTicket)GlobalTicketingSystem.getTicket(updatedTicket.id());
                     // Add the newly generated global entry to the in-memory local entry
                     correspondingGlobalTicket.addEntry(newGlobalEntry);
+                    correspondingGlobalTicket.resolve(false);
                 }
             }
 
             // Iterate through all the new tickets
             for (Ticket newTicket : newTickets) {
+                System.out.println("Processing new tickets");
                 // Generate a new global ticket
                 GlobalTicket newGlobalTicket = new GlobalTicket((LocalTicket)newTicket);
                 // Iterate through the local ticket's entries
@@ -120,7 +126,7 @@ public class ControllerImpl implements Controller {
         }
 
         // Delete locally stored data
-        LocalTicketingSystem.clearSites();
+        //LocalTicketingSystem.clearSites();
     }
 
     // Add ticket screen for edit section
@@ -244,9 +250,10 @@ public class ControllerImpl implements Controller {
         }
 
         List<UUID> listOfTickets = targetSite.tickets().stream().map(Ticket::id).distinct().toList();
+        Set<UUID> setOfTickets = new HashSet<UUID>(listOfTickets);
 
-        if(!listOfTickets.isEmpty()){
-            for (UUID ticketId : listOfTickets){
+        if(!setOfTickets.isEmpty()){
+            for (UUID ticketId : setOfTickets){
                 TicketPanel newTicketPanel = makeTicketPanelFromId(ticketId, isIntro);
                 siteInfoDisplayPanel.addTicketPanel(newTicketPanel);
             }
@@ -273,7 +280,8 @@ public class ControllerImpl implements Controller {
         } else {
             newTicket = LocalTicketingSystem.getTicket(ticketId);
         }
-        List<Entry> entries = newTicket.entries();
+        System.out.println("CURRENT ENTRIES " + newTicket.entries());
+        List<Entry> entries = newTicket.entries().stream().distinct().toList();
         LocalDate mostRecentDate = LocalDate.MAX; //
 
         for (Entry entry : entries){ // For each value in the ticket entries

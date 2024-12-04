@@ -43,6 +43,8 @@ public class GlobalTicket implements Ticket {
         return this.resolved;
     }
 
+    public void resolve(boolean resolve) { this.resolved = resolve;}
+
     @Override
     public List<UUID> entryIds() {
         return entries.stream().map(entry -> entry.id()).toList();
@@ -65,7 +67,8 @@ public class GlobalTicket implements Ticket {
 
 
     public void addEntry(GlobalEntry newGlobalEntry) {
-        entries.add(newGlobalEntry);
+
+        if (!this.entryIds().contains(newGlobalEntry.id())) {entries.add(newGlobalEntry);}
     }
 }
 

@@ -83,7 +83,7 @@ public class LocalTicket implements Ticket{
 
     @Override
     public boolean updated() {
-        return false;
+        return this.updated;
     }
 
 
@@ -94,6 +94,11 @@ public class LocalTicket implements Ticket{
     public void reset(){
         this.isNew = false;
         this.updated = false;
+    }
+
+    @Override
+    public String toString(){
+        return "Ticket ID: " + this.id() + "\n" + "Ticket Description: " + this.description() + "\n";
     }
 
 }
