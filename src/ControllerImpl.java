@@ -131,7 +131,6 @@ public class ControllerImpl implements Controller {
     // Add ticket screen for edit section
     public void generateLocalTicket(UUID ticketId, String ticketDescriptionInput, UUID siteId){
         LocalTicket newTicket = new LocalTicket(ticketId, ticketDescriptionInput, siteId);
-
     }
 
     @Override
