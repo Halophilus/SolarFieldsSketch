@@ -11,11 +11,13 @@ import java.util.stream.Collectors;
 public class ControllerImpl implements Controller {
     GlobalTicketingSystem globalTicketingSystem;
     LocalTicketingSystem localTicketingSystem;
+    Model model;
     ArrayList<JFrame> openFrames;
 
     ControllerImpl(GlobalTicketingSystem globalTicketingSystem) {
         this.globalTicketingSystem = globalTicketingSystem;
         openFrames = new ArrayList<JFrame>();
+        this.model = new ModelImpl();
     }
 
 
@@ -24,12 +26,11 @@ public class ControllerImpl implements Controller {
         // For each UUID passed to the method
         for (UUID siteId : selectedSiteIds){
             // Find the corresponding global site
-            GlobalSite globalSite = (GlobalSite)GlobalTicketingSystem.getSite(siteId);
+            GlobalSite globalSite = model.fetchGlobalSite(siteId);
             // Generate a new local site based on it
             // Thereby downloading the hierarchical data associated with it
-            LocalSite newLocalSite = new LocalSite(globalSite);
-            LocalTicketingSystem.addSite(newLocalSite);
-
+            LocalSite newLocalSite = model.generateLocalSite(globalSite)
+            model.downloadLocalSite(newLocalSite);
         }
     }
 
