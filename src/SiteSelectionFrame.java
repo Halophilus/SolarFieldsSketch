@@ -62,7 +62,6 @@ public class SiteSelectionFrame {
             buttonPanel.add(downloadButton, BorderLayout.EAST);
             downloadButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    // TODO: pass data from selected panes to download all the data related to the selected globalSites
                     System.out.println("Download Button pressed");
                     controller.clearLocalStorage();
                     // Duplicate the selected integer values
