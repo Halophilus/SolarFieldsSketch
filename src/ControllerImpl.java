@@ -12,6 +12,7 @@ public class ControllerImpl implements Controller {
     GlobalTicketingSystem globalTicketingSystem;
     LocalTicketingSystem localTicketingSystem;
     Model model;
+    View view;
     ArrayList<JFrame> openFrames;
 
     ControllerImpl(GlobalTicketingSystem globalTicketingSystem) {
@@ -19,21 +20,6 @@ public class ControllerImpl implements Controller {
         openFrames = new ArrayList<JFrame>();
         this.model = new ModelImpl();
     }
-
-
-    // Download data associated with specific site Ids
-    public void downloadSiteData(Set<UUID> selectedSiteIds){
-        // For each UUID passed to the method
-        for (UUID siteId : selectedSiteIds){
-            // Find the corresponding global site
-            GlobalSite globalSite = model.fetchGlobalSite(siteId);
-            // Generate a new local site based on it
-            // Thereby downloading the hierarchical data associated with it
-            LocalSite newLocalSite = model.generateLocalSite(globalSite)
-            model.downloadLocalSite(newLocalSite);
-        }
-    }
-
 
 
     public void closeAllOpenedFrames(){
@@ -45,86 +31,17 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void displayConnectionRestoredPopup() {
-        ConnectionRestoredPopup connectionRestoredPopup = new ConnectionRestoredPopup(this);
-        openFrames.add(connectionRestoredPopup);
-        connectionRestoredPopup.setVisible(true);
+        view.displayConnectionRestoredPopup(this);
     }
 
     // Iterates through all local data and updates and lowers the flags that indicate new entries/tickets
     public void markLocalStorageAsUploaded(){
-        for(LocalSite site : LocalTicketingSystem.getAllSites()){
-            site.reset();
-            for (Ticket ticket : site.tickets()){
-                LocalTicket localTicket = (LocalTicket) ticket;
-                localTicket.reset();
-                for (Entry entry : ticket.entries()){
-                    LocalEntry localEntry = (LocalEntry) entry;
-                    localEntry.reset();
-                }
-
-            }
-        }
+        model.markLocalStorageAsUploaded();
     }
 
     // Upload local entries to global database
     public void uploadLocalEntries(){
-        // Extract local sites
-        ArrayList<LocalSite> locallyStoredSites = LocalTicketingSystem.getAllSites();
-        // Filter out unchanged sites
-        List<LocalSite> updatedLocalSites = locallyStoredSites.stream().filter(site->site.updated).toList();
-
-        // For all updated sites
-        for (LocalSite updatedSite : updatedLocalSites) {
-            List<Ticket> oldTicketsWithNewEntries = updatedSite.tickets().stream().filter(Ticket::updated).filter(ticket ->!ticket.isNew()).toList();
-            System.out.println("Old tickets with new entries: " + oldTicketsWithNewEntries);
-            List<Ticket> newTickets = updatedSite.tickets().stream().filter(Ticket::isNew).toList();
-            System.out.println("New tickets: " + newTickets);
-
-            // Iterate through the old updated tickets
-            for (Ticket updatedTicket : oldTicketsWithNewEntries) {
-                System.out.println("Processing old tickets with new entries");
-                // Filter out existing tickets
-                List<Entry> newEntries = updatedTicket.entries().stream().filter(Entry::isNew).toList();
-                System.out.println("Current ticket: " + updatedTicket);
-                System.out.println("Updated ticket entries: " + updatedTicket.entries());
-                // For all the new entries in the updated tickets
-                Set<Entry> entriesSet = new HashSet<>(newEntries);
-                for (Entry newEntry : entriesSet) {
-                    System.out.println("Processing newEntry " + newEntry);
-                    LocalEntry newLocalEntry = (LocalEntry)newEntry;
-                    // Generate a new global entry from the local entry
-                    GlobalEntry newGlobalEntry = new GlobalEntry(newLocalEntry);
-                    // Get the corresponding global ticket
-                    GlobalTicket correspondingGlobalTicket = (GlobalTicket)GlobalTicketingSystem.getTicket(updatedTicket.id());
-                    // Add the newly generated global entry to the in-memory local entry
-                    correspondingGlobalTicket.addEntry(newGlobalEntry);
-                    correspondingGlobalTicket.resolve(false);
-                }
-            }
-
-            // Iterate through all the new tickets
-            for (Ticket newTicket : newTickets) {
-                System.out.println("Processing new tickets");
-                // Generate a new global ticket
-                GlobalTicket newGlobalTicket = new GlobalTicket((LocalTicket)newTicket);
-                // Iterate through the local ticket's entries
-                for (Entry newEntry : newTicket.entries()) {
-                    LocalEntry newLocalEntry = (LocalEntry)newEntry;
-                    // Generate a new global entry
-                    GlobalEntry newGlobalEntry = new GlobalEntry(newLocalEntry);
-                    // Add it to the new global ticket
-                    newGlobalTicket.addEntry(newGlobalEntry);
-                }
-                // Fetch the corresponding global site
-                GlobalSite correspondingGlobalSite = (GlobalSite) GlobalTicketingSystem.getSite(updatedSite.id());
-                // Add the ticket to the existing global site
-                correspondingGlobalSite.addTicket(newGlobalTicket);
-
-            }
-        }
-
-        // Delete locally stored data
-        //LocalTicketingSystem.clearSites();
+        model.uploadLocalEntries();
     }
 
     @Override
@@ -157,8 +74,7 @@ public class ControllerImpl implements Controller {
     // SiteSelectionFrame methods
     // Intro
     public void displaySiteSelectionFrameIntro(){
-        SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame(true, this);
-        openFrames.add(siteSelectionFrame.frame);
+        SiteSelectionFrame siteSelectionFrame= view.generateSiteSelectionFrameIntro(this);
         List<UUID> siteIdCollectionList = model.globalSiteIdCollectionList();
         addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, true);
         siteSelectionFrame.setVisible(true);
@@ -166,9 +82,8 @@ public class ControllerImpl implements Controller {
 
     // Edit
     public void displaySiteSelectionFrameEdit(Set<UUID> selectedSiteIds){
-        SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame(false, this);
-        openFrames.add(siteSelectionFrame.frame);
-        downloadSiteData(selectedSiteIds);
+        SiteSelectionFrame siteSelectionFrame = view.generateSiteSelectionFrameEdit(this);
+        model.downloadSiteData(selectedSiteIds);
 
         List<UUID> siteIdCollectionList = model.localSiteIDCollectionList();
         addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, false);
@@ -192,9 +107,9 @@ public class ControllerImpl implements Controller {
     public void addSiteToSiteSelectionFrameFromID(SiteSelectionFrame siteSelectionFrame, UUID id, boolean isIntro){
         Site newSite;
         if (isIntro){
-            newSite = GlobalTicketingSystem.getSite(id);
+            newSite = model.fetchGenericSiteFromGlobalDatabase(id);
         } else {
-            newSite = LocalTicketingSystem.getSite(id);
+            newSite = model.fetchGenericSiteFromLocalDatabase(id);
         }
         if (newSite != null){
             addSiteToSiteSelectionFrame(siteSelectionFrame, newSite, isIntro);
@@ -204,8 +119,8 @@ public class ControllerImpl implements Controller {
     }
 
     // Adds a globalSite to the selection frame
-    private void addSiteToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, Site site, boolean isIntro) {
-        siteSelectionFrame.addSite(site.id(), site.title(), site.state(), site.city(), isIntro, this);
+    public void addSiteToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, Site site, boolean isIntro) {
+        view.addSiteToSiteSelectionFrame(siteSelectionFrame,site.id(), site.title(), site.state(), site.city(), isIntro, this);
     }
 
 
@@ -215,10 +130,9 @@ public class ControllerImpl implements Controller {
         SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelFromID(siteId, true);
         addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, true);
         innerDisplayPanel.addTicketsToScrollPane();
-        SiteInfoFrameIntro newFrame = assembleSiteInfoFrameIntro(innerDisplayPanel, siteSelectionFrame);
-        openFrames.add(newFrame.frame);
-        newFrame.setVisible(true);
+        view.displaySiteInfoFrameIntro(innerDisplayPanel, siteSelectionFrame, this);
     }
+
     // For the edit section
     public void displaySiteInfoFrameEdit(UUID siteId, SiteSelectionFrame siteSelectionFrame){
         SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelFromID(siteId, false);
@@ -246,13 +160,12 @@ public class ControllerImpl implements Controller {
     public void addTicketPanelsToSiteInfoDisplayPanel(SiteInfoDisplayPanel siteInfoDisplayPanel, boolean isIntro){
         Site targetSite = null;
         if (isIntro) {
-            targetSite = GlobalTicketingSystem.getSite(siteInfoDisplayPanel.siteId);
+            targetSite = model.fetchGenericSiteFromGlobalDatabase(siteInfoDisplayPanel.siteId);//GlobalTicketingSystem.getSite(siteInfoDisplayPanel.siteId);
         } else {
-            targetSite = LocalTicketingSystem.getSite(siteInfoDisplayPanel.siteId);
+            targetSite = model.fetchGenericSiteFromLocalDatabase(siteInfoDisplayPanel.siteId);
         }
 
-        List<UUID> listOfTickets = targetSite.tickets().stream().map(Ticket::id).distinct().toList();
-        Set<UUID> setOfTickets = new HashSet<UUID>(listOfTickets);
+        Set<UUID> setOfTickets = model.setOfTicketsPerSite(targetSite);
 
         if(!setOfTickets.isEmpty()){
             for (UUID ticketId : setOfTickets){
@@ -270,7 +183,7 @@ public class ControllerImpl implements Controller {
             site = LocalTicketingSystem.getSite(siteId);
         }
         if (site != null){
-            return new SiteInfoDisplayPanel(site.id(), site.imageIcon(), site.title(), site.description(), site.address(), site.city(), site.state(), site.zip(), site.phoneNumber(), site.emailAddress(), isIntro, this);
+            return view.generateSiteInfoDisplayPanel(site.id(), site.imageIcon(), site.title(), site.description(), site.address(), site.city(), site.state(), site.zip(), site.phoneNumber(), site.emailAddress(), isIntro, this);
         }
         return null;
     }
@@ -278,11 +191,11 @@ public class ControllerImpl implements Controller {
     public TicketPanel makeTicketPanelFromId(UUID ticketId, boolean isIntro){
         Ticket newTicket = null;
         if (isIntro) {
-            newTicket = GlobalTicketingSystem.getTicket(ticketId);
+            newTicket = model.fetchGenericTicketFromGlobalDatabase(ticketId);
         } else {
-            newTicket = LocalTicketingSystem.getTicket(ticketId);
+            newTicket = model.fetchGenericTicketFromLocalDatabase(ticketId);
         }
-        List<Entry> entries = newTicket.entries().stream().distinct().toList();
+        List<Entry> entries = model.genericListOfEntries(newTicket);
         LocalDate mostRecentDate = LocalDate.MAX; //
 
         for (Entry entry : entries){ // For each value in the ticket entries
@@ -290,32 +203,7 @@ public class ControllerImpl implements Controller {
                     mostRecentDate = entry.date();
             }
         }
-        return new TicketPanel(ticketId, mostRecentDate, entries.size(), newTicket.resolved(), isIntro, this);
-    }
-
-    // Methods for entry display
-    // Global database
-    public Site fetchSiteGlobal(UUID siteId){
-        return GlobalTicketingSystem.getSite(siteId);
-    }
-
-    public Ticket fetchTicketGlobal(UUID ticketId){
-        return GlobalTicketingSystem.getTicket(ticketId);
-    }
-
-    public Entry fetchEntryGlobal(UUID entryId){
-        return GlobalTicketingSystem.getEntry(entryId);
-    }
-
-    public Site fetchSiteLocal(UUID siteId){
-        return LocalTicketingSystem.getSite(siteId);
-    }
-    public Ticket fetchTicketLocal(UUID ticketId){
-        return LocalTicketingSystem.getTicket(ticketId);
-    }
-
-    public Entry fetchEntryLocal(UUID entryId){
-        return LocalTicketingSystem.getEntry(entryId);
+        return view.generateTicketPanel(ticketId, mostRecentDate, entries.size(), newTicket.resolved(), isIntro, this);
     }
 
     // Displaying the entries associated with a certain ticket
@@ -366,11 +254,11 @@ public class ControllerImpl implements Controller {
     public void addEntryPanelsToEntryDisplayPanel(EntryDisplayPanel entryDisplayPanel, boolean isIntro){
         Ticket newTicket = null;
         if (isIntro) {
-            newTicket = fetchTicketGlobal(entryDisplayPanel.ticketId);
+            newTicket = model.fetchGenericTicketFromGlobalDatabase(entryDisplayPanel.ticketId);
         } else {
-            newTicket = fetchTicketLocal(entryDisplayPanel.ticketId);
+            newTicket = model.fetchGenericTicketFromLocalDatabase(entryDisplayPanel.ticketId);
         }
-        List<UUID> listOfEntries = newTicket.entryIds();
+        List<UUID> listOfEntries = model.entriesFromTicket(newTicket);
 
         if (!listOfEntries.isEmpty()){
             for (UUID entryId : listOfEntries){
@@ -385,9 +273,9 @@ public class ControllerImpl implements Controller {
     public EntryDisplayPanel makeEntryDisplayPanelFromID(UUID ticketId, boolean isIntro){
         Ticket newTicket = null;
         if (isIntro) {
-            newTicket = fetchTicketGlobal(ticketId);
+            newTicket = model.fetchGenericTicketFromGlobalDatabase(ticketId);
         } else {
-            newTicket = fetchTicketLocal(ticketId);
+            newTicket = model.fetchGenericTicketFromLocalDatabase(ticketId);
         }
         if (newTicket != null){
             return new EntryDisplayPanel(ticketId, newTicket.description(), newTicket.resolved(), isIntro);
@@ -401,9 +289,9 @@ public class ControllerImpl implements Controller {
     public EntryPanel makeEntryPanelFromId(UUID entryId, boolean isIntro){
         Entry newEntry = null;
         if (isIntro) {
-            newEntry = fetchEntryGlobal(entryId);
+            newEntry = model.fetchGenericEntryFromGlobalDatabase(entryId);
         } else {
-            newEntry = fetchEntryLocal(entryId);
+            newEntry = model.fetchGenericEntryFromLocalDatabase(entryId);
         }
         if (newEntry != null){
             return new EntryPanel(newEntry.id(), newEntry.date(), newEntry.description(),  newEntry.icon(), newEntry.reviewed(), isIntro);

@@ -32,6 +32,10 @@ public interface Model {
         return LocalTicketingSystem.getAllSites();
     }
 
+    void markLocalStorageAsUploaded();
+
+    void uploadLocalEntries();
+
     List<LocalSite> fetchUpdatedLocalSites();
 
     List<Ticket> getUpdatedOldTickets(LocalSite updatedSite);
@@ -40,9 +44,13 @@ public interface Model {
 
     Set<Entry> newEntriesSet(LocalTicket updatedTicket);
 
+    Set<Entry> newEntriesSet(Ticket updatedTicket);
+
     GlobalEntry localToGlobalEntry(LocalEntry newLocalEntry);
 
     GlobalTicket fetchCorrespondingGlobalTicket(UUID id);
+
+    GlobalSite fetchCorrespondingGlobalSite(UUID siteiD);
 
     void addEntryToGlobalTicket(GlobalTicket correspondingGlobalTicket, GlobalEntry newGlobalEntry);
 
@@ -75,4 +83,6 @@ public interface Model {
     Entry fetchGenericEntryFromLocalDatabase(UUID entryId);
 
     List<UUID> entriesFromTicket(Ticket newTicket);
+
+    void downloadSiteData(Set<UUID> selectedSiteIds);
 }
