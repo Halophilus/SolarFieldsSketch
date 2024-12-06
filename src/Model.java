@@ -10,6 +10,8 @@ public interface Model {
 
     LocalSite generateLocalSite(GlobalSite globalSite);
 
+    void clearLocalStorage();
+
     void downloadLocalSite(LocalSite newLocalSite);
 
     ArrayList<LocalSite> getLocallyStoredSites();
@@ -49,6 +51,8 @@ public interface Model {
     void syncLocalEntryToCorrespondingTicket(GlobalTicket correspondingTicket, GlobalEntry newGlobalEntry);
 
     List<UUID> globalSiteIdCollectionList();
+
+    List<UUID> localSiteIDCollectionList();
 
     void generateLocalTicket(UUID ticketId, String ticketDescriptionInput, UUID siteId);
 

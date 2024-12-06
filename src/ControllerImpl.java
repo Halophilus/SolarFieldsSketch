@@ -34,9 +34,7 @@ public class ControllerImpl implements Controller {
         }
     }
 
-    public void clearLocalStorage(){
-        LocalTicketingSystem.clearSites();
-    }
+
 
     public void closeAllOpenedFrames(){
         for (JFrame frame : openFrames){
@@ -129,14 +127,19 @@ public class ControllerImpl implements Controller {
         //LocalTicketingSystem.clearSites();
     }
 
+    @Override
+    public void clearLocalStorage() {
+        model.clearLocalStorage();
+    }
+
     // Add ticket screen for edit section
     public void generateLocalTicket(UUID ticketId, String ticketDescriptionInput, UUID siteId){
-        LocalTicket newTicket = new LocalTicket(ticketId, ticketDescriptionInput, siteId);
+        model.generateLocalTicket(ticketId, ticketDescriptionInput, siteId);
     }
 
     @Override
     public void generateLocalEntry(LocalDate date, String description, ImageIcon icon, UUID ticketId, UUID siteId, UUID entryId) {
-        LocalEntry newLocalEntry = new LocalEntry(date, description, icon, ticketId, siteId, entryId);
+        model.generateLocalEntry(date, description, icon, ticketId, siteId, entryId);
     }
 
     @Override
@@ -156,7 +159,7 @@ public class ControllerImpl implements Controller {
     public void displaySiteSelectionFrameIntro(){
         SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame(true, this);
         openFrames.add(siteSelectionFrame.frame);
-        List<UUID> siteIdCollectionList = GlobalTicketingSystem.getAllSites().stream().map(Site::id).distinct().collect(Collectors.toList());
+        List<UUID> siteIdCollectionList = model.globalSiteIdCollectionList();
         addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, true);
         siteSelectionFrame.setVisible(true);
     }
@@ -167,7 +170,7 @@ public class ControllerImpl implements Controller {
         openFrames.add(siteSelectionFrame.frame);
         downloadSiteData(selectedSiteIds);
 
-        List<UUID> siteIdCollectionList = LocalTicketingSystem.getAllSites().stream().map(LocalSite::id).distinct().collect(Collectors.toList());
+        List<UUID> siteIdCollectionList = model.localSiteIDCollectionList();
         addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, false);
         siteSelectionFrame.setVisible(true);
     }

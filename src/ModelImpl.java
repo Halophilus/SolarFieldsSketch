@@ -18,6 +18,12 @@ public class ModelImpl implements Model {
     }
 
     @Override
+    public void clearLocalStorage(){
+        LocalTicketingSystem.clearSites();
+    }
+
+
+    @Override
     public void downloadLocalSite(LocalSite newLocalSite){
         LocalTicketingSystem.addSite(newLocalSite);
     }
@@ -106,6 +112,11 @@ public class ModelImpl implements Model {
     @Override
     public List<UUID> globalSiteIdCollectionList(){
         return GlobalTicketingSystem.getAllSites().stream().map(Site::id).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UUID> localSiteIDCollectionList(){
+        return LocalTicketingSystem.getAllSites().stream().map(LocalSite::id).distinct().collect(Collectors.toList());
     }
 
     @Override
