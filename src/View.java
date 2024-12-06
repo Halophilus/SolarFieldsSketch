@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
+// An interface for generating display items for Solar Fields
 public interface View {
     void closeAllOpenedFrames();
 
@@ -20,4 +21,14 @@ public interface View {
     void displaySiteInfoFrameIntro(SiteInfoDisplayPanel siteInfoDisplayPanel, SiteSelectionFrame siteSelectionFrame, Controller controller);
 
     void displaySiteInfoFrameEdit(SiteInfoDisplayPanel siteInfoDisplayPanel, SiteSelectionFrame siteSelectionFrame, Controller controller);
+
+    EntryDisplayPanel generateEntryDisplayPanelIntro(UUID ticketId, String description, boolean resolved, boolean isIntro);
+
+    void displayEntryDisplayPanelFrameIntro(EntryDisplayPanel entryDisplayPanel, Controller controller);
+
+    void displayEntryDisplayPanelFrameEdit(EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel, UUID siteId, Controller controller);
+
+    void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame, EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel, Controller controller);
+
+    EntryPanel generateEntryPanel(UUID entryId, LocalDate datePosted, String description, ImageIcon image, boolean reviewed, boolean isIntro);
 }

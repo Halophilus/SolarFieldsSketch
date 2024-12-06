@@ -85,4 +85,6 @@ public interface Model {
     List<UUID> entriesFromTicket(Ticket newTicket);
 
     void downloadSiteData(Set<UUID> selectedSiteIds);
+
+    UUID getParentSiteId(UUID ticketId);
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class ViewImpl implements View {
-    Controller controller;
     ArrayList<JFrame> openFrames;
 
     @Override
@@ -60,7 +59,40 @@ public class ViewImpl implements View {
 
     @Override
     public void displaySiteInfoFrameEdit(SiteInfoDisplayPanel siteInfoDisplayPanel, SiteSelectionFrame siteSelectionFrame, Controller controller){
+        SiteInfoFrameEdit newSiteInfoFrameEdit = new SiteInfoFrameEdit(siteInfoDisplayPanel, controller, siteSelectionFrame);
+        openFrames.add(newSiteInfoFrameEdit.frame);
+        newSiteInfoFrameEdit.setVisible(true);
+    }
 
+    @Override
+    public EntryDisplayPanel generateEntryDisplayPanelIntro(UUID ticketId, String description, boolean resolved, boolean isIntro){
+        return new EntryDisplayPanel(ticketId, description, resolved, isIntro);
+    }
+
+    @Override
+    public void displayEntryDisplayPanelFrameIntro(EntryDisplayPanel entryDisplayPanel, Controller controller){
+        EntryDisplayFrameIntro entryDisplayFrameIntro = new EntryDisplayFrameIntro(entryDisplayPanel, controller);
+        openFrames.add(entryDisplayFrameIntro.frame);
+        entryDisplayFrameIntro.setVisible(true);
+    }
+
+    @Override
+    public void displayEntryDisplayPanelFrameEdit(EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel, UUID siteId, Controller controller){
+        EntryDisplayFrameEdit entryDisplayFrameEdit = new EntryDisplayFrameEdit(entryDisplayPanel, parentTicketPanel, siteId, controller);
+        openFrames.add(entryDisplayFrameEdit.frame);
+        entryDisplayFrameEdit.setVisible(true);
+    }
+
+    @Override
+    public void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame, EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel, Controller controller){
+        AddEntryScreen addEntryScreen = new AddEntryScreen(entryDisplayFrame, entryDisplayPanel, parentTicketPanel, controller);
+        openFrames.add(addEntryScreen.frame);
+        addEntryScreen.setVisible(true);
+    }
+
+    @Override
+    public EntryPanel generateEntryPanel(UUID entryId, LocalDate datePosted, String description, ImageIcon image, boolean reviewed, boolean isIntro){
+        return new EntryPanel(entryId, datePosted, description, image, reviewed, isIntro);
     }
 
 

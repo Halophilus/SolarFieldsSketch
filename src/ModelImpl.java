@@ -256,4 +256,9 @@ public class ModelImpl implements Model {
             downloadLocalSite(newLocalSite);
         }
     }
+
+    @Override
+    public UUID getParentSiteId(UUID ticketId){
+        return LocalTicketingSystem.getSiteFromTicket(ticketId).id();
+    }
 }

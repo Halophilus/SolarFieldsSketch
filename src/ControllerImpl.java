@@ -23,10 +23,7 @@ public class ControllerImpl implements Controller {
 
 
     public void closeAllOpenedFrames(){
-        for (JFrame frame : openFrames){
-            frame.dispose();
-        }
-        openFrames.clear();
+        view.closeAllOpenedFrames();
     }
 
     @Override
@@ -138,22 +135,7 @@ public class ControllerImpl implements Controller {
         SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelFromID(siteId, false);
         addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, false);
         innerDisplayPanel.addTicketsToScrollPane();
-        SiteInfoFrameEdit newFrame = assembleSiteInfoFrameEdit(innerDisplayPanel, siteSelectionFrame);
-        openFrames.add(newFrame.frame);
-        newFrame.setVisible(true);
-
-
-    }
-
-
-    // Assembling site info frame
-    // Intro
-    public SiteInfoFrameIntro assembleSiteInfoFrameIntro(SiteInfoDisplayPanel siteInfoDisplayPanel, SiteSelectionFrame siteSelectionFrame) {
-        return new SiteInfoFrameIntro(siteInfoDisplayPanel, this, siteSelectionFrame);
-    }
-
-    public SiteInfoFrameEdit assembleSiteInfoFrameEdit(SiteInfoDisplayPanel siteInfoDisplayPanel, SiteSelectionFrame siteSelectionFrame) {
-        return new SiteInfoFrameEdit(siteInfoDisplayPanel, this, siteSelectionFrame);
+        view.displaySiteInfoFrameEdit(innerDisplayPanel, siteSelectionFrame, this);
     }
 
 
@@ -212,9 +194,7 @@ public class ControllerImpl implements Controller {
         EntryDisplayPanel innerDisplayPanel = makeEntryDisplayPanelFromID(ticketId, true);
         addEntryPanelsToEntryDisplayPanel(innerDisplayPanel, true);
         innerDisplayPanel.addEntriesToScrollPanel();
-        EntryDisplayFrameIntro newFrame = assembleEntryDisplayPanelFrameIntro(innerDisplayPanel);
-        openFrames.add(newFrame.frame);
-        newFrame.setVisible(true);
+        view.displayEntryDisplayPanelFrameIntro(innerDisplayPanel, this);
     }
     //Edit section
     @Override
@@ -224,31 +204,19 @@ public class ControllerImpl implements Controller {
         addEntryPanelsToEntryDisplayPanel(innerDisplayPanel, false);
         innerDisplayPanel.addEntriesToScrollPanel();
 
-        // Fetch Site Data
-        EntryDisplayFrameEdit newFrame = assembleEntryDisplayPanelFrameEdit(ticketId, innerDisplayPanel, ticketPanel);
-        openFrames.add(newFrame.frame);
-        newFrame.setVisible(true);
-        //EntryDisplayFrameEdit
-
+        // Generate and display EntryDisplayPanelFrame
+        assembleEntryDisplayPanelFrameEdit(ticketId, innerDisplayPanel, ticketPanel);
     }
 
-    public EntryDisplayFrameIntro assembleEntryDisplayPanelFrameIntro(EntryDisplayPanel entryDisplayPanel){
-        return new EntryDisplayFrameIntro(entryDisplayPanel, this);
-    }
-
-    public EntryDisplayFrameEdit assembleEntryDisplayPanelFrameEdit(UUID ticketId, EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel){
-        UUID parentSiteId = LocalTicketingSystem.getSiteFromTicket(ticketId).id();
-        return new EntryDisplayFrameEdit(entryDisplayPanel, parentTicketPanel, parentSiteId, this);
+    public void assembleEntryDisplayPanelFrameEdit(UUID ticketId, EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel){
+        UUID parentSiteId = model.getParentSiteId(ticketId);
+        view.displayEntryDisplayPanelFrameEdit(entryDisplayPanel, parentTicketPanel, parentSiteId, this);
     }
 
     @Override
     public void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame,  EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel){
-        AddEntryScreen addEntryScreen = new AddEntryScreen(entryDisplayFrame, entryDisplayPanel, parentTicketPanel, this);
-        openFrames.add(addEntryScreen.frame);
-        addEntryScreen.setVisible(true);
+        view.displayAddEntryScreen(entryDisplayFrame, entryDisplayPanel, parentTicketPanel, this);
     }
-
-
 
 
     public void addEntryPanelsToEntryDisplayPanel(EntryDisplayPanel entryDisplayPanel, boolean isIntro){
@@ -278,7 +246,7 @@ public class ControllerImpl implements Controller {
             newTicket = model.fetchGenericTicketFromLocalDatabase(ticketId);
         }
         if (newTicket != null){
-            return new EntryDisplayPanel(ticketId, newTicket.description(), newTicket.resolved(), isIntro);
+            return view.generateEntryDisplayPanelIntro(ticketId, newTicket.description(), newTicket.resolved(), isIntro);
         }
         return null;
     }
@@ -294,7 +262,7 @@ public class ControllerImpl implements Controller {
             newEntry = model.fetchGenericEntryFromLocalDatabase(entryId);
         }
         if (newEntry != null){
-            return new EntryPanel(newEntry.id(), newEntry.date(), newEntry.description(),  newEntry.icon(), newEntry.reviewed(), isIntro);
+            return view.generateEntryPanel(newEntry.id(), newEntry.date(), newEntry.description(),  newEntry.icon(), newEntry.reviewed(), isIntro);
         }
         return null;
     }
