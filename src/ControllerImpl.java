@@ -1,12 +1,9 @@
 import javax.swing.*;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Array;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ControllerImpl implements Controller {
     GlobalTicketingSystem globalTicketingSystem;
@@ -19,6 +16,7 @@ public class ControllerImpl implements Controller {
         this.globalTicketingSystem = globalTicketingSystem;
         openFrames = new ArrayList<JFrame>();
         this.model = new ModelImpl();
+        this.view = new ViewImpl();
     }
 
 
@@ -74,7 +72,6 @@ public class ControllerImpl implements Controller {
         SiteSelectionFrame siteSelectionFrame= view.generateSiteSelectionFrameIntro(this);
         List<UUID> siteIdCollectionList = model.globalSiteIdCollectionList();
         addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, true);
-        siteSelectionFrame.setVisible(true);
     }
 
     // Edit
@@ -84,7 +81,6 @@ public class ControllerImpl implements Controller {
 
         List<UUID> siteIdCollectionList = model.localSiteIDCollectionList();
         addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, false);
-        siteSelectionFrame.setVisible(true);
     }
 
     @Override
@@ -118,6 +114,7 @@ public class ControllerImpl implements Controller {
     // Adds a globalSite to the selection frame
     public void addSiteToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, Site site, boolean isIntro) {
         view.addSiteToSiteSelectionFrame(siteSelectionFrame,site.id(), site.title(), site.state(), site.city(), isIntro, this);
+
     }
 
 
@@ -126,7 +123,6 @@ public class ControllerImpl implements Controller {
     public void displaySiteInfoFrameIntro(UUID siteId, SiteSelectionFrame siteSelectionFrame){
         SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelFromID(siteId, true);
         addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, true);
-        innerDisplayPanel.addTicketsToScrollPane();
         view.displaySiteInfoFrameIntro(innerDisplayPanel, siteSelectionFrame, this);
     }
 
@@ -134,7 +130,6 @@ public class ControllerImpl implements Controller {
     public void displaySiteInfoFrameEdit(UUID siteId, SiteSelectionFrame siteSelectionFrame){
         SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelFromID(siteId, false);
         addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, false);
-        innerDisplayPanel.addTicketsToScrollPane();
         view.displaySiteInfoFrameEdit(innerDisplayPanel, siteSelectionFrame, this);
     }
 
@@ -193,8 +188,7 @@ public class ControllerImpl implements Controller {
     public void displayEntryDisplayFrameIntro(UUID ticketId){
         EntryDisplayPanel innerDisplayPanel = makeEntryDisplayPanelFromID(ticketId, true);
         addEntryPanelsToEntryDisplayPanel(innerDisplayPanel, true);
-        innerDisplayPanel.addEntriesToScrollPanel();
-        view.displayEntryDisplayPanelFrameIntro(innerDisplayPanel, this);
+        view.displayEntryDisplayFrameIntro(innerDisplayPanel, this);
     }
     //Edit section
     @Override
@@ -202,7 +196,6 @@ public class ControllerImpl implements Controller {
         // Set up display panel
         EntryDisplayPanel innerDisplayPanel = makeEntryDisplayPanelFromID(ticketId, false);
         addEntryPanelsToEntryDisplayPanel(innerDisplayPanel, false);
-        innerDisplayPanel.addEntriesToScrollPanel();
 
         // Generate and display EntryDisplayPanelFrame
         assembleEntryDisplayPanelFrameEdit(ticketId, innerDisplayPanel, ticketPanel);
@@ -210,7 +203,7 @@ public class ControllerImpl implements Controller {
 
     public void assembleEntryDisplayPanelFrameEdit(UUID ticketId, EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel){
         UUID parentSiteId = model.getParentSiteId(ticketId);
-        view.displayEntryDisplayPanelFrameEdit(entryDisplayPanel, parentTicketPanel, parentSiteId, this);
+        view.displayEntryDisplayFrameEdit(entryDisplayPanel, parentTicketPanel, parentSiteId, this);
     }
 
     @Override
