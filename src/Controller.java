@@ -1,7 +1,4 @@
 import javax.swing.*;
-import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
@@ -9,66 +6,43 @@ import java.util.UUID;
 public interface Controller {
     // GlobalSite Info Screen Operations
     // Intro section operations on Sites
-    void openSiteInfoScreenFromIntroSection(UUID siteID);
 
-    void exportSiteWindowFromIntroSiteInfoScreen(UUID siteID);
+    // Internet connectivity behavior
+    boolean checkOnlineStatus();
+    void displayConnectionRestoredPopup();
 
-    void selectSiteFromIntroSiteInfoScreenAndCloseInfoScreen(UUID siteID);
+    // Model control
+    void uploadLocalEntries();
+    void markLocalStorageAsUploaded();
 
-    // Intro section operations on Tickets
-    void openTicketInfoScreenFromIntroSiteInfoScreen(UUID TicketID);
-
-    // Intro section operations on Entries
-    void exportTicketInfoFromIntroSiteInfoScreen(UUID siteID);
-
-    // Edit Section operations
-    // Open GlobalSite Info Window
-    void openSiteInfoWindowFromEditSection(UUID siteID);
-
-    // Open GlobalTicket Info Window
-    void openTicketInfoWindowFromEditSection(UUID ticketID);
-
-    // Adding a new ticket
-    void openAddTicketScreenFromEditSection(UUID siteID);
-
-    // Adding a new entry
-    void openAddEntryToTicketScreenFromEditSection(UUID siteID);
-
-    // Methods I'm actually using through this interface
-    void displayEntryDisplayFrameIntro(UUID ticketId);
-
-    void displaySiteInfoFrameIntro(UUID siteId, SiteSelectionFrame siteSelectionFrame);
-
+    // Site selection screen
+    void displaySiteSelectionFrameIntro();
     void displaySiteSelectionFrameEdit(Set<UUID> selectedSiteIds);
 
-    void displayExportScreenForSelectLocations(Set<UUID> selectedSites);
-
+    // Site info / ticket display screen
+    void displaySiteInfoFrameIntro(UUID siteId, SiteSelectionFrame siteSelectionFrame);
     void displaySiteInfoFrameEdit(UUID siteId, SiteSelectionFrame parentFrame);
+    TicketPanel makeTicketPanelFromId(UUID ticketId, boolean b); // Used as both a helper method and directly for when new tickets are generated
 
-    void displayEntryDisplayFrameEdit(UUID ticketId, TicketPanel ticketPanel);
+    // Edit section ticket creation
+    void displayAddTicketScreen(UUID siteId, SiteInfoFrameEdit siteInfoFrameEdit, Controller controller);
+
+    // Clears all locally stored sites
+    void clearLocalStorage();
 
     void generateLocalTicket(UUID ticketId, String ticketDescriptionInput, UUID siteId);
 
-    TicketPanel makeTicketPanelFromId(UUID ticketId, boolean b);
+    // Ticket info / entry display screen
+    void displayEntryDisplayFrameIntro(UUID ticketId);
+    void displayEntryDisplayFrameEdit(UUID ticketId, TicketPanel ticketPanel);
 
+    // Edit section entry creation
     void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame, EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel);
-
     void generateLocalEntry(LocalDate date, String description, ImageIcon icon, UUID ticketId, UUID siteId, UUID entryId);
 
-    boolean checkOnlineStatus();
+    // JSON export functionality
+    void displayExportScreenForSelectLocations(Set<UUID> selectedSites);
 
-    public void uploadLocalEntries();
-
-    public void clearLocalStorage();
-
-
-    EntryPanel makeEntryPanelFromId(UUID entryId, boolean b);
-
-    void markLocalStorageAsUploaded();
-
+    // View control
     void closeAllOpenedFrames();
-
-    void displayConnectionRestoredPopup();
-
-    void displaySiteSelectionFrameIntro();
 }

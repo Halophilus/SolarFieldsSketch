@@ -7,61 +7,13 @@ public class ModelImpl implements Model {
     GlobalTicketingSystem globalTicketingSystem;
     LocalTicketingSystem localTicketingSystem;
 
-    @Override
-    public GlobalSite fetchGlobalSite(UUID siteID){
-        return (GlobalSite)GlobalTicketingSystem.getSite(siteID);
-    }
 
-    @Override
-    public LocalSite generateLocalSite(GlobalSite globalSite){
-        return new LocalSite(globalSite);
-    }
 
     @Override
     public void clearLocalStorage(){
         LocalTicketingSystem.clearSites();
     }
 
-
-    @Override
-    public void downloadLocalSite(LocalSite newLocalSite){
-        LocalTicketingSystem.addSite(newLocalSite);
-    }
-
-    @Override
-    public ArrayList<LocalSite> getLocallyStoredSites(){
-        return LocalTicketingSystem.getAllSites();
-    }
-
-    @Override
-    public GlobalTicket fetchGlobalTicket(UUID ticketId){
-        return (GlobalTicket)GlobalTicketingSystem.getTicket(ticketId);
-    }
-
-    @Override
-    public List<UUID> globalSiteIds(){
-        return GlobalTicketingSystem.getAllSites().stream().map(Site::id).distinct().collect(Collectors.toList());
-    }
-
-    @Override
-    public List<UUID> localSiteIds(){
-        return LocalTicketingSystem.getAllSites().stream().map(LocalSite::id).distinct().collect(Collectors.toList());
-    }
-
-    @Override
-    public LocalSite globalToLocalSite(GlobalSite globalSite){
-        return new LocalSite(globalSite);
-    }
-
-    @Override
-    public LocalTicket coerceLocalTicket(Ticket ticket){
-        return (LocalTicket) ticket;
-    }
-
-    @Override
-    public LocalEntry coerceLocalEntry(Entry entry){
-        return (LocalEntry) entry;
-    }
 
     @Override
     public void markLocalStorageAsUploaded(){
@@ -79,6 +31,15 @@ public class ModelImpl implements Model {
         }
     }
 
+    private ArrayList<LocalSite> getLocallyStoredSites(){
+        return LocalTicketingSystem.getAllSites();
+    }
+
+    private LocalTicket coerceLocalTicket(Ticket ticket){
+        return (LocalTicket) ticket;
+    }
+
+
     @Override
     public void uploadLocalEntries(){
         // Extract local sites, filter out unchanged sites
@@ -94,15 +55,14 @@ public class ModelImpl implements Model {
                 System.out.println("Processing old tickets with new entries");
                 Set<Entry> entriesSet = newEntriesSet(updatedTicket);
                 for (Entry newEntry : entriesSet) {
-                    System.out.println("Processing newEntry " + newEntry);
+                    System.out.println(STR."Processing newEntry \{newEntry}");
                     LocalEntry newLocalEntry = coerceLocalEntry(newEntry);
                     // Generate a new global entry from the local entry
                     GlobalEntry newGlobalEntry = localToGlobalEntry(newLocalEntry);
                     // Get the corresponding global ticket
                     GlobalTicket correspondingGlobalTicket = fetchCorrespondingGlobalTicket(newGlobalEntry.id());
                     // Add the newly generated global entry to the in-memory local entry
-                    correspondingGlobalTicket.addEntry(newGlobalEntry);
-                    correspondingGlobalTicket.resolve(false);
+                    addEntryToGlobalTicket(correspondingGlobalTicket, newGlobalEntry);
                 }
             }
 
@@ -117,7 +77,7 @@ public class ModelImpl implements Model {
                     // Generate a new global entry
                     GlobalEntry newGlobalEntry = localToGlobalEntry(newLocalEntry);
                     // Add it to the new global ticket
-                    newGlobalTicket.addEntry(newGlobalEntry);
+                    addEntryToGlobalTicket(newGlobalTicket, newGlobalEntry);
                 }
                 // Fetch the corresponding global site
                 GlobalSite correspondingGlobalSite = fetchCorrespondingGlobalSite(updatedSite.id());
@@ -128,56 +88,48 @@ public class ModelImpl implements Model {
         }
     }
 
-    @Override
-    public List<LocalSite> fetchUpdatedLocalSites(){
+    private List<LocalSite> fetchUpdatedLocalSites(){
         return fetchLocalSites().stream().filter(localSite -> localSite.updated).toList();
     }
 
-    @Override
-    public List<Ticket> getUpdatedOldTickets(LocalSite updatedSite){
+    private List<Ticket> getUpdatedOldTickets(LocalSite updatedSite){
         return updatedSite.tickets().stream().filter(Ticket::updated).filter(ticket ->!ticket.isNew()).toList();
     }
 
-    @Override
-    public List<Ticket> getNewTickets(LocalSite updatedSite){
+    private List<Ticket> getNewTickets(LocalSite updatedSite){
         return updatedSite.tickets().stream().filter(Ticket::isNew).toList();
     }
 
-    @Override
-    public Set<Entry> newEntriesSet(Ticket updatedTicket){
+    private Set<Entry> newEntriesSet(Ticket updatedTicket){
         return new HashSet<>(updatedTicket.entries().stream().filter(Entry::isNew).toList());
     }
 
-    @Override
-    public GlobalEntry localToGlobalEntry(LocalEntry newLocalEntry){
+    private GlobalEntry localToGlobalEntry(LocalEntry newLocalEntry){
         return new GlobalEntry(newLocalEntry);
     }
 
-    @Override
-    public GlobalTicket fetchCorrespondingGlobalTicket(UUID id){
+    private GlobalTicket fetchCorrespondingGlobalTicket(UUID id){
         return (GlobalTicket)GlobalTicketingSystem.getTicket(id);
     }
 
-    @Override
-    public GlobalSite fetchCorrespondingGlobalSite(UUID siteId){
+    private GlobalSite fetchCorrespondingGlobalSite(UUID siteId){
         return (GlobalSite) GlobalTicketingSystem.getSite(siteId);
     }
 
-    @Override
-    public void addEntryToGlobalTicket(GlobalTicket correspondingGlobalTicket, GlobalEntry newGlobalEntry){
+    private void addEntryToGlobalTicket(GlobalTicket correspondingGlobalTicket, GlobalEntry newGlobalEntry){
         correspondingGlobalTicket.addEntry(newGlobalEntry); // Add new entry
         correspondingGlobalTicket.resolve(false); // Update resolved flag to reflect the new entry
     }
 
-    @Override
-    public GlobalTicket genericTicketToGlobal(Ticket newTicket) {
+    private LocalEntry coerceLocalEntry(Entry entry){
+        return (LocalEntry) entry;
+    }
+
+
+    private GlobalTicket genericTicketToGlobal(Ticket newTicket) {
         return new GlobalTicket((LocalTicket) newTicket);
     }
 
-    @Override
-    public void syncLocalEntryToCorrespondingTicket(GlobalTicket correspondingTicket, GlobalEntry newGlobalEntry){
-        correspondingTicket.addEntry(newGlobalEntry);
-    }
 
     @Override
     public List<UUID> globalSiteIdCollectionList(){
@@ -240,7 +192,7 @@ public class ModelImpl implements Model {
     }
 
     @Override
-    public List<UUID> entriesFromTicket(Ticket newTicket){
+    public List<UUID> entryUUIDsFromTicket(Ticket newTicket){
         return newTicket.entryIds();
     }
 
@@ -252,9 +204,21 @@ public class ModelImpl implements Model {
             GlobalSite globalSite = fetchGlobalSite(siteId);
             // Generate a new local site based on it
             // Thereby downloading the hierarchical data associated with it
-            LocalSite newLocalSite = generateLocalSite(globalSite)
+            LocalSite newLocalSite = globalToLocalSite(globalSite);
             downloadLocalSite(newLocalSite);
         }
+    }
+
+    private GlobalSite fetchGlobalSite(UUID siteID){
+        return (GlobalSite)GlobalTicketingSystem.getSite(siteID);
+    }
+
+    private void downloadLocalSite(LocalSite newLocalSite){
+        LocalTicketingSystem.addSite(newLocalSite);
+    }
+
+    private LocalSite globalToLocalSite(GlobalSite globalSite){
+        return new LocalSite(globalSite);
     }
 
     @Override

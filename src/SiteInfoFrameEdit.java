@@ -49,8 +49,7 @@ public class SiteInfoFrameEdit {
         });
         newTicketButton.addActionListener(e -> {
             System.out.println("New ticket button pressed");
-            AddTicketScreen newAddTicketScreen = new AddTicketScreen(this.siteId, this, controller);
-            newAddTicketScreen.setVisible(true);
+            controller.displayAddTicketScreen(this.siteId, this, controller);
         });
 
         panel.add(buttonPanel, BorderLayout.SOUTH);
@@ -60,7 +59,4 @@ public class SiteInfoFrameEdit {
         frame.setVisible(visible);
     }
 
-    public void updateDisplay(){
-
-    }
 }

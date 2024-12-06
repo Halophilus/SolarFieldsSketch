@@ -35,7 +35,7 @@ public class ViewImpl implements View {
     @Override
     // Generates a site display frame for downloaded sites in the edit section
     public SiteSelectionFrame generateSiteSelectionFrameEdit(Controller controller){
-        SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame(false, this);
+        SiteSelectionFrame siteSelectionFrame = new SiteSelectionFrame(false, controller);
         openFrames.add(siteSelectionFrame.frame);
         siteSelectionFrame.setVisible(true);
         return siteSelectionFrame;
@@ -111,7 +111,14 @@ public class ViewImpl implements View {
     }
 
     @Override
-    // Generates an AddEntryScreen for inputting new Entries
+    // Generates an AddTicketScreen for inputting new tickets locally
+    public void displayAddTicketScreen(UUID siteId, SiteInfoFrameEdit siteInfoFrameEdit, Controller controller) {
+        AddTicketScreen newAddTicketScreen = new AddTicketScreen(siteId, siteInfoFrameEdit, controller);
+        newAddTicketScreen.setVisible(true);
+    }
+
+    @Override
+    // Generates an AddEntryScreen for inputting new Entries locally
     public void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame, EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel, Controller controller){
         AddEntryScreen addEntryScreen = new AddEntryScreen(entryDisplayFrame, entryDisplayPanel, parentTicketPanel, controller);
         openFrames.add(addEntryScreen.frame);

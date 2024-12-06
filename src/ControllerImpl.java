@@ -6,55 +6,65 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class ControllerImpl implements Controller {
-    GlobalTicketingSystem globalTicketingSystem;
-    LocalTicketingSystem localTicketingSystem;
     Model model;
     View view;
-    ArrayList<JFrame> openFrames;
 
-    ControllerImpl(GlobalTicketingSystem globalTicketingSystem) {
-        this.globalTicketingSystem = globalTicketingSystem;
-        openFrames = new ArrayList<JFrame>();
+    ControllerImpl() {
         this.model = new ModelImpl();
         this.view = new ViewImpl();
     }
 
 
+    @Override
+    // Closes all frames associated with a given section
     public void closeAllOpenedFrames(){
         view.closeAllOpenedFrames();
     }
 
+    // General popups
     @Override
+    // Displays pop up screen once the connection is restored
     public void displayConnectionRestoredPopup() {
         view.displayConnectionRestoredPopup(this);
     }
 
-    // Iterates through all local data and updates and lowers the flags that indicate new entries/tickets
+    // Model management controls
+    @Override
+    // Marks all new entries/tickets as old to differentiate them from unuploaded elements
     public void markLocalStorageAsUploaded(){
         model.markLocalStorageAsUploaded();
     }
 
-    // Upload local entries to global database
+    @Override
+    // Upload local entries to global database via model
     public void uploadLocalEntries(){
         model.uploadLocalEntries();
     }
 
     @Override
+    // Clears all locally stored sites
     public void clearLocalStorage() {
         model.clearLocalStorage();
     }
 
-    // Add ticket screen for edit section
+    @Override
+    // Generates a new ticket and stores it in a local database
     public void generateLocalTicket(UUID ticketId, String ticketDescriptionInput, UUID siteId){
         model.generateLocalTicket(ticketId, ticketDescriptionInput, siteId);
     }
 
     @Override
+    // Generates a new entry and stores it in a local database
     public void generateLocalEntry(LocalDate date, String description, ImageIcon icon, UUID ticketId, UUID siteId, UUID entryId) {
         model.generateLocalEntry(date, description, icon, ticketId, siteId, entryId);
     }
 
     @Override
+    // Checks for online status
+    // This method is a dummy method to simulate checking an external variable in the background
+    // Internet connectivity in the case is being simulated by the state of a text file (either full or empty)
+    // Returns true if "connected" (text file contains content)
+    // Returns false otherwise
     public boolean checkOnlineStatus(){
         BufferedReader br = null;
         try {
@@ -66,84 +76,85 @@ public class ControllerImpl implements Controller {
         return false;
     }
 
-    // SiteSelectionFrame methods
-    // Intro
+    // Site Selection Behavior control methods
+    @Override
+    // Displays site selection frame for intro section of the app
     public void displaySiteSelectionFrameIntro(){
         SiteSelectionFrame siteSelectionFrame= view.generateSiteSelectionFrameIntro(this);
         List<UUID> siteIdCollectionList = model.globalSiteIdCollectionList();
         addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, true);
     }
 
-    // Edit
+
+    @Override
+    // Displays site selection frame for edit section of the app
     public void displaySiteSelectionFrameEdit(Set<UUID> selectedSiteIds){
         SiteSelectionFrame siteSelectionFrame = view.generateSiteSelectionFrameEdit(this);
-        model.downloadSiteData(selectedSiteIds);
+        model.downloadSiteData(selectedSiteIds); // Download sites selected in Intro section
 
         List<UUID> siteIdCollectionList = model.localSiteIDCollectionList();
         addSitesToSiteSelectionFrame(siteSelectionFrame, siteIdCollectionList, false);
+    }
+
+
+    // Helper method that iterates through site Ids and adds them to a generic SiteSelectionFrame
+    private void addSitesToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, List<UUID> selectedSites, boolean isIntro){
+        for (UUID siteId : selectedSites){
+            addSiteToSiteSelectionFrameFromID(siteSelectionFrame, siteId, isIntro);
+        }
+    }
+
+
+    // Takes IDs passed from addSitesToSiteSelectionFrame and uses them to generate sitePanels
+    private void addSiteToSiteSelectionFrameFromID(SiteSelectionFrame siteSelectionFrame, UUID id, boolean isIntro){
+        Site site = null;
+        if (isIntro){
+            site = model.fetchGenericSiteFromGlobalDatabase(id);
+        } else {
+            site = model.fetchGenericSiteFromLocalDatabase(id);
+        }
+        if (site != null){
+            view.addSiteToSiteSelectionFrame(siteSelectionFrame,site.id(), site.title(), site.state(), site.city(), isIntro, this);
+        } else {
+            System.out.println("Couldn't find site with id " + id);
+        }
     }
 
     @Override
     public void displayExportScreenForSelectLocations(Set<UUID> selectedSites) {
 
     }
-
-
-    // Takes a set of integers and adds the relevant IDs to the selection frame
-    public void addSitesToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, List<UUID> selectedSites, boolean isIntro){
-        for (UUID siteId : selectedSites){
-            addSiteToSiteSelectionFrameFromID(siteSelectionFrame, siteId, isIntro);
-        }
-    }
-
-    // Takes an individual ID and attempts to add it to the selection frame
-    public void addSiteToSiteSelectionFrameFromID(SiteSelectionFrame siteSelectionFrame, UUID id, boolean isIntro){
-        Site newSite;
-        if (isIntro){
-            newSite = model.fetchGenericSiteFromGlobalDatabase(id);
-        } else {
-            newSite = model.fetchGenericSiteFromLocalDatabase(id);
-        }
-        if (newSite != null){
-            addSiteToSiteSelectionFrame(siteSelectionFrame, newSite, isIntro);
-        } else {
-            System.out.println("Couldn't find site with id " + id);
-        }
-    }
-
-    // Adds a globalSite to the selection frame
-    public void addSiteToSiteSelectionFrame(SiteSelectionFrame siteSelectionFrame, Site site, boolean isIntro) {
-        view.addSiteToSiteSelectionFrame(siteSelectionFrame,site.id(), site.title(), site.state(), site.city(), isIntro, this);
-
-    }
-
-
     // SiteInfoFrameMethods
-    // For intro
+    @Override
+    // Displays a SiteInfoFrame for a given site in the intro section of the app
     public void displaySiteInfoFrameIntro(UUID siteId, SiteSelectionFrame siteSelectionFrame){
-        SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelFromID(siteId, true);
+        SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelHeader(siteId, true);
         addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, true);
         view.displaySiteInfoFrameIntro(innerDisplayPanel, siteSelectionFrame, this);
     }
 
-    // For the edit section
+    @Override
+    // Displays a SiteInfoFrame for a given site in the edit section of the app
     public void displaySiteInfoFrameEdit(UUID siteId, SiteSelectionFrame siteSelectionFrame){
-        SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelFromID(siteId, false);
+        SiteInfoDisplayPanel innerDisplayPanel = makeSiteInfoDisplayPanelHeader(siteId, false);
         addTicketPanelsToSiteInfoDisplayPanel(innerDisplayPanel, false);
         view.displaySiteInfoFrameEdit(innerDisplayPanel, siteSelectionFrame, this);
     }
 
-
-    public void addTicketPanelsToSiteInfoDisplayPanel(SiteInfoDisplayPanel siteInfoDisplayPanel, boolean isIntro){
+    // Helper method for iterating through the tickets associated with a site and generating panels for each one
+    private void addTicketPanelsToSiteInfoDisplayPanel(SiteInfoDisplayPanel siteInfoDisplayPanel, boolean isIntro){
+        // Access flow changes depending on the section of the app
         Site targetSite = null;
         if (isIntro) {
-            targetSite = model.fetchGenericSiteFromGlobalDatabase(siteInfoDisplayPanel.siteId);//GlobalTicketingSystem.getSite(siteInfoDisplayPanel.siteId);
+            targetSite = model.fetchGenericSiteFromGlobalDatabase(siteInfoDisplayPanel.siteId);
         } else {
             targetSite = model.fetchGenericSiteFromLocalDatabase(siteInfoDisplayPanel.siteId);
         }
 
+        // Get a set of all tickets associated with the target site
         Set<UUID> setOfTickets = model.setOfTicketsPerSite(targetSite);
 
+        // Iterate through them all and generate/add new tickets to the display panel
         if(!setOfTickets.isEmpty()){
             for (UUID ticketId : setOfTickets){
                 TicketPanel newTicketPanel = makeTicketPanelFromId(ticketId, isIntro);
@@ -152,19 +163,8 @@ public class ControllerImpl implements Controller {
         }
     }
 
-    private SiteInfoDisplayPanel makeSiteInfoDisplayPanelFromID(UUID siteId, boolean isIntro) {
-        Site site = null;
-        if (isIntro) {
-            site = GlobalTicketingSystem.getSite(siteId);
-        } else {
-            site = LocalTicketingSystem.getSite(siteId);
-        }
-        if (site != null){
-            return view.generateSiteInfoDisplayPanel(site.id(), site.imageIcon(), site.title(), site.description(), site.address(), site.city(), site.state(), site.zip(), site.phoneNumber(), site.emailAddress(), isIntro, this);
-        }
-        return null;
-    }
-
+    @Override
+    // General method for generating new TicketPanels given a specific UUID
     public TicketPanel makeTicketPanelFromId(UUID ticketId, boolean isIntro){
         Ticket newTicket = null;
         if (isIntro) {
@@ -172,66 +172,88 @@ public class ControllerImpl implements Controller {
         } else {
             newTicket = model.fetchGenericTicketFromLocalDatabase(ticketId);
         }
+
         List<Entry> entries = model.genericListOfEntries(newTicket);
-        LocalDate mostRecentDate = LocalDate.MAX; //
+        LocalDate mostRecentDate = LocalDate.MAX;
 
         for (Entry entry : entries){ // For each value in the ticket entries
-                if (mostRecentDate.isAfter(entry.date())) {
-                    mostRecentDate = entry.date();
+            if (mostRecentDate.isAfter(entry.date())) { // Mark the most recent date of entry for the given ticket
+                mostRecentDate = entry.date();
             }
         }
+        // Generate a ticket panel given the existing ticket data
         return view.generateTicketPanel(ticketId, mostRecentDate, entries.size(), newTicket.resolved(), isIntro, this);
     }
 
-    // Displaying the entries associated with a certain ticket
-    // Intro
+    // Helper method for generating a header/starter for a SiteInfoDisplayPanel with all the info for a given Site
+    private SiteInfoDisplayPanel makeSiteInfoDisplayPanelHeader(UUID siteId, boolean isIntro) {
+        Site site = null;
+        if (isIntro) {
+            site = model.fetchGenericSiteFromGlobalDatabase(siteId);
+        } else {
+            site = model.fetchGenericSiteFromLocalDatabase(siteId);
+        }
+        if (site != null){
+            return view.generateSiteInfoDisplayPanel(site.id(), site.imageIcon(), site.title(), site.description(), site.address(), site.city(), site.state(), site.zip(), site.phoneNumber(), site.emailAddress(), isIntro, this);
+        }
+        return null;
+    }
+
+    @Override
+    // Displays a screen for adding new tickets to a given site
+    // Available in the edit section of the app
+    public void displayAddTicketScreen(UUID siteId, SiteInfoFrameEdit siteInfoFrameEdit, Controller controller) {
+        view.displayAddTicketScreen(siteId, siteInfoFrameEdit, controller);
+    }
+
+    // Methods for controlling the display of ticket info / associated entries
+    @Override
+    // Generates an EntryDisplayFrame for the intro section of the app
     public void displayEntryDisplayFrameIntro(UUID ticketId){
-        EntryDisplayPanel innerDisplayPanel = makeEntryDisplayPanelFromID(ticketId, true);
+        EntryDisplayPanel innerDisplayPanel = generateEntryDisplayPanelFromID(ticketId, true);
         addEntryPanelsToEntryDisplayPanel(innerDisplayPanel, true);
         view.displayEntryDisplayFrameIntro(innerDisplayPanel, this);
     }
-    //Edit section
+
     @Override
+    // Generates an EntryDisplayFrame for the edit section of the app
     public void displayEntryDisplayFrameEdit(UUID ticketId, TicketPanel ticketPanel) {
         // Set up display panel
-        EntryDisplayPanel innerDisplayPanel = makeEntryDisplayPanelFromID(ticketId, false);
+        EntryDisplayPanel innerDisplayPanel = generateEntryDisplayPanelFromID(ticketId, false);
         addEntryPanelsToEntryDisplayPanel(innerDisplayPanel, false);
 
         // Generate and display EntryDisplayPanelFrame
-        assembleEntryDisplayPanelFrameEdit(ticketId, innerDisplayPanel, ticketPanel);
+        generateEntryDisplayPanelFrameEdit(ticketId, innerDisplayPanel, ticketPanel);
     }
 
-    public void assembleEntryDisplayPanelFrameEdit(UUID ticketId, EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel){
+    // Helper method for generating an EntryDisplayPanel for the edit section of the app
+    // This requires access to the Controller so that it can derive the parent Site UUID prior to displaying the frame, which is otherwise not locally stored
+    private void generateEntryDisplayPanelFrameEdit(UUID ticketId, EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel){
         UUID parentSiteId = model.getParentSiteId(ticketId);
         view.displayEntryDisplayFrameEdit(entryDisplayPanel, parentTicketPanel, parentSiteId, this);
     }
 
-    @Override
-    public void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame,  EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel){
-        view.displayAddEntryScreen(entryDisplayFrame, entryDisplayPanel, parentTicketPanel, this);
-    }
-
-
-    public void addEntryPanelsToEntryDisplayPanel(EntryDisplayPanel entryDisplayPanel, boolean isIntro){
+    // Helper method for creating and adding new EntryPanels from a list of UUIDs associated with that ticket
+    private void addEntryPanelsToEntryDisplayPanel(EntryDisplayPanel entryDisplayPanel, boolean isIntro){
         Ticket newTicket = null;
         if (isIntro) {
             newTicket = model.fetchGenericTicketFromGlobalDatabase(entryDisplayPanel.ticketId);
         } else {
             newTicket = model.fetchGenericTicketFromLocalDatabase(entryDisplayPanel.ticketId);
         }
-        List<UUID> listOfEntries = model.entriesFromTicket(newTicket);
+        List<UUID> listOfEntries = model.entryUUIDsFromTicket(newTicket);
 
         if (!listOfEntries.isEmpty()){
             for (UUID entryId : listOfEntries){
-                EntryPanel newEntryPanel = makeEntryPanelFromId(entryId, isIntro);
+                EntryPanel newEntryPanel = generateEntryPanelFromId(entryId, isIntro);
                 entryDisplayPanel.addEntryPanel(newEntryPanel);
             }
         }
-
     }
 
-    // Generate a display panel for ticket entries in the intro section of the app
-    public EntryDisplayPanel makeEntryDisplayPanelFromID(UUID ticketId, boolean isIntro){
+
+    // Helper method for generating display panel for ticket entries in the intro section of the app
+    private EntryDisplayPanel generateEntryDisplayPanelFromID(UUID ticketId, boolean isIntro){
         Ticket newTicket = null;
         if (isIntro) {
             newTicket = model.fetchGenericTicketFromGlobalDatabase(ticketId);
@@ -244,10 +266,8 @@ public class ControllerImpl implements Controller {
         return null;
     }
 
-
-
-    // Generate an entry panel to be added to the ticket entry screen in the intro section of the app
-    public EntryPanel makeEntryPanelFromId(UUID entryId, boolean isIntro){
+    // Helper method for generating entry panels given an entry's ID
+    private EntryPanel generateEntryPanelFromId(UUID entryId, boolean isIntro){
         Entry newEntry = null;
         if (isIntro) {
             newEntry = model.fetchGenericEntryFromGlobalDatabase(entryId);
@@ -260,51 +280,12 @@ public class ControllerImpl implements Controller {
         return null;
     }
 
-
-
     @Override
-    public void openSiteInfoScreenFromIntroSection(UUID siteID) {
-
+    // Displays a screen for adding new entries to a given ticket
+    // Available in the edit section of the app only
+    public void displayAddEntryScreen(EntryDisplayFrameEdit entryDisplayFrame,  EntryDisplayPanel entryDisplayPanel, TicketPanel parentTicketPanel){
+        view.displayAddEntryScreen(entryDisplayFrame, entryDisplayPanel, parentTicketPanel, this);
     }
 
-    @Override
-    public void exportSiteWindowFromIntroSiteInfoScreen(UUID siteID) {
-
-    }
-
-    @Override
-    public void selectSiteFromIntroSiteInfoScreenAndCloseInfoScreen(UUID siteID) {
-
-    }
-
-    @Override
-    public void openTicketInfoScreenFromIntroSiteInfoScreen(UUID TicketID) {
-
-    }
-
-    @Override
-    public void exportTicketInfoFromIntroSiteInfoScreen(UUID siteID) {
-
-    }
-
-    @Override
-    public void openSiteInfoWindowFromEditSection(UUID siteID) {
-
-    }
-
-    @Override
-    public void openTicketInfoWindowFromEditSection(UUID ticketID) {
-
-    }
-
-    @Override
-    public void openAddTicketScreenFromEditSection(UUID siteID) {
-
-    }
-
-    @Override
-    public void openAddEntryToTicketScreenFromEditSection(UUID siteID) {
-
-    }
 }
 
