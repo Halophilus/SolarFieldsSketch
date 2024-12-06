@@ -10,7 +10,7 @@ public class ViewImpl implements View {
     public ViewImpl(){
         this.openFrames = new ArrayList<>();
     }
-    
+
     @Override
     public void closeAllOpenedFrames(){
         for (JFrame frame : openFrames){

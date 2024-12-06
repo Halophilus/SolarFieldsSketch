@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-// Custom class for generating random image icons
+// Custom class for generating random image icons for program testing
 public class CustomImageIcon extends ImageIcon {
 
     public CustomImageIcon() {

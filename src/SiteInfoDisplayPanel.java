@@ -108,14 +108,13 @@ public class SiteInfoDisplayPanel {
         if (!resolvedTickets.isEmpty()){
             resolvedPanel.setBackground(Color.BLACK);
             scrollPanel.add(resolvedPanel);
-            for (TicketPanel ticket : resolvedTickets){
+            for (TicketPanel ticket : resolvedTickets){ // Alternate background color for visibility
                 ticket.changeBackgroundColor(Color.WHITE);
                 if (counter % 2 == 0) {
                     ticket.changeBackgroundColor(Color.LIGHT_GRAY);
                 }
                 counter++;
                 scrollPanel.add(ticket.mainPanel());
-
             }
         }
 

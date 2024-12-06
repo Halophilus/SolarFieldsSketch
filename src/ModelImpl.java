@@ -15,15 +15,17 @@ public class ModelImpl implements Model {
 
     @Override
     // Marks all local storage as having been uploaded
+    // Allows new entry/ticket operations to continue in the edit section after uploading it.
     public void markLocalStorageAsUploaded(){
+        // For all the locally stored sites
         for(LocalSite site : getLocallyStoredSites()){
-            site.reset();
+            site.reset(); // Reset updated/new flags
             for (Ticket ticket : site.tickets()){
                 LocalTicket localTicket = coerceLocalTicket(ticket);
-                localTicket.reset();
+                localTicket.reset(); // Reset flags for each ticket
                 for (Entry entry : ticket.entries()){
                     LocalEntry localEntry = coerceLocalEntry(entry);
-                    localEntry.reset();
+                    localEntry.reset(); // Reset flags for each entry
                 }
 
             }
@@ -62,7 +64,7 @@ public class ModelImpl implements Model {
                     // Generate a new global entry from the local entry
                     GlobalEntry newGlobalEntry = localToGlobalEntry(newLocalEntry);
                     // Get the corresponding global ticket
-                    GlobalTicket correspondingGlobalTicket = fetchCorrespondingGlobalTicket(newGlobalEntry.id());
+                    GlobalTicket correspondingGlobalTicket = fetchCorrespondingGlobalTicket(updatedTicket.id());
                     // Add the newly generated global entry to the in-memory local entry
                     addEntryToGlobalTicket(correspondingGlobalTicket, newGlobalEntry);
                 }
@@ -226,28 +228,20 @@ public class ModelImpl implements Model {
         new LocalEntry(date, description, icon, ticketId, siteId, entryId);
     }
 
-
-
-
-
-
-
-
-
-
-
-
     @Override
+    // Returns a list of UUIDs associated with the entries of a ticket
     public List<UUID> entryUUIDsFromTicket(Ticket newTicket){
         return newTicket.entryIds();
     }
 
     @Override
+    // Returns a list of generic Entries from a generic Ticket
     public List<Entry> genericListOfEntries(Ticket newTicket){
         return newTicket.entries().stream().distinct().toList();
     }
 
     @Override
+    // Gets the parentSiteId from the UUID of a given ticket
     public UUID getParentSiteId(UUID ticketId){
         return LocalTicketingSystem.getSiteFromTicket(ticketId).id();
     }
