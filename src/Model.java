@@ -10,7 +10,7 @@ public interface Model {
 
     // Broad database operations
     void downloadSiteData(Set<UUID> selectedSiteIds);
-    void uploadLocalEntries();
+    void uploadAllNewContent();
     void markLocalStorageAsUploaded();
     void clearLocalStorage();
 
@@ -40,5 +40,5 @@ public interface Model {
     Site fetchGenericSiteFromLocalDatabase(UUID uuid);
     Ticket fetchGenericTicketFromLocalDatabase(UUID ticketId);
     Entry fetchGenericEntryFromLocalDatabase(UUID entryId);
-    
+
 }

@@ -7,6 +7,10 @@ public class ViewImpl implements View {
     // Stores frames that have been open in a section (intro vs. edit)
     ArrayList<JFrame> openFrames;
 
+    public ViewImpl(){
+        this.openFrames = new ArrayList<>();
+    }
+    
     @Override
     public void closeAllOpenedFrames(){
         for (JFrame frame : openFrames){

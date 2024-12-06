@@ -38,7 +38,7 @@ public class ControllerImpl implements Controller {
     @Override
     // Upload local entries to global database via model
     public void uploadLocalEntries(){
-        model.uploadLocalEntries();
+        model.uploadAllNewContent();
     }
 
     @Override

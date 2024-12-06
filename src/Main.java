@@ -37,7 +37,7 @@ public class Main {
         List<UUID> siteIds = globalTicketingSystem.globalSites.stream().map(site -> site.id()).toList();
         System.out.println("SiteIDs: " + siteIds);
 
-        ControllerImpl c = new ControllerImpl(globalTicketingSystem);
+        ControllerImpl c = new ControllerImpl();
 
         c.displaySiteSelectionFrameIntro();
 
