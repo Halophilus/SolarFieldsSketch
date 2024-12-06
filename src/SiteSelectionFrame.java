@@ -64,7 +64,7 @@ public class SiteSelectionFrame {
                 public void actionPerformed(ActionEvent e) {
                     // TODO: pass data from selected panes to download all the data related to the selected globalSites
                     System.out.println("Download Button pressed");
-
+                    controller.clearLocalStorage();
                     // Duplicate the selected integer values
                     Set<UUID> selectedSites = new HashSet<UUID>();
                     selectedSites.addAll(SiteSelectionPanel.selected);

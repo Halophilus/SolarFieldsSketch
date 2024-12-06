@@ -14,7 +14,6 @@ public class ControllerImpl implements Controller {
         this.view = new ViewImpl();
     }
 
-
     @Override
     // Closes all frames associated with a given section
     public void closeAllOpenedFrames(){
