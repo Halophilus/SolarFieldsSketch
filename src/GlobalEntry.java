@@ -14,8 +14,9 @@ public class GlobalEntry implements Entry{
     static int entryCounter = 0;
 
     // Entry information fields initialized to default values
-    LocalDate date = null;
-    String description = "";
+    LocalDate date;
+    String description;
+
     boolean reviewed = false;
 
     // Default icon is a square ImageIcon of a random color
@@ -30,10 +31,9 @@ public class GlobalEntry implements Entry{
         long minDay = LocalDate.of(1970, 1, 1).toEpochDay();
         long maxDay = LocalDate.of(2015, 12, 31).toEpochDay();
         long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
-        LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
 
-        this.date = randomDate;
-        this.description = "Description for entry " + this.counter;
+        this.date = LocalDate.ofEpochDay(randomDay);
+        this.description = STR."Description for entry \{this.counter}";
     }
 
     // GlobalEntries generated through the process of uploading a LocalEntry to the global database

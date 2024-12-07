@@ -3,13 +3,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+// The Local representation of Site-type objects accessivle within an Entry session
 public class LocalSite implements Site{
+    // Ticketing identifier
     final UUID id;
 
+    // Site information
     String title;
-    boolean updated = false; // Used to filter sites that have new tickets/entries
-
-    // Display fields (may repeat)
     String state;
     String city;
     String description;
@@ -17,13 +17,15 @@ public class LocalSite implements Site{
     String zip;
     String phoneNumber;
     String emailAddress;
-
-    // Swing components
     ImageIcon imageIcon;
 
-    // Backup information
+    // Control flags
+    boolean updated = false; // Used to filter sites that have new tickets/entries
+
+    // Child tickets associated with this Site
     ArrayList<Ticket> localTickets = new ArrayList<>();
 
+    // Transferring GlobalSite data to a corresponding LocalSite
     LocalSite(GlobalSite globalSite) {
         this.id = globalSite.id;
         this.title = globalSite.title;
@@ -36,24 +38,28 @@ public class LocalSite implements Site{
         this.emailAddress = globalSite.emailAddress;
         this.imageIcon = globalSite.imageIcon;
 
+        // Iterate through the list of child Tickets and generate all corresponding LocalTickets
         for(Ticket globalTicket : globalSite.globalTickets) {
             LocalTicket downloadedTicket = new LocalTicket((GlobalTicket)globalTicket);
             localTickets.add(downloadedTicket);
         }
 
+        // Add the new LocalSite to the local database
         LocalTicketingSystem.downloadedSites.add(this);
     }
 
-    // Gets associated ticket IDs for a downloaded site
-    public List<UUID> ticketIds() {
-        return localTickets.stream().map(ticket -> ticket.id()).toList();
-    }
-
+    // Raised when a new Entry or Ticket is generated for this LocalSite
     public void indicateUpdated() {
         updated = true;
     }
 
+    // Called when local data is uploaded to the global database within an ongoing Edit session
+    public void reset(){
+        this.updated = false;
+    }
 
+    // Interface compatible getters
+    @Override
     public UUID id() {
         return id;
     }
@@ -108,7 +114,4 @@ public class LocalSite implements Site{
         return this.emailAddress;
     }
 
-    public void reset(){
-        this.updated = false;
-    }
 }
