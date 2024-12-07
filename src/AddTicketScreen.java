@@ -3,18 +3,17 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.UUID;
-
+// Displays a user interface for generating and submitting a new Ticket item associated with an existing LocalSite
 public class AddTicketScreen {
+    // Context variables
     public UUID siteId;
     public UUID ticketId;
-    // TODO: Link the title into the AddTicketScreen
     public String title;
     public Controller controller;
     public SiteInfoFrameEdit parentSiteFrame;
 
     // Visual components
     public JFrame frame = new JFrame();
-    //public JPanel outerPanel = new JPanel();
     // Header for ticket info display
     public JPanel ticketIdPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
     public JLabel ticketIdHeader = new JLabel(); // Short title for ID
@@ -27,7 +26,7 @@ public class AddTicketScreen {
     public JButton addTicketButton = new JButton("ADD TICKET");
     public JButton cancelButton = new JButton("CANCEL");
 
-
+    // Contains references to the parent SiteInfoFrameEdit so it can be updated in realtime
     public AddTicketScreen(UUID siteId, SiteInfoFrameEdit parentSiteFrame, Controller controller){
         this.ticketId = UUID.randomUUID();
         this.siteId = siteId;
@@ -61,11 +60,11 @@ public class AddTicketScreen {
 
         // Create event listeners for the two buttons
         // TODO: Generate functional action listeners
-        cancelButton.addActionListener(e -> {
+        cancelButton.addActionListener(e -> { // Closes the current frame
             System.out.println("Cancel button pressed");
             frame.dispose();
         });
-        addTicketButton.addActionListener(e -> {
+        addTicketButton.addActionListener(e -> { // Generates a new LocalTicket based on provided parameters
             System.out.println("Add ticket button pressed");
             controller.generateLocalTicket(this.ticketId, this.ticketDescriptionInput.getText(),this.siteId);
             frame.dispose();
@@ -74,7 +73,7 @@ public class AddTicketScreen {
             parentSiteFrame.siteInfoDisplayPanel.clearAndRefresh();
         });
 
-        // Set up JFrame
+        // Set up visible JFrame properties
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setTitle("Generate a new ticket for " + this.title);
         frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));

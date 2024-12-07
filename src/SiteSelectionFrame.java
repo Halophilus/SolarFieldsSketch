@@ -48,13 +48,11 @@ public class SiteSelectionFrame {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         scrollPanel.setLayout(new BoxLayout(scrollPanel, BoxLayout.Y_AXIS));
-        //frame.add(scrollPane);
 
         outerPanel.setSize(800, 500);
         outerPanel.add(scrollPane);
         frame.add(outerPanel);
 
-        // Formatting button panel
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         // Button panel when intro
@@ -75,7 +73,6 @@ public class SiteSelectionFrame {
                     SiteSelectionPanel.selected.clear();
                     frame.dispose();
 
-                    //setVisible(false);
                 }
             });
 
@@ -94,8 +91,7 @@ public class SiteSelectionFrame {
                 }
             });
 
-                // Button panel when edit
-        if (!isIntro) {
+        if (!isIntro) { // If the class is instantiated during an Edit session
 
             // Store notification flag as an array to make it accessible from the heap
             downloadButton.setEnabled(false);
@@ -119,7 +115,6 @@ public class SiteSelectionFrame {
                 }
             });
             uploadButton.addActionListener(new ActionListener() {
-                // TODO: Create an upload operation
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Upload Button pressed");
                     controller.uploadLocalEntries(); // Add all new local entries
@@ -190,8 +185,4 @@ public class SiteSelectionFrame {
         }
 
     }
-
-
-
-
 }

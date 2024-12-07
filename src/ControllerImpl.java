@@ -9,6 +9,7 @@ public class ControllerImpl implements Controller {
     Model model;
     View view;
 
+
     ControllerImpl() {
         this.model = new ModelImpl();
         this.view = new ViewImpl();
