@@ -3,21 +3,28 @@ import java.time.LocalDate;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-// GlobalEntry model general accessors
+// The Global representation of Entry-type objects that are accessible within Intro sessions of the application
 public class GlobalEntry implements Entry{
+    // Ticketing identifier
     final UUID id;
 
+    // These parameters are only used for generating dummy entries
+    // This makes it easier for humans to identify different entries
     int counter;
     static int entryCounter = 0;
+
+    // Entry information fields initialized to default values
     LocalDate date = null;
     String description = "";
     boolean reviewed = false;
 
+    // Default icon is a square ImageIcon of a random color
     ImageIcon icon = new CustomImageIcon();
 
+    // Constructor for generating dummy Entry objects
     GlobalEntry() {
-        this.id = UUID.randomUUID();
-        this.counter = entryCounter++;
+        this.id = UUID.randomUUID(); // Generate a random UUID
+        this.counter = entryCounter++; // Iterate dummy entry counter
 
         // Generating a random date
         long minDay = LocalDate.of(1970, 1, 1).toEpochDay();
@@ -25,12 +32,11 @@ public class GlobalEntry implements Entry{
         long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
         LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
 
-        // Generating a random image
         this.date = randomDate;
         this.description = "Description for entry " + this.counter;
     }
 
-    // Generating a new global entry for a new local ticket
+    // GlobalEntries generated through the process of uploading a LocalEntry to the global database
     GlobalEntry(LocalEntry uploadedEntry) {
         this.id = uploadedEntry.id();
         this.date = uploadedEntry.date();
@@ -39,7 +45,7 @@ public class GlobalEntry implements Entry{
         this.icon = uploadedEntry.icon();
     }
 
-
+    // Getter methods for each field to tie them to their parent interface
     @Override
     public UUID id() {
         return this.id;

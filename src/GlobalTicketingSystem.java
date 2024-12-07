@@ -2,9 +2,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
+// A static class for fetching Global Site, Ticket, and Entry objects from their associated UUIDs
 public class GlobalTicketingSystem {
+    // Entry point for the global database
     public static ArrayList<Site> globalSites = new ArrayList<>();
+    public static ArrayList<Site> getAllSites() {
+        return globalSites;
+    }
 
+    // Static getter methods
     static Site getSite(UUID id) {
         for (Site globalSite : globalSites) {
             if (globalSite.id().equals(id)) {
@@ -39,7 +45,4 @@ public class GlobalTicketingSystem {
         return null;
     }
 
-    public static ArrayList<Site> getAllSites() {
-        return globalSites;
-    }
 }

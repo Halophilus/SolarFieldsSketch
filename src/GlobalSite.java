@@ -3,16 +3,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-// GlobalSite model general accessors
+// The Global representation of Site-type objects that are accessible within Intro sessions
 public class GlobalSite implements Site{
-    // ID fields (unique to instance)
+    // Ticketing identifier
     final UUID id;
 
+    // Human-readable testing parameters
     int counter;
     static int siteCounter = 0;
-    String title = "";
 
-    // Display fields (may repeat)
+    // Site information fields initialized to default values
+    String title = "";
     String state = "";
     String city = "";
     String description = "";
@@ -21,37 +22,46 @@ public class GlobalSite implements Site{
     String phoneNumber = "";
     String emailAddress = "";
 
-    // Swing components
+    // Randomly generated default icon
     ImageIcon imageIcon = new CustomImageIcon();
 
+    // ADT linkage to child GlobalTickets
     ArrayList<Ticket> globalTickets = new ArrayList<>();
 
+    // Constructor for generating dummy Site objects
+    // This client is not responsible for sourcing new GlobalSites so no custom constructor has been created
     GlobalSite() {
         this.id = UUID.randomUUID();
         this.counter = siteCounter++;
 
-        this.title = "Title " + this.counter;
-        this.state = "State " + this.counter;
-        this.city = "City " + this.counter;
-        this.description = "Description " + this.counter;
-        this.address = "Address " + this.counter;
-        this.zip = "Zip " + this.counter;
-        this.phoneNumber = "Phone " + this.counter;
-        this.emailAddress = "Email " + this.counter;
+        // Human-readable identifying fields
+        this.title = STR."Title \{this.counter}";
+        this.state = STR."State \{this.counter}";
+        this.city = STR."City \{this.counter}";
+        this.description = STR."Description \{this.counter}";
+        this.address = STR."Address \{this.counter}";
+        this.zip = STR."Zip \{this.counter}";
+        this.phoneNumber = STR."Phone \{this.counter}";
+        this.emailAddress = STR."Email \{this.counter}";
 
+        // Add the current entry to the Global database
         GlobalTicketingSystem.globalSites.add(this);
     }
 
-    GlobalSite(UUID id) {
-        this.id = id;
-
+    // Direct channel for adding GlobalTickets to the list of child Tickets
+    public void addTicket(GlobalTicket newGlobalTicket) {
+        globalTickets.add(newGlobalTicket);
     }
 
+    @Override
+    // Child Ticket objects associated with this GlobalSite
+    public ArrayList<Ticket> tickets() { return globalTickets;}
+
+    // Getter methods for each field to tie it to its parent interface
+    @Override
     public UUID id() {
         return id;
     }
-
-    public ArrayList<Ticket> tickets() { return globalTickets;}
 
     @Override
     public String title() {
@@ -102,7 +112,5 @@ public class GlobalSite implements Site{
         return globalTickets.stream().map(Ticket::id).toList();
     }
 
-    public void addTicket(GlobalTicket newGlobalTicket) {
-        globalTickets.add(newGlobalTicket);
-    }
+
 }
