@@ -9,6 +9,7 @@ public class CustomImageIcon extends ImageIcon {
         super(createImage());
     }
 
+    // Generates a 100x100px ImageIcon with a random color
     private static Image createImage() {
         Color randomColor = new Color((int) (Math.random() * 0x1000000)); // Select a random color
         BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
