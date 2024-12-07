@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
+// Implementation of the Controller interface
 public class ControllerImpl implements Controller {
+    // Local instances of the Model (database access) and the View (GUI display)
     Model model;
     View view;
 
-
+    // Default constructor
     ControllerImpl() {
         this.model = new ModelImpl();
         this.view = new ViewImpl();

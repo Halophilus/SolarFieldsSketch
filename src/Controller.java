@@ -3,9 +3,9 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
+// Interface for the Controller class in SolarFields' MVC pattern
+// Serves as the interlocutor between the View and the Controller
 public interface Controller {
-    // GlobalSite Info Screen Operations
-    // Intro section operations on Sites
 
     // Internet connectivity behavior
     boolean checkOnlineStatus();
