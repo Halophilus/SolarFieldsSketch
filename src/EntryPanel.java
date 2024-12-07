@@ -3,11 +3,12 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
+// An amphoteric JPanel object that stores data about an Entry object that is relevant for user interaction for both Edit and Intro sessions
 public class EntryPanel implements Comparable<EntryPanel> {
-    // Determines whether the frame is from intro or edit section
+    // Indicates whether the EntryPanel is being generated for an Intro or Edit session
     boolean isIntro;
 
-    // ID Info
+    // Information about the Entry
     UUID entryId;
     LocalDate datePosted;
     String description;
@@ -15,20 +16,19 @@ public class EntryPanel implements Comparable<EntryPanel> {
     boolean reviewed;
 
     // Visual components
-    // Panels
-    public JPanel outerPanel;
-    public JPanel stackedPanel;
-    public JPanel idPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-    public JPanel imageAndDescriptionPanel;
-    public JPanel entryPanel;
+    public JPanel outerPanel; // main content panel
 
-    // Labels
+    public JPanel stackedPanel; // Stacks Entry ID and general Entry information vertically
+    // Entry header
+    public JPanel idPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0)); // Header for EntryPanel
     public JLabel idHeader;
     public JLabel datePostedHeader;
+    // General Entry information
+    public JPanel imageAndDescriptionPanel; // Stores remaining Entry information
     public JLabel imageLabel;
     public JLabel descriptionLabel;
 
-
+    // Contains superficial information about the Entry object to which it is connected
     public EntryPanel(UUID entryId, LocalDate datePosted, String description, ImageIcon image, boolean reviewed, boolean isIntro) {
         this.entryId = entryId;
         this.datePosted = datePosted;
@@ -37,46 +37,45 @@ public class EntryPanel implements Comparable<EntryPanel> {
         this.reviewed = reviewed;
         this.isIntro = isIntro;
 
-        // Stores all entry data
+        // Outer content panel that stores all nested panels
         outerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
-        // Creates space for GlobalEntry ID and Icon+Image
+        // Formats the space that will store the Entry header and the general Entry information
         stackedPanel = new JPanel();
         BoxLayout boxLayout = new BoxLayout(stackedPanel, BoxLayout.Y_AXIS);
         stackedPanel.setLayout(boxLayout);
 
-        // Creates space for entry ID + date header
-        // Create ID label
-        idHeader = new JLabel(entryId.toString());
+        // Formats panel that contains Entry header
+        idHeader = new JLabel(entryId.toString()); // Displays Entry ID
         idHeader.setForeground(Color.BLACK);
-        // Create date panel
-        datePostedHeader = new JLabel(datePosted.toString());
-        // Add it to iDPanel
+        datePostedHeader = new JLabel(datePosted.toString()); // Displays date of creation for Entry
+        // Adds both to header ID panel
         idPanel.add(idHeader);
         idPanel.add(datePostedHeader);
 
-        // Creates space for Icon + Image
+        // Formats the space that will store general Entry information
         imageAndDescriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        // Create Icon and Image
-        imageLabel = new JLabel(image);
-        descriptionLabel = new JLabel(this.description);
-        // Add labels to relevant panel
+        imageLabel = new JLabel(image); // Entry ImageIcon
+        descriptionLabel = new JLabel(this.description); // Entry Description
+        // Add both to general Entry information panel
         imageAndDescriptionPanel.add(imageLabel);
         imageAndDescriptionPanel.add(descriptionLabel);
 
-        // Add subpanels to stackedPanel
+        // Add subpanels to the formatted space so that they appear stacked on top of each other
         stackedPanel.add(idPanel);
         stackedPanel.add(imageAndDescriptionPanel);
 
-        // Add stackedPanel to outerPanel
+        // Insert the formatted panel into the outer content panel
         outerPanel.add(stackedPanel);
 
     }
 
+    // Returns outer content panel
     public JPanel mainPanel() {
         return outerPanel;
     }
 
+    // Method for changing the background color of the panel for greater contrast between EntryPanels when inserted into the EntryDisplayPanel
     public void changeBackgroundColor(Color color) {
         idPanel.setBackground(color);
         outerPanel.setBackground(color);
@@ -85,6 +84,8 @@ public class EntryPanel implements Comparable<EntryPanel> {
     }
 
     @Override
+    // Comparable for sorting the EntryPanels by date
+    // TODO: Figure out why this doesn't work
     public int compareTo(EntryPanel otherEntry) {
         if (this.datePosted.isBefore(otherEntry.datePosted)) {
             return 1; // If the current date is before the provided date

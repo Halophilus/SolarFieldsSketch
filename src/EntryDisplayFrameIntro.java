@@ -4,10 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.UUID;
 
-// Displays all the entries for a given ticket in an intro screen
+// Displays the JPanel that contains the set of Entry objects associated with a given GlobalTicket within an Intro session
 public class EntryDisplayFrameIntro {
+    // Identifying variables
     public UUID ticketID;
+    // Context variables
     public EntryDisplayPanel entryDisplayPanel;
+    // Connection to Controller
     public Controller controller;
 
     // Visual subunits
@@ -15,40 +18,44 @@ public class EntryDisplayFrameIntro {
     public JFrame frame = new JFrame();
     public JPanel panel; // Will be taken from EntryDisplayPanel
     public JPanel buttonPanel = new JPanel(new BorderLayout());
-    public JPanel headerPanel = new JPanel(new BorderLayout()); // Added for future formatting options
-    // Buttons
+
+    // Buttons for exporting GlobalTicket data
     public JButton exportButton = new JButton("EXPORT");
 
+    // Contains the EntryDisplayPanel which itself contains all TicketPanels relevant to the session
     public EntryDisplayFrameIntro(EntryDisplayPanel entryDisplayPanel, Controller controller) {
+        // Pull ID from the child JPanel
         this.ticketID = entryDisplayPanel.ticketId;
+
         this.entryDisplayPanel = entryDisplayPanel;
         this.controller = controller;
 
-        // Set up content panel
+        // Substitute main panel for panel from provided EntryDisplayPanel
         panel = entryDisplayPanel.mainPanel();
 
-        // Format frame
+        // Format visible components of frame
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setTitle("Entries for GlobalTicket No. " + this.ticketID);
         frame.setSize(800, 500);
-        // Add EntryDisplayPanelContent
+        // Insert main panel into the center of the visible frame
         frame.add(panel, BorderLayout.CENTER);
 
         // Set up export button
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         buttonPanel.add(exportButton, BorderLayout.WEST);
 
-        // TODO: Set up action listener that interacts with the controller to perform an export action
-        exportButton.addActionListener(new ActionListener() {
+        // TODO: Make an export screen
+        exportButton.addActionListener(new ActionListener() { // Opens an export screen for the related Ticket
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Export button pressed");
             }
         });
 
+        // Add the button panel to the bottom of the screen
         panel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    // Makes the frame visible
+    // Sets the visibility for the main Jframe
     public void setVisible(boolean visible) {
         frame.setVisible(visible);
     }
