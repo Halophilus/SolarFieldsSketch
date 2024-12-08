@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 // The Local representation of Site-type objects accessivle within an Entry session

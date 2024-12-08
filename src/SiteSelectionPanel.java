@@ -13,15 +13,10 @@ public class SiteSelectionPanel{
 
     public JPanel panel;
     private final JCheckBox checkBox;
-    private final JLabel titleLabel;
-    private final JLabel locationLabel;
     private GlobalSite globalSite;
 
     // De-coupling view from controller
     public final UUID siteId;
-    private final String title;
-    private final String state;
-    private final String city;
 
     // User-manipulated state
     public static Set<UUID> selected = new HashSet<>();
@@ -31,9 +26,6 @@ public class SiteSelectionPanel{
 
     public SiteSelectionPanel(UUID siteId, String title, String state, String city, boolean isIntro, Controller controller, SiteSelectionFrame parentFrame){
         this.siteId = siteId;
-        this.title = title;
-        this.state = state;
-        this.city = city;
         this.isIntro = isIntro;
         this.controller = controller;
         this.parentFrame = parentFrame;
@@ -53,11 +45,11 @@ public class SiteSelectionPanel{
 
 
         // Header
-        titleLabel = new JLabel(this.title);
+        JLabel titleLabel = new JLabel(title);
         //titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setForeground(Color.BLUE);
 
-        locationLabel = new JLabel( this.state + ", " + this.city);
+        JLabel locationLabel = new JLabel(STR."\{state}, \{city}");
         //locationLabel.setFont(new Font("Arial", Font.ITALIC, 20));
         locationLabel.setForeground(Color.DARK_GRAY);
 
@@ -65,10 +57,10 @@ public class SiteSelectionPanel{
         checkBox.addItemListener(e->{
              if(e.getStateChange() == ItemEvent.SELECTED) {
                  selected.add(this.siteId);
-                 System.out.println(this.siteId + " selected");
+                 System.out.println(STR."\{this.siteId} selected");
              } else {
                  selected.remove(this.siteId);
-                 System.out.println(this.siteId + " removed");
+                 System.out.println(STR."\{this.siteId} removed");
              }
         });
         idPanel.add(titleLabel);
@@ -78,7 +70,7 @@ public class SiteSelectionPanel{
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                System.out.println("Mouse clicked on SiteSelectionPanel " + siteId);
+                System.out.println(STR."Mouse clicked on SiteSelectionPanel \{siteId}");
                 if (isIntro) {
                     controller.displaySiteInfoFrameIntro(siteId, parentFrame);
                 } else {

@@ -68,7 +68,7 @@ public class ControllerImpl implements Controller {
     // Returns true if "connected" (text file contains content)
     // Returns false otherwise
     public boolean checkOnlineStatus(){
-        BufferedReader br = null;
+        BufferedReader br;
         try {
             br = new BufferedReader(new FileReader("res/online.txt"));
             return br.readLine() != null;
@@ -109,7 +109,7 @@ public class ControllerImpl implements Controller {
 
     // Takes IDs passed from addSitesToSiteSelectionFrame and uses them to generate sitePanels
     private void addSiteToSiteSelectionFrameFromID(SiteSelectionFrame siteSelectionFrame, UUID id, boolean isIntro){
-        Site site = null;
+        Site site;
         if (isIntro){
             site = model.fetchGenericSiteFromGlobalDatabase(id);
         } else {
@@ -118,7 +118,7 @@ public class ControllerImpl implements Controller {
         if (site != null){
             view.addSiteToSiteSelectionFrame(siteSelectionFrame,site.id(), site.title(), site.state(), site.city(), isIntro, this);
         } else {
-            System.out.println("Couldn't find site with id " + id);
+            System.out.println(STR."Couldn't find site with id \{id}");
         }
     }
 
@@ -146,7 +146,7 @@ public class ControllerImpl implements Controller {
     // Helper method for iterating through the tickets associated with a site and generating panels for each one
     private void addTicketPanelsToSiteInfoDisplayPanel(SiteInfoDisplayPanel siteInfoDisplayPanel, boolean isIntro){
         // Access flow changes depending on the section of the app
-        Site targetSite = null;
+        Site targetSite;
         if (isIntro) {
             targetSite = model.fetchGenericSiteFromGlobalDatabase(siteInfoDisplayPanel.siteId);
         } else {
@@ -168,7 +168,7 @@ public class ControllerImpl implements Controller {
     @Override
     // General method for generating new TicketPanels given a specific UUID
     public TicketPanel makeTicketPanelFromId(UUID ticketId, boolean isIntro){
-        Ticket newTicket = null;
+        Ticket newTicket;
         if (isIntro) {
             newTicket = model.fetchGenericTicketFromGlobalDatabase(ticketId);
         } else {
@@ -189,7 +189,7 @@ public class ControllerImpl implements Controller {
 
     // Helper method for generating a header/starter for a SiteInfoDisplayPanel with all the info for a given Site
     private SiteInfoDisplayPanel makeSiteInfoDisplayPanelHeader(UUID siteId, boolean isIntro) {
-        Site site = null;
+        Site site;
         if (isIntro) {
             site = model.fetchGenericSiteFromGlobalDatabase(siteId);
         } else {
@@ -237,7 +237,7 @@ public class ControllerImpl implements Controller {
 
     // Helper method for creating and adding new EntryPanels from a list of UUIDs associated with that ticket
     private void addEntryPanelsToEntryDisplayPanel(EntryDisplayPanel entryDisplayPanel, boolean isIntro){
-        Ticket newTicket = null;
+        Ticket newTicket;
         if (isIntro) {
             newTicket = model.fetchGenericTicketFromGlobalDatabase(entryDisplayPanel.ticketId);
         } else {
@@ -256,7 +256,7 @@ public class ControllerImpl implements Controller {
 
     // Helper method for generating display panel for ticket entries in the intro section of the app
     private EntryDisplayPanel generateEntryDisplayPanelFromID(UUID ticketId, boolean isIntro){
-        Ticket newTicket = null;
+        Ticket newTicket;
         if (isIntro) {
             newTicket = model.fetchGenericTicketFromGlobalDatabase(ticketId);
         } else {
@@ -270,7 +270,7 @@ public class ControllerImpl implements Controller {
 
     // Helper method for generating entry panels given an entry's ID
     private EntryPanel generateEntryPanelFromId(UUID entryId, boolean isIntro){
-        Entry newEntry = null;
+        Entry newEntry;
         if (isIntro) {
             newEntry = model.fetchGenericEntryFromGlobalDatabase(entryId);
         } else {

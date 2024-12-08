@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -94,7 +93,7 @@ public class LocalTicket implements Ticket{
 
     @Override
     public List<UUID> entryIds() {
-        return localEntries.stream().map(entry -> entry.id()).toList();
+        return localEntries.stream().map(Entry::id).toList();
     }
 
     @Override

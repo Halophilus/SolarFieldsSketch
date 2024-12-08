@@ -75,7 +75,7 @@ public class AddEntryScreen {
         // Set up image chooser
         FileNameExtensionFilter filter = new FileNameExtensionFilter("ImageIcon file formats", "gif", "jpg", "png"); // Filters out incompatible types from the selection screen
         imageChooser.addChoosableFileFilter(filter);
-        fileSelectButton.addActionListener(e->{
+        fileSelectButton.addActionListener(e ->{
             File file;
             int response;
             imageChooser.setFileSelectionMode(JFileChooser.FILES_ONLY); // Restrict visible files

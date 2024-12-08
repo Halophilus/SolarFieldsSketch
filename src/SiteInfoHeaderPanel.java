@@ -2,9 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.UUID;
 
+// A graphical header for displaying contact and location information about a Site in a SiteInfoFrame both session types
 public class SiteInfoHeaderPanel {
-    // ID info
+    // Ticketing information
     UUID id;
+
+    // Visual identifier
     ImageIcon icon;
 
     // Location information
@@ -23,23 +26,20 @@ public class SiteInfoHeaderPanel {
     // Storage for icon
     JLabel iconLabel;
 
-    // Contact info
+    // Displaying contact information
     JPanel contactPanel;
-    // Nested content
     JLabel addressHeader = new JLabel("Address: ");
     JPanel addressLabelPanel;
     JLabel addressLabel;
 
-    // Address info
+    // Displaying address information
     JPanel addressPanel;
-    // Nested content
     JLabel contactHeader = new JLabel("Contact: ");
     JPanel contactLabelPanel;
     JLabel contactLabel;
 
-
+    // The role of this class is purely for display purposes and has no connection to the Controller or other elements of the application
     public SiteInfoHeaderPanel(UUID id, ImageIcon icon, String address, String city, String state, String zip, String phoneNumber, String emailAddress) {
-        // Assign fields
         this.id = id;
         this.icon = icon;
         this.address = address;
@@ -49,47 +49,42 @@ public class SiteInfoHeaderPanel {
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
 
-        // Create outer panel to store header info
+        // Create space to display information so that each successive frame stacks horizontally from left to right
         outerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
-        // Create panel to store indented contact information
+        // Contact information formatting
         contactPanel = new JPanel();
-        BoxLayout boxLayout = new BoxLayout(contactPanel, BoxLayout.Y_AXIS);
+        BoxLayout boxLayout = new BoxLayout(contactPanel, BoxLayout.Y_AXIS); // Each part of the contact information is to be stacked vertically within its panel
         contactPanel.setLayout(boxLayout);
-        contactLabel = new JLabel(this.phoneNumber + "\n" + this.emailAddress);
+        contactLabel = new JLabel(STR."\{this.phoneNumber}\n\{this.emailAddress}");
 
         JLabel phoneNumberLabel = new JLabel(this.phoneNumber);
         JLabel emailAddressLabel = new JLabel(this.emailAddress);
         contactLabelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        contactLabelPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0)); //indent the label
-        //contactLabelPanel.add(contactLabel);
+        contactLabelPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0)); // Indent the actual contact information
         contactPanel.add(contactHeader);
         contactPanel.add(phoneNumberLabel);
         contactPanel.add(emailAddressLabel);
         contactPanel.add(contactLabelPanel);
 
-
-        // Create panel to store indented address information;
+        // Location information formatting
         addressPanel = new JPanel();
         BoxLayout boxLayout2 = new BoxLayout(addressPanel, BoxLayout.Y_AXIS);
         addressPanel.setLayout(boxLayout2);
-        //addressPanel.add(this.addressHeader);
         addressLabel = new JLabel(this.address);
-        JLabel stateAndCityLabel = new JLabel(this.city + ", " + this.state + " " + this.zip);
-
+        JLabel stateAndCityLabel = new JLabel(STR."\{this.city}, \{this.state} \{this.zip}");
 
         addressLabelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         addressLabelPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-        //addressLabelPanel.add(addressLabel);
         addressPanel.add(addressHeader);
         addressPanel.add(addressLabel);
         addressPanel.add(stateAndCityLabel);
 
-        // Scale the image by the size of the contact panel (widest element in panel)
+        // TODO: Create a method for automatically scaling the height of the icon to fit the
         this.icon = scaleImage(icon, contactPanel.getHeight());
         iconLabel = new JLabel(this.icon);
 
-        // Add content panels to the outer panel
+        // Add medi to the outer content panel
         outerPanel.add(iconLabel);
         outerPanel.add(addressPanel);
         outerPanel.add(contactPanel);
@@ -99,20 +94,11 @@ public class SiteInfoHeaderPanel {
     // Scales image icon to appropriate height
     private ImageIcon scaleImage(ImageIcon icon, int newHeight)
     {
-        /*
-        int currentWidth = icon.getIconWidth();
-        int currentHeight = icon.getIconHeight();
-
-        currentHeight = newHeight;
-        currentWidth = (icon.getIconWidth() * currentHeight) / icon.getIconHeight();
-
-        return new ImageIcon(icon.getImage().getScaledInstance(currentWidth, currentHeight, Image.SCALE_DEFAULT));
-         */
         return icon;
     }
 
+    // Returns content panel containing header
     public JPanel mainPanel() {
         return this.outerPanel;
     }
-
 }

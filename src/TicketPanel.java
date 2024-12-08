@@ -1,11 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 public class TicketPanel implements Comparable<TicketPanel> {
@@ -54,7 +51,7 @@ public class TicketPanel implements Comparable<TicketPanel> {
         //idPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0)); //; align left, horizontal gap of 5 pixels
 
         // The ticket number
-        idLabel = new JLabel("#" + this.ticketId);
+        idLabel = new JLabel(STR."#\{this.ticketId}");
         //idLabel.setFont(new Font("Arial", Font.BOLD, 12));
         idLabel.setForeground(Color.BLUE);
 
@@ -63,7 +60,7 @@ public class TicketPanel implements Comparable<TicketPanel> {
         //dividerLabel.setFont(new Font("Arial", Font.BOLD, 12));
 
         // The number of entries
-        entriesLabel = new JLabel("No. Entries: " + this.numEntries);
+        entriesLabel = new JLabel(STR."No. Entries: \{this.numEntries}");
         //entriesLabel.setFont(new Font("Arial", Font.ITALIC, ));
 
         // Font color as a visual indicator of unresolved issues
@@ -79,8 +76,7 @@ public class TicketPanel implements Comparable<TicketPanel> {
         idPanel.add(dividerLabel);
         idPanel.add(entriesLabel);
 
-        String dateUpdatedIndicator;
-        if (mostRecentEditDate != LocalDate.MAX) {dateLabel.setText("Last edited: " + this.mostRecentEditDate);}
+        if (mostRecentEditDate != LocalDate.MAX) {dateLabel.setText(STR."Last edited: \{this.mostRecentEditDate}");}
 
         //panel.setPreferredSize(new Dimension(100, idPanel.getHeight()));
         panel.add(idPanel, BorderLayout.WEST);
@@ -93,8 +89,8 @@ public class TicketPanel implements Comparable<TicketPanel> {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                System.out.println("Mouse clicked on TicketPanel " + ticketId);
-                System.out.println("IsIntro: " + isIntro);
+                System.out.println(STR."Mouse clicked on TicketPanel \{ticketId}");
+                System.out.println(STR."IsIntro: \{isIntro}");
                 if (isIntro) {
                     controller.displayEntryDisplayFrameIntro(ticketId);
                 } else {
@@ -123,8 +119,8 @@ public class TicketPanel implements Comparable<TicketPanel> {
         this.mostRecentEditDate = newDate;
         this.resolved = false;
         // Update labels
-        this.entriesLabel.setText("No. Entries: " + this.numEntries);
-        this.dateLabel.setText("Last edited: " + this.mostRecentEditDate);
+        this.entriesLabel.setText(STR."No. Entries: \{this.numEntries}");
+        this.dateLabel.setText(STR."Last edited: \{this.mostRecentEditDate}");
         // Refresh the panel
         panel.revalidate();
         panel.repaint();

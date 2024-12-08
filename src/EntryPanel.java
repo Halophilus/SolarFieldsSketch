@@ -32,7 +32,7 @@ public class EntryPanel implements Comparable<EntryPanel> {
     public EntryPanel(UUID entryId, LocalDate datePosted, String description, ImageIcon image, boolean reviewed, boolean isIntro) {
         this.entryId = entryId;
         this.datePosted = datePosted;
-        this.description = "<html><p>" + description + "</p></html>"; // Formatting description string to ensure wrapping text;
+        this.description = STR."<html><p>\{description}</p></html>"; // Formatting description string to ensure wrapping text;
         this.image = image;
         this.reviewed = reviewed;
         this.isIntro = isIntro;

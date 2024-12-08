@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 // The Global representation of Site-type objects that are accessible within Intro sessions
@@ -13,14 +12,14 @@ public class GlobalSite implements Site{
     static int siteCounter = 0;
 
     // Site information fields initialized to default values
-    String title = "";
-    String state = "";
-    String city = "";
-    String description = "";
-    String address = "";
-    String zip = "";
-    String phoneNumber = "";
-    String emailAddress = "";
+    String title;
+    String state;
+    String city;
+    String description;
+    String address;
+    String zip;
+    String phoneNumber;
+    String emailAddress;
 
     // Randomly generated default icon
     ImageIcon imageIcon = new CustomImageIcon();
@@ -106,10 +105,6 @@ public class GlobalSite implements Site{
     @Override
     public String emailAddress() {
         return this.emailAddress;
-    }
-
-    List<UUID> ticketIds() {
-        return globalTickets.stream().map(Ticket::id).toList();
     }
 
 

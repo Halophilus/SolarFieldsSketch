@@ -3,9 +3,8 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+// Functional implementation of the Model interface
 public class ModelImpl implements Model {
-    GlobalTicketingSystem globalTicketingSystem;
-    LocalTicketingSystem localTicketingSystem;
 
     @Override
     // Clears local storage at closure of edit section
@@ -212,7 +211,7 @@ public class ModelImpl implements Model {
     @Override
     // Pulls all unique ticket IDs associated with a given site
     public Set<UUID> setOfTicketsPerSite(Site targetSite){
-        return new HashSet<UUID>(targetSite.tickets().stream().map(Ticket::id).distinct().toList());
+        return new HashSet<>(targetSite.tickets().stream().map(Ticket::id).distinct().toList());
     }
 
     // New content operations
@@ -243,6 +242,6 @@ public class ModelImpl implements Model {
     @Override
     // Gets the parentSiteId from the UUID of a given ticket
     public UUID getParentSiteId(UUID ticketId){
-        return LocalTicketingSystem.getSiteFromTicket(ticketId).id();
+        return Objects.requireNonNull(LocalTicketingSystem.getSiteFromTicket(ticketId)).id();
     }
 }

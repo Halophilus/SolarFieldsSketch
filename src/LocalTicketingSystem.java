@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.UUID;
 
 // A static class for fetching Local Site, Ticket, and Entry objects from their associated UUID

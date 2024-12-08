@@ -1,11 +1,9 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 // An amphoteric JPanel class that can store TicketPanels associated with Ticket objects in both Edit and Intro sessions
 public class EntryDisplayPanel {
@@ -19,7 +17,7 @@ public class EntryDisplayPanel {
 
     // Set of EntryPanels generated for the display panel
     // Can be sorted as a stream
-    Set<EntryPanel> entryPanels = new HashSet<EntryPanel>();
+    Set<EntryPanel> entryPanels = new HashSet<>();
 
     // Value used to alternate the background color of successive EntryPanel objects
     int counter;

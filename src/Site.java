@@ -1,9 +1,8 @@
 import javax.swing.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
 
-// A general interface for simplifying symettrical operations on Local and Global Sites
+// A general interface for simplifying symmetrical operations on Local and Global Sites
 public interface Site {
     // State variables
     UUID id();

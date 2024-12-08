@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.UUID;
 
 // Displays the JPanel that contains the set of Entry objects associated with a given GlobalTicket within an Intro session
@@ -35,7 +33,7 @@ public class EntryDisplayFrameIntro {
 
         // Format visible components of frame
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setTitle("Entries for GlobalTicket No. " + this.ticketID);
+        frame.setTitle(STR."Entries for GlobalTicket No. \{this.ticketID}");
         frame.setSize(800, 500);
         // Insert main panel into the center of the visible frame
         frame.add(panel, BorderLayout.CENTER);
@@ -45,11 +43,8 @@ public class EntryDisplayFrameIntro {
         buttonPanel.add(exportButton, BorderLayout.WEST);
 
         // TODO: Make an export screen
-        exportButton.addActionListener(new ActionListener() { // Opens an export screen for the related Ticket
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Export button pressed");
-            }
-        });
+        // Opens an export screen for the related Ticket
+        exportButton.addActionListener(e -> System.out.println("Export button pressed"));
 
         // Add the button panel to the bottom of the screen
         panel.add(buttonPanel, BorderLayout.SOUTH);

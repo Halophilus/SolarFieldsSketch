@@ -1,9 +1,5 @@
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.Duration;
@@ -12,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+// A frame for displaying all Sites stored in 
 public class SiteSelectionFrame {
     // Control
     boolean isIntro;
@@ -58,22 +55,19 @@ public class SiteSelectionFrame {
         // Button panel when intro
         if (isIntro) {
             buttonPanel.add(downloadButton, BorderLayout.EAST);
-            downloadButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Download Button pressed");
-                    controller.clearLocalStorage();
-                    // Duplicate the selected integer values
-                    Set<UUID> selectedSites = new HashSet<UUID>();
-                    selectedSites.addAll(SiteSelectionPanel.selected);
-                    controller.closeAllOpenedFrames();
-                    // Perform some action
-                    // In this case, pass them to the controller to download site data
-                    controller.displaySiteSelectionFrameEdit(selectedSites);
-                    // Clear the set of selected globalSites
-                    SiteSelectionPanel.selected.clear();
-                    frame.dispose();
+            downloadButton.addActionListener(e -> {
+                System.out.println("Download Button pressed");
+                controller.clearLocalStorage();
+                // Duplicate the selected integer values
+                Set<UUID> selectedSites = new HashSet<>(SiteSelectionPanel.selected);
+                controller.closeAllOpenedFrames();
+                // Perform some action
+                // In this case, pass them to the controller to download site data
+                controller.displaySiteSelectionFrameEdit(selectedSites);
+                // Clear the set of selected globalSites
+                SiteSelectionPanel.selected.clear();
+                frame.dispose();
 
-                }
             });
 
         }
@@ -102,24 +96,19 @@ public class SiteSelectionFrame {
             Thread.startVirtualThread(this::attemptSyncLoop);
             // Set action listeners
             // Export button
-            exportButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Export Button pressed");
+            exportButton.addActionListener(e -> {
+                System.out.println("Export Button pressed");
 
-                    Set<UUID> selectedSites = new HashSet<UUID>();
-                    selectedSites.addAll(SiteSelectionPanel.selected);
+                Set<UUID> selectedSites = new HashSet<>(SiteSelectionPanel.selected);
 
-                    // todo: implement an export screen for selected site IDs
-                    controller.displayExportScreenForSelectLocations(selectedSites);
-                    SiteSelectionPanel.selected.clear();
-                }
+                // todo: implement an export screen for selected site IDs
+                controller.displayExportScreenForSelectLocations(selectedSites);
+                SiteSelectionPanel.selected.clear();
             });
-            uploadButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Upload Button pressed");
-                    controller.uploadLocalEntries(); // Add all new local entries
-                    controller.markLocalStorageAsUploaded(); // Lower updated flags for local data
-                }
+            uploadButton.addActionListener(e -> {
+                System.out.println("Upload Button pressed");
+                controller.uploadLocalEntries(); // Add all new local entries
+                controller.markLocalStorageAsUploaded(); // Lower updated flags for local data
             });
         }
 

@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +12,7 @@ public class GlobalTicket implements Ticket {
     static int siteCounter = 0;
 
     // Default values for basic information fields
-    String description = "";
+    String description;
     boolean resolved = false;
     ArrayList<Entry> entries = new ArrayList<>();
 
@@ -21,7 +20,7 @@ public class GlobalTicket implements Ticket {
     GlobalTicket() {
         this.id = UUID.randomUUID();
         this.counter = siteCounter++;
-        this.description = "Description for ticket " + this.counter;
+        this.description = STR."Description for ticket \{this.counter}";
     }
 
     // GlobalTickets generated through uploaded GlobalTickets
@@ -57,7 +56,7 @@ public class GlobalTicket implements Ticket {
 
     @Override
     public List<UUID> entryIds() {
-        return entries.stream().map(entry -> entry.id()).toList();
+        return entries.stream().map(Entry::id).toList();
     }
 
     @Override
