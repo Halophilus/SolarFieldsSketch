@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-// A frame for displaying all Sites stored in 
+// A frame for displaying a list of Sites stored in either the Global or Local database depending on whether the
 public class SiteSelectionFrame {
     // Control
     boolean isIntro;

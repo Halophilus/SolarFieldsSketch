@@ -12,6 +12,7 @@ public class ViewImpl implements View {
     }
 
     @Override
+    // Closes all open frames when transitioning between session types
     public void closeAllOpenedFrames(){
         for (JFrame frame : openFrames){
             frame.dispose();

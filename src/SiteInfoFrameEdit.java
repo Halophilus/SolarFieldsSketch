@@ -42,7 +42,7 @@ public class SiteInfoFrameEdit {
         // Format frame and add the content panel
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setTitle(STR."\{this.title} Stored Site Information");
-        frame.setSize(800, 500)
+        frame.setSize(800, 500);
         frame.add(panel, BorderLayout.CENTER);
 
         // Set up buttons
